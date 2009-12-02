@@ -66,7 +66,7 @@
 		//console.log('Creating paddles...');
 		var self = this;
 		var $startButton = self.options.$options.find('#jBreakStart');
-		$startButton.bind('click.jBreakCreatePaddles',function(e){
+		$startButton.bind('click.jBreakCreatePaddles',function(){
 			$('#jBreak .optionsContainer').fadeOut(750, function(){
 				self.$field.bind('click.jBreakCreatePaddles',function(e){
 					e.stopPropagation(); // do not bubble
@@ -381,6 +381,7 @@ jBreak.paddle.prototype = {
 				var y = this.position.y
 				      - this._size.height / 2
 				      - jBreak.balls[ballID].$ball.height() / 2;
+				jBreak.balls[ballID].setAngle(-90);
 				var effectDirection = 'up';
 				break;
 			case 'left':
@@ -390,6 +391,7 @@ jBreak.paddle.prototype = {
 				var y = this.position.y
 				      + this._size.height / 2
 				      - jBreak.balls[ballID].$ball.width() / 2;
+				jBreak.balls[ballID].setAngle(-90);
 				var effectDirection = 'right';
 				break;
 		}
@@ -584,24 +586,51 @@ jBreak.ball.prototype = {
 		// only run checks if a block could be hit
 		if(y <= jBreak.fieldSize.height - 32 || y >= 32 || x >= 32 || x <= jBreak.fieldSize.width - 32){
 			if(this._speed.y > 0){
-				var blockY = Math.floor((y-(32-this._size.height)) / 16);
+				var ballY = y-(32-this._size.height);
 			} else {
-				var blockY = Math.floor((y-32) / 16);
+				var ballY = y-32; // @todo by ds: check division by 0..?
 			}
 
 			if(this._speed.x > 0){
-				var blockX = Math.floor((x-(32-this._size.width)) / 64);
+				var ballX = x-(32-this._size.width);
 			} else {
-				var blockX = Math.floor((x-32) / 64);
+				var ballX = x-32;
 			}
+			var blockX = Math.floor(ballX / 64);
+			var blockY = Math.floor(ballY / 16);
 
 			var blockExists = jBreak.blocks[blockX] != undefined
 			               && jBreak.blocks[blockX][blockY] != undefined
 
 			if(blockExists){
 				if(jBreak.blocks[blockX][blockY] > 0){
+					ballX = Math.floor(ballX);
+					ballY = Math.floor(ballY);
+
+					var hHit = (ballX % 64 <= 63 && ballX % 64 >= 61 && this._speed.x < 0)
+					        || (ballX % 64 <=  2 && this._speed.x > 0);
+					var vHit = (ballY % 16 <= 15 && ballY % 16 >= 13 && this._speed.y < 0)
+					        || (ballY % 16 <=  2 && this._speed.y > 0);
+
+					/*if(!vHit && !hHit){
+						// something went wrong...
+						console.log('X: %d S: %d', ballX % 64, this._speed.x);
+						console.log('Y: %d S: %d', ballY % 16, this._speed.y);
+						console.log('vHit %d, hHit %d', vHit, hHit);
+						console.log('---');
+					}*/
+
+					if(vHit)
+						this._speed.y *= -1;
+
+					if(hHit)
+						this._speed.x *= -1;
+
 					//console.log('I hit %d,%d', blockX,blockY);
-					$('.'+blockX+'_'+blockY).remove();
+					$block = $('.'+blockX+'_'+blockY);
+					$block.effect('puff', {}, 'fast', function(){
+						$block.remove();
+					});
 					jBreak.blocks[blockX][blockY] = 0;
 					return;
 				}
