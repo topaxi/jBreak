@@ -1,8 +1,11 @@
-﻿jBreak = {
+﻿;(function($){
+
+jBreak = {
 	// methods
 	start:function(){
-		//var $jBreak = $('<div id="jBreak"/>');
-		this.$field = $('#jBreak').empty();
+		var $jBreak = $('#jBreak').empty();
+		this.$field = $('<div id="jBreakField"/>');
+		$jBreak.append(this.$field);
 
 		this.paddles = [];
 		this.balls = {};
@@ -12,44 +15,14 @@
 			height:this.$field.height()
 		};
 
-		// will be destroyed on game start
-		/*var self = this;
-		this.$field.resizable({
-			minHeight: 400,
-			minWidth:  256,
-			grid:        8,
-			resize:function(){
-				self.fieldSize.width = self.$field.width();
-				self.fieldSize.height = self.$field.height();
-
-				self.paddles.forEach(function(jBPaddle){
-					switch(jBPaddle.position.relative){
-						case 'top':
-							jBPaddle.setPosition('left',0,false);
-							jBPaddle.setPosition('top',self.fieldSize.width / 2,true);
-							break;
-						default:
-						case 'bottom':
-							jBPaddle.setPosition('left',self.fieldSize.height,false);
-							jBPaddle.setPosition('bottom',self.fieldSize.width / 2,true);
-							break;
-						case 'left':
-							jBPaddle.setPosition('top',0,false);
-							jBPaddle.setPosition('left',self.fieldSize.height / 2,true);
-							break;
-						case 'right':
-							jBPaddle.setPosition('top',self.fieldSize.width,false);
-							jBPaddle.setPosition('right',self.fieldSize.height / 2,true);
-							break;
-					}
-				});
-			}
-		});*/
-
 		this.options.showOptions();
-		this.createPaddles();
-		this.drawBlocks();
+		this.loadLevel();
 		//console.log('Playing field initialized -> %o', this);
+	},
+	playSound:function(soundFile){
+		var audio = new Audio(soundFile);
+		audio.volume = this._volume/100;
+		audio.play();
 	},
 	addBall:function(paddleID){
 		var ballID = (this.balls.length == undefined ? 0 : this.balls.length+1);
@@ -71,7 +44,7 @@
 				self.$field.bind('click.jBreakCreatePaddles',function(e){
 					e.stopPropagation(); // do not bubble
 					//self.$field.resizable('destroy'); // game started, destroy resizable ui
-					self.$field.css({cursor:'none'});
+					$('#jBreak').css({cursor:'none'});
 
 					self.paddles.forEach(function(jBPaddle){
 						jBPaddle.start();
@@ -100,23 +73,16 @@
 		var self = this;
 		$(document).keydown(function(e){
 			if(e.keyCode == 32){
-				for(jBBall in self.balls){
-					if(self.balls[jBBall]._timer){
-						self.balls[jBBall]._timer = false;
-					} else {
-						self.balls[jBBall]._timer = true;
-						self.balls[jBBall]._animate();
-					}
-				}
+				for(jBBall in self.balls)
+					self.balls[jBBall].pause();
 			}
 		});
 	},
 	ballChecker:function(){
 		//console.log('Checking remaining balls...');
 		var i = 0;
-		for(ball in this.balls){
+		for(ball in this.balls)
 			i++;
-		}
 
 		if(i == 0){
 			//console.log('No remaining balls found... FAIL!')
@@ -124,7 +90,7 @@
 
 			this.$field.unbind('mousemove');
 			this.$field.find('.jBreakPaddle').effect('puff', {}, 750);
-			this.$blocks.find('div').effect('puff', {}, 750); // this is painfully slow on other browsers than chromium ^^
+			this.$blocks.find('div').effect('drop', {direction:'down'}, 750);
 
 			setTimeout(function(){
 				self.paddles.forEach(function(jBPaddle){
@@ -135,7 +101,7 @@
 				self.$blocks.remove();
 
 				var $fail = $('<div class="fail" style="display:none">FAIL!</div>');
-				self.$field.css({cursor:'default'});
+				$('#jBreak').css({cursor:'default'});
 				self.$field.append($fail);
 				var failOffset = $fail.offset();
 
@@ -151,30 +117,64 @@
 			//console.log('%d remaining balls found.', i)
 		}
 	},
-	// test
-	drawBlocks:function(){
-		this.$blocks = $('<div style="position:absolute;left:32px;top:32px;display:none"/>');
-		this.blocks = [
-			//0  1  2  3  4  5  6  7  8
-			[ 1, 1, 1, 1, 1, 1, 1, 1, 1], // 0
-			[ 1, 1, 1, 1, 1, 1, 1, 1, 1], // 1
-			[ 1, 1, 1, 1, 1, 1, 1, 1, 1], // 2
-			[ 1, 1, 1, 1, 1, 1, 1, 1, 1], // 3
-			[ 1, 1, 1, 1, 1, 1, 1, 1, 1], // 4
-			[ 1, 1, 1, 1, 1, 1, 1, 1, 1], // 5
-			[ 1, 1, 1, 1, 1, 1, 1, 1, 1], // 6
-			[ 1, 1, 1, 1, 1, 1, 1, 1, 1], // 7
-			[ 1, 1, 1, 1, 1, 1, 1, 1, 1]  // 8
-		];
+	loadLevel:function(levelID){
+		if(typeof levelID == 'undefined'){
+			var level = {
+				paddles:[{
+						position:'bottom',
+						ball:true
+					}
+				],
+				blocks:[
+					//0  1  2  3  4  5  6  7  8
+					[ 1, 1, 1, 1, 1, 1, 1, 1, 1], // 0
+					[ 1, 1, 1, 1, 1, 1, 1, 1, 1], // 1
+					[ 1, 1, 1, 1, 1, 1, 1, 1, 1], // 2
+					[ 1, 1, 1, 1, 1, 1, 1, 1, 1], // 3
+					[ 1, 1, 1, 1, 1, 1, 1, 1, 1], // 4
+					[ 1, 1, 1, 1, 1, 1, 1, 1, 1], // 5
+					[ 1, 1, 1, 1, 1, 1, 1, 1, 1], // 6
+					[ 1, 1, 1, 1, 1, 1, 1, 1, 1], // 7
+					[ 1, 1, 1, 1, 1, 1, 1, 1, 1], // 8
+					[ 0, 0, 0, 0, 0, 0, 0, 0, 0], // 9
+					[ 0, 0, 0, 0, 0, 0, 0, 0, 0], //10
+					[ 0, 0, 0, 0, 0, 0, 0, 0, 0], //11
+					[ 0, 0, 0, 0, 0, 0, 0, 0, 0], //12
+					[ 0, 0, 0, 0, 0, 0, 0, 0, 0], //13
+					[ 0, 0, 0, 0, 0, 0, 0, 0, 0], //14
+					[ 0, 0, 0, 0, 0, 0, 0, 0, 0], //15
+					[ 0, 0, 0, 0, 0, 0, 0, 0, 0], //16
+					[ 0, 0, 0, 0, 0, 0, 0, 0, 0], //17
+					[ 0, 0, 0, 0, 0, 0, 0, 0, 0], //18
+					[ 0, 0, 0, 0, 0, 0, 0, 0, 0], //19
+					[ 0, 0, 0, 0, 0, 0, 0, 0, 0]  //20
+				],
+				name: 'default',
+				theme:'default'
+			};
+		} else {
+			// ajax request to get level
+		}
 
+		this.blocks = level.blocks;
+		this._drawBlocks();
+		this.createPaddles();
+
+		level.paddles.forEach(function(jBPaddle){
+			var paddleID = this.addPaddle(jBPaddle.position);
+			if(jBPaddle.ball)
+				this.addBall(paddleID);
+		}, this);
+	},
+	_drawBlocks:function(){
+		this.$blocks = $('<div style="position:absolute;left:32px;top:32px;display:none"/>');
 		this.blocks.forEach(function(horizontalBlocks, y){
 			horizontalBlocks.forEach(function(block, x){
 				if(block > 0){
-					var $block = $('<div style="width:62px;height:14px;border:1px solid gray;background-color:black;position:absolute"/>');
-					$block.css({textAlign:'center',color:'white',fontSize:'11px'});
-					$block.append(x+'.'+y);
+					var $block = $('<div/>');
 					$block.addClass('jBreakBlock');
-					$block.addClass(x+'_'+y);
+					$block.addClass('x'+x);
+					$block.addClass('y'+y);
 					$block.css({left:x*64,top:y*16});
 					this.$blocks.append($block);
 				}
@@ -191,6 +191,8 @@
 	paddles:null,
 	balls:null,
 	blocks:null,
+	// private variables
+	_volume:70,
 	// objects
 	options:{
 		showOptions:function(){
@@ -203,17 +205,16 @@
 			this.$options.prepend($draggableHandle);
 
 			this.$options.draggable({
-				containment:'#jBreak',
+				containment:'#jBreakField',
 				handle:'.draggableHandle',
 				scroll:false
 			});
 
 			this.$optionTabs = $('<div class="options"/>');
 
-			this.$optionTabs.append('<ul style="font-size:12px"><li><a href="#tabs-1">Player</a><li><a href="#tabs-2">Ball</a></li><li><a href="#tabs-3">Level</a></li></ul></ul>');
-			this.$optionTabs.append(this.playerOptions());
-			this.$optionTabs.append(this.ballOptions());
-			this.$optionTabs.append('<div id="tabs-3" style="text-align:center;height:220px">-under construction-</div>');
+			this.$optionTabs.append('<ul style="font-size:12px"><li><a href="#tabs-1">Sound</a></li><li><a href="#tabs-2">Level</a></li></ul></ul>');
+			this.$optionTabs.append(this.soundOptions());
+			this.$optionTabs.append('<div id="tabs-2" style="text-align:center;height:220px">-under construction-</div>');
 
 			var $startButton = $(
 				'<button class="ui-state-default ui-corner-all" style="cursor:pointer" id="jBreakStart">Start</button>'
@@ -231,46 +232,53 @@
 			jBreak.$field.append(this.$options.append(this.$optionTabs));
 			this.$optionTabs.tabs();
 			this.$options.fadeIn('slow');
-
-			// default stuff
-			var paddleID = jBreak.addPaddle('bottom');
-			jBreak.addBall(paddleID);
 		},
-		playerOptions:function(){
-			var $playerOptions = $('<div id="tabs-1" style="height:220px"/>');
-			var $paddlePositions = $('<div style="border:1px solid black;width:51px;position:relative;margin:auto"/>');
+		soundOptions:function(){
+			var $soundOptions = $('<div id="tabs-1" style="height:220px"/>');
 
-			$paddlePositions.append('<input class="option position paddleTop" name="top" style="display:block;margin:auto;margin-top:3px" type="checkbox"/>');
-			$paddlePositions.append('<input class="option position paddleRight" name="right" style="position:absolute;right:1px" type="checkbox"/>');
-			$paddlePositions.append('<input class="option position paddleLeft" name="left" type="checkbox"/>');
-			$paddlePositions.append('<input class="option position paddleBottom" name="bottom" style="display:block;margin:auto;margin-bottom:3px" type="checkbox" checked="checked" disabled="disabled"/>');
-
-			$paddlePositions.find('.option.position').each(function(i, el){
-				var $el = $(el);
-				var position = this.name;
-
-				$el.click(function(){
-					var checked = ($el.attr('checked') ? true : false);
-					if(!checked){
-						jBreak.paddles.forEach(function(jBPaddle){
-							if(jBPaddle.position.relative == position){
-								jBPaddle.remove();
-								return false;
-							}
-						});
-					} else {
-						jBreak.addPaddle($el.attr('name'));
-					}
-				});
+			var $soundVolumeControl = $('<div/>');
+			var $soundVolumeSlider = $('<div/>');
+			$soundVolumeControl.css({
+				fontSize:'11px'
 			});
+			$soundVolumeSlider.css({width:'170px',marginBottom:'8px'});
+			$soundVolumeSlider.slider({
+				animate:true,
+				value:70,
+				range:'min',
+				min:0,
+				max:100,
+				slide:function(e, ui){
+					jBreak._volume = ui.value;
+					$('#soundVolume').text(ui.value+'%');
+					jBreak.playSound('sound/pling1s.ogg');
+				}
+			});
+			$soundVolumeControl.append($soundVolumeSlider);
+			$soundVolumeControl.prepend('<p style="margin:0">Sound volume: <span id="soundVolume" style="float:right">70%</span></p>');
+			$soundOptions.append($soundVolumeControl);
 
-			$playerOptions.append('<p>Paddles:</p>');
-			$playerOptions.append($paddlePositions);
-			return $playerOptions;
-		},
-		ballOptions:function(){
-			var $ballOptions = $('<div id="tabs-2" style="height:220px;text-align:center">-under construction-</div>');
-			return $ballOptions;
+			var $musicVolumeControl = $('<div/>');
+			var $musicVolumeSlider = $('<div/>');
+			$musicVolumeControl.css({
+				fontSize:'11px'
+			});
+			$musicVolumeSlider.css({width:'170px'});
+			$musicVolumeSlider.slider({
+				animate:true,
+				value:70,
+				range:'min',
+				min:0,
+				max:100,
+				slide:function(e, ui){
+					//jBreak._volume = ui.value;
+					$('#musicVolume').text(ui.value+'%');
+				}
+			}).slider('disable');
+			$musicVolumeControl.append($musicVolumeSlider);
+			$musicVolumeControl.prepend('<p style="margin:0">Music volume: <span id="musicVolume" style="float:right">70%</span></p>');
+			$soundOptions.append($musicVolumeControl);
+			return $soundOptions;
 		},
 		$options:null,
 		$optionsTabs:null
@@ -409,69 +417,6 @@ jBreak.paddle.prototype = {
 		// flush balls
 		this.balls = [];
 	},
-	// @todo remove/refactor this method as it's only a hack for resizing, this function is ~3x slower than this.move()
-	setPosition:function(relativePosition, position, withBall){
-		if(relativePosition == 'top' || relativePosition == 'bottom'){
-			var x = position;
-			x -= this._size.width / 2;
-
-			if(x < 0){
-				x = 0;
-			} else if(x > jBreak.fieldSize.width - this._size.width){
-				x = jBreak.fieldSize.width - this._size.width;
-			}
-
-			if(withBall){
-				this.balls.forEach(function(i){
-					var ballX = x
-					          + this._size.width / 2
-					          - jBreak.balls[i].$ball.width() / 2;
-
-					if(relativePosition == 'bottom'){
-						var ballY = this.position.y
-						          - this._size.height / 2
-						          - jBreak.balls[i].$ball.height() / 2;
-					}
-
-					jBreak.balls[i].move(
-						ballX,
-						(ballY ? ballY : jBreak.balls[i].position.y));
-				}, this);
-			}
-
-			this.position.x = x;
-			this.$paddle.css({left:x});
-		} else {
-			var y = position;
-			y -= this._size.height / 2;
-
-			if(y < 0){
-				y = 0;
-			} else if(y > jBreak.fieldSize.height - this._size.height){
-				y = jBreak.fieldSize.height - this._size.height;
-			}
-
-			if(withBall){
-				this.balls.forEach(function(i){
-					var ballY = y
-					          + this._size.height / 2
-					          - jBreak.balls[i].$ball.height() / 2;
-
-					if(relativePosition == 'right'){
-						var ballX = this.position.x
-						          - jBreak.balls[i].$ball.width();
-					}
-
-					jBreak.balls[i].move(
-						(ballX ? ballX : jBreak.balls[i].position.x),
-						ballY);
-				}, this);
-			}
-
-			this.position.y = y;
-			this.$paddle.css({top:y});
-		}
-	},
 	move:function(relativePosition, position){
 		if(relativePosition == 'top' || relativePosition == 'bottom'){
 			var x = position;
@@ -567,9 +512,8 @@ jBreak.ball.prototype = {
 		this._animate();
 	},
 	setAngle:function(angle){
-		if(angle != undefined){
+		if(angle != undefined)
 			this._angle = angle;
-		}
 
 		var speed = this._angle / 360 * Math.PI;
 		this._speed.x = Math.cos(speed);
@@ -588,7 +532,7 @@ jBreak.ball.prototype = {
 			if(this._speed.y > 0){
 				var ballY = y-(32-this._size.height);
 			} else {
-				var ballY = y-32; // @todo by ds: check division by 0..?
+				var ballY = y-32;
 			}
 
 			if(this._speed.x > 0){
@@ -599,11 +543,12 @@ jBreak.ball.prototype = {
 			var blockX = Math.floor(ballX / 64);
 			var blockY = Math.floor(ballY / 16);
 
-			var blockExists = jBreak.blocks[blockX] != undefined
-			               && jBreak.blocks[blockX][blockY] != undefined
+			var blockExists = jBreak.blocks[blockY] != undefined
+			               && jBreak.blocks[blockY][blockX] != undefined
 
 			if(blockExists){
-				if(jBreak.blocks[blockX][blockY] > 0){
+				if(jBreak.blocks[blockY][blockX] > 0){
+					jBreak.playSound('sound/pling1s.ogg');
 					ballX = Math.floor(ballX);
 					ballY = Math.floor(ballY);
 
@@ -612,26 +557,26 @@ jBreak.ball.prototype = {
 					var vHit = (ballY % 16 <= 15 && ballY % 16 >= 13 && this._speed.y < 0)
 					        || (ballY % 16 <=  2 && this._speed.y > 0);
 
-					/*if(!vHit && !hHit){
-						// something went wrong...
-						console.log('X: %d S: %d', ballX % 64, this._speed.x);
-						console.log('Y: %d S: %d', ballY % 16, this._speed.y);
-						console.log('vHit %d, hHit %d', vHit, hHit);
-						console.log('---');
-					}*/
+					if(vHit && hHit) // don't mirror both speeds, mirror the slower one
+						(this._speed.y > this._speed.x ? hHit = false : vHit = false);
 
-					if(vHit)
+					if(vHit || !hHit) // workaround, a hit must occur here...
 						this._speed.y *= -1;
 
 					if(hHit)
 						this._speed.x *= -1;
 
 					//console.log('I hit %d,%d', blockX,blockY);
-					$block = $('.'+blockX+'_'+blockY);
-					$block.effect('puff', {}, 'fast', function(){
+					$block = $('.x'+blockX+'.y'+blockY);
+					var direction = (vHit && this._speed.y > 0 ? 'up'    : (
+					                 hHit && this._speed.x > 0 ? 'left'  : (
+					                 hHit && this._speed.x < 0 ? 'right' :
+					               /*vHit && this._speed.y < 0*/ 'down')));
+
+					$block.effect('drop', {direction:direction}, 'fast', function(){
 						$block.remove();
 					});
-					jBreak.blocks[blockX][blockY] = 0;
+					jBreak.blocks[blockY][blockX] = 0;
 					return;
 				}
 			}
@@ -656,7 +601,16 @@ jBreak.ball.prototype = {
 
 						paddleMissed = y > jBreak.fieldSize.height + 2;
 
-						(paddleHit ? this._speed.y *= -1 : null);
+						if(paddleHit){
+							var angle =
+								(this.position.x - jBPaddle.position.x + this._size.width/2)
+								 * 180 / (jBPaddle._size.width / 2)
+								 - 360;
+
+							angle = Math.floor((angle > -45 ? -45 : (angle < -315 ? -315 : angle)));
+
+							this.setAngle(angle);
+						}
 						break;
 					case 'top':
 						paddle.top = true;
@@ -698,6 +652,7 @@ jBreak.ball.prototype = {
 				}
 
 				if(paddleHit){
+					jBreak.playSound('sound/pling1s.ogg');
 					this._interval -= (this._interval > 12.5 ? .25 : 0);
 					return true;
 				} else if(paddleMissed){
@@ -712,6 +667,7 @@ jBreak.ball.prototype = {
 		check = x < 0 && !paddle.left
 		     || x > jBreak.fieldSize.width - this._size.width && !paddle.right;
 		if(check){
+			jBreak.playSound('sound/pling1s.ogg');
 			this._speed.x *= -1;
 			this._interval -= (this._interval > 10 ? .075 : 0);
 		}
@@ -719,6 +675,7 @@ jBreak.ball.prototype = {
 		check = y < 0 && !paddle.top
 		     || y > jBreak.fieldSize.height - this._size.height && !paddle.bottom;
 		if(check){
+			jBreak.playSound('sound/pling1s.ogg');
 			this._speed.y *= -1;
 			this._interval -= (this._interval > 10 ? .075 : 0);
 		}
@@ -727,8 +684,8 @@ jBreak.ball.prototype = {
 		var x = this.position.x + this._speed.x*4;
 		var y = this.position.y + this._speed.y*4;
 
-		this._hitCheck(x,y);
 		this.move(x,y);
+		this._hitCheck(x,y);
 
 		if(this._timer){
 			// arguments.callee kills the "this" reference :(
@@ -751,12 +708,20 @@ jBreak.ball.prototype = {
 		jBreak.ballChecker(); // any balls left?
 		//delete this;
 	},
+	pause:function(){
+		if(this._timer){
+			this._timer = false;
+		} else {
+			this._timer = true;
+			this._animate();
+		}
+	},
 	// private variables
 	_ballID:null,
 	_speed:null,
 	_angle:-90,
 	_timer:null,
-	_interval:33,
+	_interval:30,
 	_size:null,
 	// public variables @todo these should be private too
 	$ball:null,
@@ -792,3 +757,5 @@ if(!Array.prototype.forEach){
 $(function(){
 	jBreak.start();
 });
+
+})(jQuery);
