@@ -1,0 +1,154 @@
+body {
+	background-color:#ccc;
+}
+
+div#jBreak {
+	background:white url(../../images/BG2-b.png) scroll no-repeat;
+	width:678px;
+	height:434px;
+	position:relative;
+	margin:auto;
+	box-shadow: 5px 5px 10px #888;
+	-moz-box-shadow: 5px 5px 10px #888;
+	-webkit-box-shadow: 5px 5px 10px #888;
+}
+
+div#jBreakField {
+	background:transparent url(../../images/backgrounds/icecaveBG01.png) scroll no-repeat;
+	/*margin:auto;*/
+	top:17px;
+	left:17px;
+	width:640px;
+	height:400px;
+	/*border:1px solid black;
+	background-color:#ededed;*/
+	position:relative;
+	font-family:sans-serif;
+	overflow:hidden
+}
+
+div#jBreakField div.jBreakPaddle {
+	position:absolute;
+	background-color:black
+}
+
+	div#jBreakField div.jBreakPaddle.top {
+		width:64px;
+		height:8px;
+		/*background:transparent url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAAAICAYAAABJYvnfAAAABHNCSVQICAgIfAhkiAAAAcVJREFUSInlVctuE0EQrLLWwZLjtUFIew3/aSn5g/CnBoLiU1Ic+jmOkbkzp+2eftZ09XK73QoCRIEg6mj8JJsosOlkBoBMJXdlj0STpQqlzEGL9yGVIBGkILcRAbqfVSwg9UQrxe88cWk8l8nTPM+4ddSauX7xV4urUT5YXypuJ/zXVDfLNADyqWhWTSYE0fWCY96eOJ43UpGgRp/xtFHoIUIPv2OrB10sXQ856qPu1rRa5c1+2u12WJEIAogCfWysjhpUay7GVNYD2fMCUoFM86aDmbGTNI1C7kS5D3lBJSVaSdZGN2TdyubkoLLmfgSKxDTv91glcVmUQaDXuIO6iAYGfRcSKDSONqTaMqgM4XutjlEQ+s6KpttDIFI0y7YSBGG9vsP07eHh9+l0usd/eJZleZk2m83XZVnO5/OrYzNyKUav8K25Mz6ZTYy5bWDlKCffqIqXu8Z5ecH1io32cpW3qB056NTzt410MVf5+/Aa3oXDl8/6/vw8Z19PT4+/Tj9+7t7f3rBadV5bcCXX1SuoT422tggvOB0hc/wdSPel/46z5iRZTfjQvI/4QNEoxncOOlAi7j6tcdgfXo7H4wwAfwDd2hWpEogEbAAAAABJRU5ErkJggg%3D%3D) scroll no-repeat;*/
+		background:transparent url(../../images/paddles/pad5.png) scroll no-repeat;
+		/*-moz-border-radius-bottomleft:3px;
+		-moz-border-radius-bottomright:3px;
+		-webkit-border-bottom-left-radius:3px;
+		-webkit-border-bottom-right-radius:3px*/
+	}
+
+	div#jBreakField div.jBreakPaddle.right {
+		width:8px;
+		height:64px;
+		background:transparent url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAABACAYAAAAnBDaKAAAABHNCSVQICAgIfAhkiAAAAjFJREFUSIltVUtuG1EMI4U62bSp240P6SsYaG6Q3jA5QAHXM0DtTYZd6PP0nBjwZzQaiaT4ZALA8Xh8vN1uf17f3r4ulwvWdcWyLFiWBV8AYNu26/l8ppEwEiD8JcCen38t1+s/D0lQ3QVEwc5/L9/GI/RfYl3Z9v6OTBD9KUBVxcxYAQKgGgYA1pJRWQMFbIoKkAYGr8DRAhQIf7cWamX9lhgpAkxk16V+EQDIGWQGe8z8aoCiSq4EiYDupVWf/j21EAByBKiokCGCXoyVDStgySJBBgzTuBWTRJUQBKPu5J9IM6TWmEUr40pOUiflwESG1Gpc3ROBTIBRcpP0ymxKil25pDxYWbcYM7kPywOjRacsAEbSRUfkld0825qGIBS29ysCado+QdYDRXOUZZVWCjW5WkFY44S65Th4drspD04/BwNy6iBAGoZR6hq+sFnaVMrVpbPAx1c/3aKmnlQHWUJlJLwhFTljG54IMJfYcHUbN+73g2DEjGF0d/rWrj/4gVRYjq1HqyhUhXlJKBOFOJu9d4EklI5q6yMaDOmNbZb6hJGprRw2TQokWQP+BK9gPte7Rdj/L9QfU5ggDcSg2X3o404WtUh743ntGai7YxGzDoEMImbbqbwphOX6UVNI3Gi2RZorr1nMmP6O4lkw1+W0QJgslMTlIAtlCakqYQ+PuwEyaGZ5AbD99/2Kre+ZYUwKsNPp9LT/+SP0bDMpDAB+v7zY4XBYd7uHaU8CxH96riiGsz4FrAAAAABJRU5ErkJggg%3D%3D) scroll no-repeat;
+		-moz-border-radius-bottomleft:3px;
+		-moz-border-radius-topleft:3px;
+		-webkit-border-bottom-left-radius:3px;
+		-webkit-border-top-left-radius:3px
+	}
+
+	div#jBreakField div.jBreakPaddle.bottom {
+		width:64px;
+		height:8px;
+		/*background:transparent url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAAAICAYAAABJYvnfAAAAAXNSR0IArs4c6QAAAAZiS0dEAP8A/wD/oL2nkwAAAAlwSFlzAAALEwAACxMBAJqcGAAAAcdJREFUSMflVTtSQzEM3H1JE0KAHDMd3CDM5J7QpgDyHjSQmSyFJVk2/xpX/koraVcmbOx2u+kwHlZvr0eAAkEIAgBQBChABAgIAAEAgkSQgCAQsBflerlhloiwJQKQQLp3AhJkG+XYXlLmmqCE4kwOpfhzQLLXRHPXjZ5OwjCbYX11+bzd3l64L1zf3JwOj0/EYFZSwBEoPShLjBn3ROXgEWArQI817oAg7aUsAqZIAgNqIiL7URrDUP26h0hMWxabC4vFmYZhWHCz2Uz7/X6FfzjW6/XL/O7+fnU8vlklaxHktTaKd+VL1XL6E1kcH6ZKughp+EJd9VhxOHsyhs6FM7DiSTPXSsZhDD6M4/n88eGh6iRoCCC0Ck9NyELeDxLrPGFZi0rMzJpGyCIn0N5Q0XOKzapjhbHMaJl9K4HtVcKzYjTbjvUkYT6OYwquPvJ1nXZa8vNmlP32KNtKpfikbyThNiaB0lPE1C+Qmkv0Oe9P6U1T1L7IwHyaptZhI4GP+z+PLy722926Xf7G2VdA/waXy7NlJTA7FUXHNbLGtlKvYJDdtVvseP9Iisy/AWu1mc+/+TlaAqQuEt9izqi6DOT0usyAd9nwKo/HNdWsAAAAAElFTkSuQmCC) scroll no-repeat;*/
+		background:transparent url(../../images/paddles/pad5.png) scroll no-repeat;
+		/*-moz-border-radius-topleft:3px;
+		-moz-border-radius-topright:3px;
+		-webkit-border-top-left-radius:3px;
+		-webkit-border-top-right-radius:3px*/
+	}
+
+	div#jBreakField div.jBreakPaddle.left {
+		width:8px;
+		height:64px;
+		background:transparent url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAABACAYAAAAnBDaKAAAABHNCSVQICAgIfAhkiAAAAjZJREFUSIltlU1OXEEMhL9qVoCmXyZcIJHI/cINyCk4IzsisglIU1m02+0e5W1Gb/xXLpf9dH937350eu8cx8HXhwe+f/v2/vLy0gEamPEIbD4/P3h9fT39fHq6ACgzHJ3j1OnHQe+dfuo8/nh8b1Yk8Mgy89HE2++3U1MYBSCj9DAffz8Dg8AooQy7QKZlWhlcSsgI0TK9I2i6WBjTsqjCKVDPSm3Wlke0pgUji+xiOKYViwBpFgg5iZWHVytBEZZtgKC5zMKLJcywtPxPTnLGuxCUEouheDfg1WYEFQTCo81Vd7TrxCBBK7Cj48Wk9xKKObg4ZxeeXLOxCYSiFMxVnoZjgvSsnFQPdTV7T1kgRYZFZW0o4GpILnIiFRihj1bcsb0LTNA8G5YGSaqtEIqaWbdxMyS3t7A/o4Sm0UWbkxOvzRqS1TLraprXFWampm04DiURvwFyUByuusLgspu5fwAylmh11byRFBi2YVulTYfs64zrhbGwfUV18V0HpJQcu7C8LU8Mq62qcbkwKRchMKK3Nq1txyJDEDU8zKY5A9oOiNY6RRdr3P9RS1ygOc2YQVU184BkPbY2cZwg5jgTYy4hOJd3BlX5DK+2DkY9HWTLRZPezyRFchlo7w0rQBZY21WUPZhUvChNFKozIuSWQHKz5nt8K4qIgXJASvYdZDFa3mZxudQSCFnbd7Pd3JTvhdaVng7nL8d7U6FPc2LA7e2dn59/9e17cbG52JzP5z+ttVuAf3foHt2L9pFUAAAAAElFTkSuQmCC) scroll no-repeat;
+		-moz-border-radius-bottomright:3px;
+		-moz-border-radius-topright:3px;
+		-webkit-border-bottom-right-radius:3px;
+		-webkit-border-top-right-radius:3px
+	}
+
+div#jBreakField div.jBreakBall {
+	position:absolute;
+	/*background:#ededed url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAICAYAAADED76LAAAAAXNSR0IArs4c6QAAAAZiS0dEAP8A/wD/oL2nkwAAAAlwSFlzAAALEwAACxMBAJqcGAAAAAd0SU1FB9kKHxA1ItBYmA0AAADoSURBVBjTJcoxTsMwFAbgP7alqmpLBasvwFYhb2UiJ+jWnYtQblJu0JUlO13omks0iZNnx7H9wsA3f8X564zrz3UnpTzFlA6OyFprq67rPo0xN6m13m0fttVqvXqRUiBnXuSUn2OMx7quv5VS6rRYLp426w1mZiilUMgCQohHIcSHSimVwY/gzBhDQEoJnBnMDGYulSPCPM+QUiLGCO89QgiYpgkxRSjb91UI00FIgZwzvPdwzv3HMVRSa13HGI9jGJfOeTjvQDSAiFoiehfGmFvT3st701zatkHXdNba/jIMw9vrfv/7B+Csl/Zc18NeAAAAAElFTkSuQmCC) scroll no-repeat;*/
+	background:transparent url(../../images/ball4-88.png) scroll no-repeat;
+	width:8px;
+	height:8px
+}
+
+div#jBreakField div.optionsContainer {
+	border:1px solid black;
+	right:16px;
+	top:16px;
+	width:216px;
+	background-color:rgba(237, 237, 237, .75);
+	padding:4px;
+	z-index:10000;
+	font-size:12px;
+	display:none;
+	-moz-border-radius:8px;
+	-webkit-border-radius:8px
+}
+
+	div#jBreakField div.optionsContainer p.draggableHandle {
+		cursor:move;
+		margin:0;
+		text-align:center;
+		padding:2px;
+		-moz-border-radius:4px;
+		-webkit-border-radius:4px
+	}
+
+	div#jBreakField div.optionsContainer div.options {
+		background:white;
+		margin:4px 0 0 0;
+		padding:2px;
+		color:black;
+		-moz-border-radius:4px;
+		-webkit-border-radius:4px
+	}
+
+div#jBreakField div.jBreakBlock {
+	/*background:transparent url(../../images/a1-a.png) scroll no-repeat;*/
+	width:64px;
+	height:16px;
+	position:absolute
+}
+/*
+div#jBreakField div.jBreakBlock.y0  {background:transparent url(../../images/blocks/b2-a.png) scroll no-repeat}
+div#jBreakField div.jBreakBlock.y1  {background:transparent url(../../images/blocks/b2-a.png) scroll no-repeat}
+div#jBreakField div.jBreakBlock.y2  {background:transparent url(../../images/blocks/b2-a.png) scroll no-repeat}
+div#jBreakField div.jBreakBlock.y3  {background:transparent url(../../images/blocks/b3-a.png) scroll no-repeat}
+div#jBreakField div.jBreakBlock.y4  {background:transparent url(../../images/blocks/b3-a.png) scroll no-repeat}
+div#jBreakField div.jBreakBlock.y5  {background:transparent url(../../images/blocks/b3-a.png) scroll no-repeat}
+div#jBreakField div.jBreakBlock.y6  {background:transparent url(../../images/blocks/b1-a.png) scroll no-repeat}
+div#jBreakField div.jBreakBlock.y7  {background:transparent url(../../images/blocks/b1-a.png) scroll no-repeat}
+div#jBreakField div.jBreakBlock.y8  {background:transparent url(../../images/blocks/b1-a.png) scroll no-repeat}
+div#jBreakField div.jBreakBlock.y9  {background:transparent url(../../images/blocks/a2-a.png) scroll no-repeat}
+div#jBreakField div.jBreakBlock.y10 {background:transparent url(../../images/blocks/a2-a.png) scroll no-repeat}
+div#jBreakField div.jBreakBlock.y11 {background:transparent url(../../images/blocks/a2-a.png) scroll no-repeat}
+div#jBreakField div.jBreakBlock.y12 {background:transparent url(../../images/blocks/a2-a.png) scroll no-repeat}
+div#jBreakField div.jBreakBlock.y13 {background:transparent url(../../images/blocks/a3-a.png) scroll no-repeat}
+div#jBreakField div.jBreakBlock.y14 {background:transparent url(../../images/blocks/a3-a.png) scroll no-repeat}
+div#jBreakField div.jBreakBlock.y15 {background:transparent url(../../images/blocks/a3-a.png) scroll no-repeat}
+div#jBreakField div.jBreakBlock.y16 {background:transparent url(../../images/blocks/a3-a.png) scroll no-repeat}
+div#jBreakField div.jBreakBlock.y17 {background:transparent url(../../images/blocks/a1-a.png) scroll no-repeat}
+div#jBreakField div.jBreakBlock.y18 {background:transparent url(../../images/blocks/a1-a.png) scroll no-repeat}
+div#jBreakField div.jBreakBlock.y19 {background:transparent url(../../images/blocks/a1-a.png) scroll no-repeat}
+div#jBreakField div.jBreakBlock.y20 {background:transparent url(../../images/blocks/a1-a.png) scroll no-repeat}
+*/
+
+div#jBreakField div.fail {
+	position:absolute;
+	width:100%;
+	text-align:center;
+	color:#cc0000;
+	font-size:32pt;
+	font-weight:bold
+}
