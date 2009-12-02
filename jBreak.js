@@ -56,7 +56,7 @@ jBreak = {
 					jBPaddle.move(jBPaddle.position.relative, position);
 				}, this);
 
-				self.$field.bind('click.jBreakLaunchPaddleBalls',function(){
+				self.$field.bind('click.jBreakLaunchPaddleBalls', function(){
 					self.paddles.forEach(function(jBPaddle){
 						jBPaddle.startBalls();
 					});
@@ -67,6 +67,7 @@ jBreak = {
 				$(document).unbind('.jBreakPause');
 				$(document).bind('keydown.jBreakPause', function(e){
 					if(e.keyCode == 32){
+						// @todo stop paddle movement too and unpause only by clicking a paddle
 						for(jBBall in self.balls){
 							self.balls[jBBall].pause();
 						}
@@ -146,14 +147,8 @@ jBreak = {
 		}
 	},
 	loadLevel:function(levelID){
-		var colorSchemes = [
-			'Blue', 'Blue_purpled', 'Gray', 'Green_greener', 'Green_Yellowish_Light',
-			'Orange', 'Purple_bluish', 'Purple_gay', 'Purple_haze', 'Red_fire',
-			'Turkoise_2', 'Turkoise_3', 'Turkoise_greenisch', 'Yellow'
-		];
-		if(typeof levelID == 'undefined'){
-			levelID = 0;
-		}
+		levelID = (levelID != undefined ? levelID : 0);
+
 		var level;
 		$.ajax({
 			url:'getLevel.php',
@@ -195,7 +190,8 @@ jBreak = {
 					$block.css({
 						left:x*64,
 						top:y*16,
-						background:'transparent url(images/blocks/'+block.theme+'/'+random+'.png) scroll no-repeat'});
+						background:
+							'transparent url(images/blocks/'+block.theme+'/'+random+'.png) scroll no-repeat'});
 					// prefetch hit block image
 					$('<img src="images/blocks/'+block.theme+'/'+random+'_h.png"/>').remove();
 					this.$blocks.append($block);
@@ -261,7 +257,6 @@ jBreak = {
 				e.stopPropagation();
 				$('#jBreak .optionsContainer').fadeOut(750);
 				jBreak.loadLevel(jBreak._levelID);
-				jBreak.createPaddles();
 			});
 			
 			this.$options.fadeIn('slow');
@@ -323,6 +318,9 @@ jBreak = {
 	ball:function(ballID, position){
 		// this references to the jBreak.ball object!
 		this.init(ballID, position);
+	},
+	bonus:function(){
+		// @todo
 	}
 };
 
@@ -332,39 +330,15 @@ jBreak.paddle.prototype = {
 		//console.log('Create %s paddle..', position);
 		this.$paddle = $('<div class="jBreakPaddle"/>');
 
-		this.position = {
+		this._position = {
 			x:null,
 			y:null,
 			relative:position
 		}
 
 		this.balls = [];
-		this.position = {};
 
-		switch(position){
-			default:
-			case 'bottom':
-				this.$paddle.addClass('bottom');
-				this.position.y = jBreak.fieldSize.height - 8;
-				this.position.x = jBreak.fieldSize.width / 2 - 32;
-				break;
-			case 'top':
-				this.$paddle.addClass('top');
-				this.position.y = 0;
-				this.position.x = jBreak.fieldSize.width / 2 - 32;
-				break;
-			case 'left':
-				this.$paddle.addClass('left');
-				this.position.y = jBreak.fieldSize.height / 2 - 32;
-				this.position.x = 0;
-				break;
-			case 'right':
-				this.$paddle.addClass('right');
-				this.position.y = jBreak.fieldSize.height / 2 - 32;
-				this.position.x = jBreak.fieldSize.width - 8;
-				break;
-		}
-
+		this.$paddle.addClass(position);
 		jBreak.$field.append(this.$paddle);
 
 		this._size = {
@@ -372,8 +346,30 @@ jBreak.paddle.prototype = {
 			height:this.$paddle.height()
 		};
 
-		this.position['relative'] = position;
-		this.$paddle.css({left:this.position.x,top:this.position.y});
+		switch(position){
+			default:
+			case 'bottom':
+				this._position.y = jBreak.fieldSize.height - this._size.height;
+				this._position.x = jBreak.fieldSize.width / 2 - this._size.width / 2;
+				break;
+			case 'top':
+				this._position.y = 0;
+				this._position.x = jBreak.fieldSize.width / 2 - this._size.width / 2;
+				break;
+			case 'left':
+				this._position.y = jBreak.fieldSize.height / 2 - this._size.width / 2;
+				this._position.x = 0;
+				break;
+			case 'right':
+				this._position.y = jBreak.fieldSize.height / 2 - this._size.height / 2;
+				this._position.x = jBreak.fieldSize.width - this._size.width;
+				break;
+		}
+
+		this.$paddle.css({
+			left:this._position.x,
+			top:this._position.y
+		});
 		//console.log('%s paddle created and moved to initial position -> %o', position, this);
 	},
 	start:function(){
@@ -381,64 +377,71 @@ jBreak.paddle.prototype = {
 
 		$(document)./*jBreak.$field.*/mousemove(function(e){
 			var fieldOffset = jBreak.$field.offset();
-			var position = (self.position.relative == 'top' || self.position.relative ==  'bottom'
-			             ? e.pageX - fieldOffset.left
-			             : e.pageY - fieldOffset.top);
+			var position = (self._position.relative == 'top'
+			            ||  self._position.relative == 'bottom'
+			               ? e.pageX - fieldOffset.left
+			               : e.pageY - fieldOffset.top);
 
-			self.move(self.position.relative, position);
+			self.move(self._position.relative, position);
 		});
 	},
 	connectBall:function(ballID){
-		switch(this.position['relative']){
-			case 'top':
-				var x = this.position.x
-				      + this._size.width / 2
-				      - jBreak.balls[ballID].$ball.width() / 2;
+		var x,y,effectDirection;
 
-				var y = this.position.y
-				      + this._size.height / 2
-				      + jBreak.balls[ballID].$ball.height() / 2;
+		switch(this._position.relative){
+			case 'top':
+				x = this._position.x
+				  + this._size.width / 2
+				  - jBreak.balls[ballID].$ball.width() / 2;
+
+				y = this._position.y
+				  + this._size.height / 2
+				  + jBreak.balls[ballID].$ball.height() / 2;
 
 				jBreak.balls[ballID].setAngle(90);
-				var effectDirection = 'down';
+				effectDirection = 'down';
 				break;
 			case 'right':
-				var x = this.position.x
-				      - jBreak.balls[ballID].$ball.width();
+				x = this._position.x
+				  - jBreak.balls[ballID].$ball.width();
 
-				var y = this.position.y
-				      + this._size.height / 2
-				      - jBreak.balls[ballID].$ball.width() / 2;
+				y = this._position.y
+				  + this._size.height / 2
+				  - jBreak.balls[ballID].$ball.width() / 2;
 
 				jBreak.balls[ballID].setAngle(90);
-				var effectDirection = 'left';
+				effectDirection = 'left';
 				break;
 			default:
 			case 'bottom':
-				var x = this.position.x
-				      + this._size.width / 2
-				      - jBreak.balls[ballID].$ball.width() / 2;
+				x = this._position.x
+				  + this._size.width / 2
+				  - jBreak.balls[ballID].$ball.width() / 2;
 
-				var y = this.position.y
-				      - this._size.height / 2
-				      - jBreak.balls[ballID].$ball.height() / 2;
+				y = this._position.y
+				  - this._size.height / 2
+				  - jBreak.balls[ballID].$ball.height() / 2;
 				jBreak.balls[ballID].setAngle(-90);
-				var effectDirection = 'up';
+				effectDirection = 'up';
 				break;
 			case 'left':
-				var x = this.position.x
-				      + jBreak.balls[ballID].$ball.width();
+				x = this.position.x
+				  + jBreak.balls[ballID].$ball.width();
 
-				var y = this.position.y
-				      + this._size.height / 2
-				      - jBreak.balls[ballID].$ball.width() / 2;
+				y = this._position.y
+				  + this._size.height / 2
+				  - jBreak.balls[ballID].$ball.width() / 2;
 				jBreak.balls[ballID].setAngle(-90);
 				var effectDirection = 'right';
 				break;
 		}
 
 		jBreak.balls[ballID].move(x,y);
-		jBreak.balls[ballID].$ball.show('bounce', {direction:effectDirection,distance:40,times:5});
+		jBreak.balls[ballID].$ball.show('bounce', {
+			direction:effectDirection,
+			distance:40,
+			times:5
+		});
 		this.balls.push(ballID);
 
 		//console.log('Ball %d connected to %o and moved to %d,%d', ballID, this, x, y);
@@ -471,7 +474,7 @@ jBreak.paddle.prototype = {
 					jBreak.balls[i].position.y);
 			}, this);
 
-			this.position.x = x;
+			this._position.x = x;
 			this.$paddle.css({left:x});
 		} else {
 			var y = position;
@@ -493,13 +496,13 @@ jBreak.paddle.prototype = {
 					ballY);
 			}, this);
 
-			this.position.y = y;
+			this._position.y = y;
 			this.$paddle.css({top:y});
 		}
 	},
 	remove:function(){
 		jBreak.paddles.forEach(function(jBPaddle, i, self){
-			if(jBPaddle.position.relative == this.position.relative){
+			if(jBPaddle._position.relative == this._position.relative){
 				self.remove(i);
 			}
 		}, this);
@@ -511,10 +514,13 @@ jBreak.paddle.prototype = {
 		this.$paddle.remove();
 		//delete this;
 	},
+	get position(){
+		return this._position;
+	},
 	// private variables
 	_size:null,
+	_position:null,
 	// public variables @todo these should be private too
-	position:null, //@todo getter
 	$paddle:null,
 	balls:null
 };
@@ -562,17 +568,9 @@ jBreak.ball.prototype = {
 
 		// only run checks if a block could be hit
 		if(y <= jBreak.fieldSize.height || y >= 0 || x >= 0 || x <= jBreak.fieldSize.width){
-			if(this._speed.y > 0){
-				var ballY = y+this._size.height;
-			} else {
-				var ballY = y;
-			}
+			var ballY = (this._speed.y > 0 ? y + this._size.height : y);
+			var ballX = (this._speed.x > 0 ? x + this._size.width  : x);
 
-			if(this._speed.x > 0){
-				var ballX = x+this._size.width;
-			} else {
-				var ballX = x;
-			}
 			var blockX = Math.floor(ballX / 64);
 			var blockY = Math.floor(ballY / 16);
 
@@ -601,10 +599,11 @@ jBreak.ball.prototype = {
 
 					//console.log('I hit %d,%d', blockX,blockY);
 					var $block = $('.x'+blockX+'.y'+blockY);
-					var direction = (vHit && this._speed.y > 0 ? 'up'    : (
-					                 hHit && this._speed.x > 0 ? 'left'  : (
-					                 hHit && this._speed.x < 0 ? 'right' :
-					               /*vHit && this._speed.y < 0*/ 'down')));
+					var direction =
+						(vHit && this._speed.y > 0 ? 'up' :
+							(hHit && this._speed.x > 0 ? 'left' :
+								(hHit && this._speed.x < 0 ? 'right' :
+									/*vHit && this._speed.y < 0*/ 'down')));
 
 					if(jBreak.blocks[blockY][blockX] > 1){
 						$block.css({'opacity':1-1/jBreak.blocks[blockY][blockX]});
@@ -626,8 +625,7 @@ jBreak.ball.prototype = {
 		// only run checks if a paddle could be hit
 		if(y >= jBreak.fieldSize.height - 16 || y <=  8 || x <=  8 || x >= jBreak.fieldSize.width - 16){
 			jBreak.paddles.forEach(function(jBPaddle){
-				var paddleMissed;
-				var paddleHit;
+				var paddleMissed, paddleHit;
 
 				switch(jBPaddle.position.relative){
 					default:
@@ -648,7 +646,9 @@ jBreak.ball.prototype = {
 								 * 180 / (jBPaddle._size.width / 2)
 								 - 360;
 
-							angle = Math.floor((angle > -45 ? -45 : (angle < -315 ? -315 : angle)));
+							angle = Math.floor(
+								(angle > -45 ? -45 :
+									(angle < -315 ? -315 : angle)));
 
 							this.setAngle(angle);
 						}
@@ -669,7 +669,9 @@ jBreak.ball.prototype = {
 								 * 180 / (jBPaddle._size.width / 2)
 								 - 360;
 
-							angle = Math.floor((angle > -45 ? -45 : (angle < -315 ? -315 : angle)));
+							angle = Math.floor(
+								(angle > -45 ? -45 :
+									(angle < -315 ? -315 : angle)));
 
 							this.setAngle(angle*-1);
 						}
@@ -684,7 +686,8 @@ jBreak.ball.prototype = {
 
 						paddleMissed = x < -10;
 
-						(paddleHit ? this._speed.x *= -1 : null);
+						if(paddleHit)
+							this._speed.x *= -1;
 						break;
 					case 'right':
 						paddle.right = true;
@@ -697,7 +700,8 @@ jBreak.ball.prototype = {
 
 						paddleMissed = x > jBreak.fieldSize.width + 2;
 
-						(paddleHit ? this._speed.x *= -1 : null);
+						if(paddleHit)
+							this._speed.x *= -1;
 						break;
 				}
 
@@ -739,7 +743,7 @@ jBreak.ball.prototype = {
 		this._hitCheck(x,y);
 
 		if(this._timer){
-			// arguments.callee kills the "this" reference :(
+			// setTimeout(this._animate, 15) kills the "this" reference :(
 			var self = this;
 			setTimeout(function(){
 				self._animate();
