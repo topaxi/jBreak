@@ -123,31 +123,34 @@ jBreak = {
 				paddles:[{
 						position:'bottom',
 						ball:true
-					}
-				],
+					},{
+						position:'top',
+						ball:false
+				}],
 				blocks:[
-					//0  1  2  3  4  5  6  7  8
-					[ 1, 1, 1, 1, 1, 1, 1, 1, 1], // 0
-					[ 1, 1, 1, 1, 1, 1, 1, 1, 1], // 1
-					[ 1, 1, 1, 1, 1, 1, 1, 1, 1], // 2
-					[ 1, 1, 1, 1, 1, 1, 1, 1, 1], // 3
-					[ 1, 1, 1, 1, 1, 1, 1, 1, 1], // 4
-					[ 1, 1, 1, 1, 1, 1, 1, 1, 1], // 5
-					[ 1, 1, 1, 1, 1, 1, 1, 1, 1], // 6
-					[ 1, 1, 1, 1, 1, 1, 1, 1, 1], // 7
-					[ 1, 1, 1, 1, 1, 1, 1, 1, 1], // 8
-					[ 0, 0, 0, 0, 0, 0, 0, 0, 0], // 9
-					[ 0, 0, 0, 0, 0, 0, 0, 0, 0], //10
-					[ 0, 0, 0, 0, 0, 0, 0, 0, 0], //11
-					[ 0, 0, 0, 0, 0, 0, 0, 0, 0], //12
-					[ 0, 0, 0, 0, 0, 0, 0, 0, 0], //13
-					[ 0, 0, 0, 0, 0, 0, 0, 0, 0], //14
-					[ 0, 0, 0, 0, 0, 0, 0, 0, 0], //15
-					[ 0, 0, 0, 0, 0, 0, 0, 0, 0], //16
-					[ 0, 0, 0, 0, 0, 0, 0, 0, 0], //17
-					[ 0, 0, 0, 0, 0, 0, 0, 0, 0], //18
-					[ 0, 0, 0, 0, 0, 0, 0, 0, 0], //19
-					[ 0, 0, 0, 0, 0, 0, 0, 0, 0]  //20
+					//0  1  2  3  4  5  6  7  8  9
+					[ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], // 0
+					[ 0, 0, 0, 0, 0, 0, 0, 0, 0 ,0], // 1
+					[ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], // 2
+					[ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], // 3
+					[ 0, 1, 1, 1, 1, 1, 1, 1, 1, 0], // 4
+					[ 0, 1, 1, 1, 1, 1, 1, 1, 1, 0], // 5
+					[ 0, 1, 1, 1, 1, 1, 1, 1, 1, 0], // 6
+					[ 0, 1, 1, 1, 1, 1, 1, 1, 1, 0], // 7
+					[ 0, 1, 1, 1, 1, 1, 1, 1, 1, 0], // 8
+					[ 0, 1, 1, 1, 1, 1, 1, 1, 1, 0], // 9
+					[ 0, 1, 1, 1, 1, 1, 1, 1, 1, 0], //10
+					[ 0, 1, 1, 1, 1, 1, 1, 1, 1, 0], //11
+					[ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], //12
+					[ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], //13
+					[ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], //14
+					[ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], //15
+					[ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], //16
+					[ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], //17
+					[ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], //18
+					[ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], //19
+					[ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], //20
+					[ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]  //21
 				],
 				name: 'default',
 				theme:'default'
@@ -167,7 +170,7 @@ jBreak = {
 		}, this);
 	},
 	_drawBlocks:function(){
-		this.$blocks = $('<div style="position:absolute;left:32px;top:32px;display:none"/>');
+		this.$blocks = $('<div style="position:absolute;left:0;top:0;display:none"/>');
 		this.blocks.forEach(function(horizontalBlocks, y){
 			horizontalBlocks.forEach(function(block, x){
 				if(block > 0){
@@ -346,7 +349,7 @@ jBreak.paddle.prototype = {
 	start:function(){
 		var self = this;
 
-		jBreak.$field.mousemove(function(e){
+		$(document)./*jBreak.$field.*/mousemove(function(e){
 			var fieldOffset = jBreak.$field.offset();
 			var position = (self.position.relative == 'top' || self.position.relative ==  'bottom'
 			             ? e.pageX - fieldOffset.left
@@ -528,17 +531,17 @@ jBreak.ball.prototype = {
 		}
 
 		// only run checks if a block could be hit
-		if(y <= jBreak.fieldSize.height - 32 || y >= 32 || x >= 32 || x <= jBreak.fieldSize.width - 32){
+		if(y <= jBreak.fieldSize.height || y >= 0 || x >= 0 || x <= jBreak.fieldSize.width){
 			if(this._speed.y > 0){
-				var ballY = y-(32-this._size.height);
+				var ballY = y+this._size.height;
 			} else {
-				var ballY = y-32;
+				var ballY = y;
 			}
 
 			if(this._speed.x > 0){
-				var ballX = x-(32-this._size.width);
+				var ballX = x+this._size.width;
 			} else {
-				var ballX = x-32;
+				var ballX = x;
 			}
 			var blockX = Math.floor(ballX / 64);
 			var blockY = Math.floor(ballY / 16);
@@ -622,7 +625,16 @@ jBreak.ball.prototype = {
 
 						paddleMissed = y < -10;
 
-						(paddleHit ? this._speed.y *= -1 : null);
+						if(paddleHit){
+							var angle =
+								(this.position.x - jBPaddle.position.x + this._size.width/2)
+								 * 180 / (jBPaddle._size.width / 2)
+								 - 360;
+
+							angle = Math.floor((angle > -45 ? -45 : (angle < -315 ? -315 : angle)));
+
+							this.setAngle(angle*-1);
+						}
 						break;
 					case 'left':
 						paddle.left = true;
