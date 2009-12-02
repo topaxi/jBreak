@@ -2,7 +2,7 @@
 
 jBreak = {
 	// methods
-	start:function(){
+	start:function(showOptions){
 		var $jBreak = $('#jBreak').empty();
 		this.$field = $('<div id="jBreakField"/>');
 		$jBreak.append(this.$field);
@@ -15,11 +15,13 @@ jBreak = {
 			height:this.$field.height()
 		};
 
-		this.options.showOptions();
-		this.loadLevel();
+		if(showOptions){
+			this.options.showOptions();
+		}
 		//console.log('Playing field initialized -> %o', this);
 	},
 	playSound:function(soundFile){
+		if(!Audio) return; // return if Audio is undefined
 		var audio = new Audio(soundFile);
 		audio.volume = this._volume/100;
 		audio.play();
@@ -36,47 +38,71 @@ jBreak = {
 		return this.paddles.length-1;
 	},
 	createPaddles:function(){
-		//console.log('Creating paddles...');
 		var self = this;
-		var $startButton = self.options.$options.find('#jBreakStart');
-		$startButton.bind('click.jBreakCreatePaddles',function(){
-			$('#jBreak .optionsContainer').fadeOut(750, function(){
-				self.$field.bind('click.jBreakCreatePaddles',function(e){
-					e.stopPropagation(); // do not bubble
-					//self.$field.resizable('destroy'); // game started, destroy resizable ui
-					$('#jBreak').css({cursor:'none'});
+		setTimeout(function(){
+			self.$field.bind('click.jBreakCreatePaddles', function(e){
+				e.stopPropagation(); // do not bubble
+				//console.log('Creating paddles...');
+				$('#jBreak').css({cursor:'none'});
 
+				self.paddles.forEach(function(jBPaddle){
+					jBPaddle.start();
+					var position = (
+						jBPaddle.position.relative == 'top' ||
+						jBPaddle.position.relative == 'bottom'
+							? e.pageX - this.offsetLeft
+							: e.pageY - this.offsetTop);
+
+					jBPaddle.move(jBPaddle.position.relative, position);
+				}, this);
+
+				self.$field.bind('click.jBreakLaunchPaddleBalls',function(){
 					self.paddles.forEach(function(jBPaddle){
-						jBPaddle.start();
-						var position = (
-							jBPaddle.position.relative == 'top' ||
-							jBPaddle.position.relative == 'bottom'
-								? e.pageX - this.offsetLeft
-								: e.pageY - this.offsetTop);
-
-						jBPaddle.move(jBPaddle.position.relative, position);
-					}, this);
-
-					self.$field.bind('click.jBreakLaunchPaddleBalls',function(){
-						self.paddles.forEach(function(jBPaddle){
-							jBPaddle.startBalls();
-						});
-
-						self.$field.unbind('click.jBreakLaunchPaddleBalls');
+						jBPaddle.startBalls();
 					});
-					self.$field.unbind('click.jBreakCreatePaddles');
+					self.$field.unbind('click.jBreakLaunchPaddleBalls');
 				});
-			});
-		});
-		//console.log('Paddles created');
+				self.$field.unbind('click.jBreakCreatePaddles');
 
-		var self = this;
-		$(document).keydown(function(e){
-			if(e.keyCode == 32){
-				for(jBBall in self.balls)
-					self.balls[jBBall].pause();
+				$(document).bind('keydown.jBreakPause', function(e){
+					if(e.keyCode == 32){
+						for(jBBall in self.balls){
+							self.balls[jBBall].pause();
+						}
+					}
+				});
+
+				//console.log('Paddles created');
+			});
+		}, 1000);
+	},
+	destroyField:function(){
+		this.$field.unbind('mousemove');
+	},
+	blockChecker:function(){
+		var i=0;
+		this.blocks.forEach(function(horizontalBlocks, y){
+			horizontalBlocks.forEach(function(block, x){
+				i += block;
+			}, this);
+		}, this);
+
+		if(i == 0){
+			for(ball in this.balls){
+				this.balls[ball].remove();
 			}
-		});
+
+			this.paddles.forEach(function(jBPaddle){
+				jBPaddle.$paddle.remove();
+				jBPaddle.remove();
+			});
+
+			this.destroyField();
+			this._levelID += 1;
+			this.start(false);
+			this.loadLevel(this._levelID);
+			this.createPaddles();
+		}
 	},
 	ballChecker:function(){
 		//console.log('Checking remaining balls...');
@@ -88,7 +114,7 @@ jBreak = {
 			//console.log('No remaining balls found... FAIL!')
 			var self = this;
 
-			this.$field.unbind('mousemove');
+			this.destroyField();
 			this.$field.find('.jBreakPaddle').effect('puff', {}, 750);
 			this.$blocks.find('div').effect('drop', {direction:'down'}, 750);
 
@@ -109,7 +135,8 @@ jBreak = {
 					top:self.$field.height()/2 - $fail.height()/2 + 'px'
 				}).fadeIn('slow', function(){
 					$(this).effect('pulsate', {times:2,mode:'hide'}, 2000, function(){
-						self.start(); // restart game
+						self._levelID = 0;
+						self.start(true); // restart game
 					});
 				});
 			}, 1000);
@@ -118,15 +145,18 @@ jBreak = {
 		}
 	},
 	loadLevel:function(levelID){
-		if(typeof levelID == 'undefined'){
+		var colorSchemes = [
+			'Blue', 'Blue_purpled', 'Gray', 'Green_greener', 'Green_Yellowish_Light',
+			'Orange', 'Purple_bluish', 'Purple_gay', 'Purple_haze', 'Red_fire',
+			'Turkoise_2', 'Turkoise_3', 'Turkoise_greenisch', 'Yellow'
+		];
+		if(typeof levelID == 'undefined' || levelID == 0){
 			var level = {
 				paddles:[{
 						position:'bottom',
 						ball:true
-					},{
-						position:'top',
-						ball:false
-				}],
+					}
+				],
 				blocks:[
 					//0  1  2  3  4  5  6  7  8  9
 					[ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], // 0
@@ -153,23 +183,63 @@ jBreak = {
 					[ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]  //21
 				],
 				name: 'default',
-				theme:'default'
+				theme:'Purple_bluish'
 			};
 		} else {
-			// ajax request to get level
+			// @todo ajax request to get level
+			var level = {
+				paddles:[{
+						position:'bottom',
+						ball:true
+					},{
+						position:'top',
+						ball:false
+				}],
+				blocks:[
+					//0  1  2  3  4  5  6  7  8  9
+					[ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], // 0
+					[ 0, 0, 0, 0, 0, 0, 0, 0, 0 ,0], // 1
+					[ 2, 2, 2, 2, 2, 2, 2, 2, 2, 2], // 2
+					[ 2, 2, 2, 2, 2, 2, 2, 2, 2, 2], // 3
+					[ 2, 2, 2, 2, 2, 2, 2, 2, 2, 2], // 4
+					[ 2, 2, 2, 2, 3, 3, 2, 2, 2, 2], // 5
+					[ 2, 2, 2, 3, 3, 3, 3, 2, 2, 2], // 6
+					[ 2, 2, 2, 3, 3, 3, 3, 2, 2, 2], // 7
+					[ 2, 2, 2, 2, 3, 3, 2, 2, 2, 2], // 8
+					[ 2, 2, 2, 2, 2, 2, 2, 2, 2, 2], // 9
+					[ 2, 2, 2, 2, 2, 2, 2, 2, 2, 2], //10
+					[ 2, 2, 2, 2, 2, 2, 2, 2, 2, 2], //11
+					[ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], //12
+					[ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], //13
+					[ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], //14
+					[ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], //15
+					[ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], //16
+					[ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], //17
+					[ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], //18
+					[ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], //19
+					[ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], //20
+					[ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]  //21
+				],
+				name: 'default',
+				theme:colorSchemes[Math.floor(Math.random()*colorSchemes.length)]
+			};
 		}
 
 		this.blocks = level.blocks;
-		this._drawBlocks();
-		this.createPaddles();
+		this._drawBlocks(level);
 
-		level.paddles.forEach(function(jBPaddle){
-			var paddleID = this.addPaddle(jBPaddle.position);
-			if(jBPaddle.ball)
-				this.addBall(paddleID);
-		}, this);
+		var self = this;
+		setTimeout(function(){
+			self.createPaddles();
+
+			level.paddles.forEach(function(jBPaddle){
+				var paddleID = self.addPaddle(jBPaddle.position);
+				if(jBPaddle.ball)
+					self.addBall(paddleID);
+			});
+		}, 250);
 	},
-	_drawBlocks:function(){
+	_drawBlocks:function(level){
 		this.$blocks = $('<div style="position:absolute;left:0;top:0;display:none"/>');
 		this.blocks.forEach(function(horizontalBlocks, y){
 			horizontalBlocks.forEach(function(block, x){
@@ -178,14 +248,28 @@ jBreak = {
 					$block.addClass('jBreakBlock');
 					$block.addClass('x'+x);
 					$block.addClass('y'+y);
-					$block.css({left:x*64,top:y*16});
+					var random = Math.ceil(Math.random()*10);
+					random = (random < 10 ? '0'+random : random);
+
+					// @todo create one a sprite image for each block theme to reduce http requests
+					$block.css({
+						left:x*64,
+						top:y*16,
+						background:'transparent url(images/blocks/'+level.theme+'/'+random+'.png) scroll no-repeat'});
 					this.$blocks.append($block);
+
 				}
 			}, this);
 		}, this);
 
 		this.$field.append(this.$blocks);
-		this.$blocks.fadeIn('slow');
+		this.$blocks.fadeIn('slow', function(){
+			// prefetch hit image
+			for(var i = 1; i <= 10;i++){
+				i = (i < 10 ? '0'+i : i);
+				$('<img src="images/blocks/'+level.theme+'/'+i+'_h.png"/>').remove();
+			}
+		});
 	},
 	// public variables
 	$field:null,
@@ -196,6 +280,7 @@ jBreak = {
 	blocks:null,
 	// private variables
 	_volume:70,
+	_levelID:0,
 	// objects
 	options:{
 		showOptions:function(){
@@ -215,9 +300,10 @@ jBreak = {
 
 			this.$optionTabs = $('<div class="options"/>');
 
-			this.$optionTabs.append('<ul style="font-size:12px"><li><a href="#tabs-1">Sound</a></li><li><a href="#tabs-2">Level</a></li></ul></ul>');
+			this.$optionTabs.append('<ul style="font-size:12px"><li><a href="#tabs-1">Sound</a></li><li><a href="#tabs-2">Level</a></li><li><a href="#tabs-3">About</a></li></ul>');
 			this.$optionTabs.append(this.soundOptions());
 			this.$optionTabs.append('<div id="tabs-2" style="text-align:center;height:220px">-under construction-</div>');
+			this.$optionTabs.append('<div id="tabs-3" style="text-align:center;height:220px"><p>jBreak 0.1</p><p style="font-size:11px">Written by Damian Senn<br /><br />Graphics and Sounds<br />by <a href="http://www.helleresonnen.com/">Jan Neversil</a><br /><br />Music (coming soon)<br />by <a href="http://www.alphatronic.net/">Dani Whiler</a></p></div>');
 
 			var $startButton = $(
 				'<button class="ui-state-default ui-corner-all" style="cursor:pointer" id="jBreakStart">Start</button>'
@@ -234,6 +320,14 @@ jBreak = {
 
 			jBreak.$field.append(this.$options.append(this.$optionTabs));
 			this.$optionTabs.tabs();
+
+			$startButton.bind('click.jBreakCreatePaddles',function(e){
+				e.stopPropagation();
+				$('#jBreak .optionsContainer').fadeOut(750);
+				jBreak.loadLevel(jBreak._levelID);
+				jBreak.createPaddles();
+			});
+			
 			this.$options.fadeIn('slow');
 		},
 		soundOptions:function(){
@@ -576,11 +670,19 @@ jBreak.ball.prototype = {
 					                 hHit && this._speed.x < 0 ? 'right' :
 					               /*vHit && this._speed.y < 0*/ 'down')));
 
-					$block.effect('drop', {direction:direction}, 'fast', function(){
-						$block.remove();
-					});
-					jBreak.blocks[blockY][blockX] = 0;
-					return;
+					if(jBreak.blocks[blockY][blockX] > 1){
+						$block.css({'opacity':1-1/jBreak.blocks[blockY][blockX]});
+						jBreak.blocks[blockY][blockX] -= 1;
+					} else {
+						$block.css('background-image',
+							$block.css('background-image').replace(/\/(.*)\.png/g, '/$1_h.png'));
+						$block.effect('drop', {direction:direction}, 'fast', function(){
+							$block.remove();
+						});
+						jBreak.blocks[blockY][blockX] = 0;
+						jBreak.blockChecker();
+						return;
+					}
 				}
 			}
 		}
@@ -670,6 +772,7 @@ jBreak.ball.prototype = {
 				} else if(paddleMissed){
 					jBreak.$field.effect('highlight','slow');
 					this.remove();
+					jBreak.ballChecker(); // any balls left?
 				}
 			}, this);
 		}
@@ -717,7 +820,6 @@ jBreak.ball.prototype = {
 		// delete me!
 		delete jBreak.balls[this._ballID];
 		//console.log('Ball lost. Removed %o from jBreak field!', this);
-		jBreak.ballChecker(); // any balls left?
 		//delete this;
 	},
 	pause:function(){
@@ -767,7 +869,7 @@ if(!Array.prototype.forEach){
 }
 
 $(function(){
-	jBreak.start();
+	jBreak.start(true);
 });
 
 })(jQuery);
