@@ -64,6 +64,7 @@ jBreak = {
 				});
 				self.$field.unbind('click.jBreakCreatePaddles');
 
+				$(document).unbind('.jBreakPause');
 				$(document).bind('keydown.jBreakPause', function(e){
 					if(e.keyCode == 32){
 						for(jBBall in self.balls){
@@ -150,81 +151,20 @@ jBreak = {
 			'Orange', 'Purple_bluish', 'Purple_gay', 'Purple_haze', 'Red_fire',
 			'Turkoise_2', 'Turkoise_3', 'Turkoise_greenisch', 'Yellow'
 		];
-		if(typeof levelID == 'undefined' || levelID == 0){
-			var level = {
-				paddles:[{
-						position:'bottom',
-						ball:true
-					}
-				],
-				blocks:[
-					//0  1  2  3  4  5  6  7  8  9
-					[ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], // 0
-					[ 0, 0, 0, 0, 0, 0, 0, 0, 0 ,0], // 1
-					[ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], // 2
-					[ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], // 3
-					[ 0, 1, 1, 1, 1, 1, 1, 1, 1, 0], // 4
-					[ 0, 1, 1, 1, 1, 1, 1, 1, 1, 0], // 5
-					[ 0, 1, 1, 1, 1, 1, 1, 1, 1, 0], // 6
-					[ 0, 1, 1, 1, 1, 1, 1, 1, 1, 0], // 7
-					[ 0, 1, 1, 1, 1, 1, 1, 1, 1, 0], // 8
-					[ 0, 1, 1, 1, 1, 1, 1, 1, 1, 0], // 9
-					[ 0, 1, 1, 1, 1, 1, 1, 1, 1, 0], //10
-					[ 0, 1, 1, 1, 1, 1, 1, 1, 1, 0], //11
-					[ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], //12
-					[ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], //13
-					[ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], //14
-					[ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], //15
-					[ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], //16
-					[ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], //17
-					[ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], //18
-					[ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], //19
-					[ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], //20
-					[ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]  //21
-				],
-				name: 'default',
-				theme:'Purple_bluish'
-			};
-		} else {
-			// @todo ajax request to get level
-			var level = {
-				paddles:[{
-						position:'bottom',
-						ball:true
-					},{
-						position:'top',
-						ball:false
-				}],
-				blocks:[
-					//0  1  2  3  4  5  6  7  8  9
-					[ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], // 0
-					[ 0, 0, 0, 0, 0, 0, 0, 0, 0 ,0], // 1
-					[ 2, 2, 2, 2, 2, 2, 2, 2, 2, 2], // 2
-					[ 2, 2, 2, 2, 2, 2, 2, 2, 2, 2], // 3
-					[ 2, 2, 2, 2, 2, 2, 2, 2, 2, 2], // 4
-					[ 2, 2, 2, 2, 3, 3, 2, 2, 2, 2], // 5
-					[ 2, 2, 2, 3, 3, 3, 3, 2, 2, 2], // 6
-					[ 2, 2, 2, 3, 3, 3, 3, 2, 2, 2], // 7
-					[ 2, 2, 2, 2, 3, 3, 2, 2, 2, 2], // 8
-					[ 2, 2, 2, 2, 2, 2, 2, 2, 2, 2], // 9
-					[ 2, 2, 2, 2, 2, 2, 2, 2, 2, 2], //10
-					[ 2, 2, 2, 2, 2, 2, 2, 2, 2, 2], //11
-					[ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], //12
-					[ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], //13
-					[ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], //14
-					[ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], //15
-					[ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], //16
-					[ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], //17
-					[ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], //18
-					[ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], //19
-					[ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], //20
-					[ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]  //21
-				],
-				name: 'default',
-				theme:colorSchemes[Math.floor(Math.random()*colorSchemes.length)]
-			};
+		if(typeof levelID == 'undefined'){
+			levelID = 0;
 		}
-
+		var level;
+		$.ajax({
+			url:'getLevel.php',
+			method:'get',
+			data:{levelID:levelID},
+			dataType:'json',
+			async:false,
+			success:function(data, textStatus){
+				level = data.message;
+			}
+		});
 		this.blocks = level.blocks;
 		this._drawBlocks(level);
 
@@ -243,7 +183,7 @@ jBreak = {
 		this.$blocks = $('<div style="position:absolute;left:0;top:0;display:none"/>');
 		this.blocks.forEach(function(horizontalBlocks, y){
 			horizontalBlocks.forEach(function(block, x){
-				if(block > 0){
+				if(block !== 0){
 					var $block = $('<div/>');
 					$block.addClass('jBreakBlock');
 					$block.addClass('x'+x);
@@ -255,21 +195,17 @@ jBreak = {
 					$block.css({
 						left:x*64,
 						top:y*16,
-						background:'transparent url(images/blocks/'+level.theme+'/'+random+'.png) scroll no-repeat'});
+						background:'transparent url(images/blocks/'+block.theme+'/'+random+'.png) scroll no-repeat'});
+					// prefetch hit block image
+					$('<img src="images/blocks/'+block.theme+'/'+random+'_h.png"/>').remove();
 					this.$blocks.append($block);
-
+					this.blocks[y][x] = block.value;
 				}
 			}, this);
 		}, this);
 
 		this.$field.append(this.$blocks);
-		this.$blocks.fadeIn('slow', function(){
-			// prefetch hit image
-			for(var i = 1; i <= 10;i++){
-				i = (i < 10 ? '0'+i : i);
-				$('<img src="images/blocks/'+level.theme+'/'+i+'_h.png"/>').remove();
-			}
-		});
+		this.$blocks.fadeIn('slow');
 	},
 	// public variables
 	$field:null,
@@ -303,7 +239,7 @@ jBreak = {
 			this.$optionTabs.append('<ul style="font-size:12px"><li><a href="#tabs-1">Sound</a></li><li><a href="#tabs-2">Level</a></li><li><a href="#tabs-3">About</a></li></ul>');
 			this.$optionTabs.append(this.soundOptions());
 			this.$optionTabs.append('<div id="tabs-2" style="text-align:center;height:220px">-under construction-</div>');
-			this.$optionTabs.append('<div id="tabs-3" style="text-align:center;height:220px"><p>jBreak 0.1</p><p style="font-size:11px">Written by Damian Senn<br /><br />Graphics and Sounds<br />by <a href="http://www.helleresonnen.com/">Jan Neversil</a><br /><br />Music (coming soon)<br />by <a href="http://www.alphatronic.net/">Dani Whiler</a></p></div>');
+			this.$optionTabs.append('<div id="tabs-3" style="text-align:center;height:220px"><p>jBreak 0.1.2</p><p style="font-size:11px">Written by Damian Senn<br /><br />Graphics and Sounds<br />by <a href="http://www.helleresonnen.com/">Jan Neversil</a><br /><br />Music (coming soon)<br />by <a href="http://www.alphatronic.net/">Dani Whiler</a></p></div>');
 
 			var $startButton = $(
 				'<button class="ui-state-default ui-corner-all" style="cursor:pointer" id="jBreakStart">Start</button>'
@@ -664,7 +600,7 @@ jBreak.ball.prototype = {
 						this._speed.x *= -1;
 
 					//console.log('I hit %d,%d', blockX,blockY);
-					$block = $('.x'+blockX+'.y'+blockY);
+					var $block = $('.x'+blockX+'.y'+blockY);
 					var direction = (vHit && this._speed.y > 0 ? 'up'    : (
 					                 hHit && this._speed.x > 0 ? 'left'  : (
 					                 hHit && this._speed.x < 0 ? 'right' :
@@ -767,7 +703,7 @@ jBreak.ball.prototype = {
 
 				if(paddleHit){
 					jBreak.playSound('sound/pling1s.ogg');
-					this._interval -= (this._interval > 12.5 ? .25 : 0);
+					this._interval -= (this._interval > 12.5 ? .20 : 0);
 					return true;
 				} else if(paddleMissed){
 					jBreak.$field.effect('highlight','slow');
