@@ -13,7 +13,7 @@
 		};
 
 		// will be destroyed on game start
-		var self = this;
+		/*var self = this;
 		this.$field.resizable({
 			minHeight: 400,
 			minWidth:  256,
@@ -44,10 +44,11 @@
 					}
 				});
 			}
-		});
+		});*/
 
 		this.options.showOptions();
 		this.createPaddles();
+		this.drawBlocks();
 		//console.log('Playing field initialized -> %o', this);
 	},
 	addBall:function(paddleID){
@@ -69,7 +70,7 @@
 			$('#jBreak .optionsContainer').fadeOut(750, function(){
 				self.$field.bind('click.jBreakCreatePaddles',function(e){
 					e.stopPropagation(); // do not bubble
-					self.$field.resizable('destroy'); // game started, destroy resizable ui
+					//self.$field.resizable('destroy'); // game started, destroy resizable ui
 					self.$field.css({cursor:'none'});
 
 					self.paddles.forEach(function(jBPaddle){
@@ -95,6 +96,20 @@
 			});
 		});
 		//console.log('Paddles created');
+
+		var self = this;
+		$(document).keydown(function(e){
+			if(e.keyCode == 32){
+				for(jBBall in self.balls){
+					if(self.balls[jBBall]._timer){
+						self.balls[jBBall]._timer = false;
+					} else {
+						self.balls[jBBall]._timer = true;
+						self.balls[jBBall]._animate();
+					}
+				}
+			}
+		});
 	},
 	ballChecker:function(){
 		//console.log('Checking remaining balls...');
@@ -109,6 +124,7 @@
 
 			this.$field.unbind('mousemove');
 			this.$field.find('.jBreakPaddle').effect('puff', {}, 750);
+			this.$blocks.find('div').effect('puff', {}, 750); // this is painfully slow on other browsers than chromium ^^
 
 			setTimeout(function(){
 				self.paddles.forEach(function(jBPaddle){
@@ -116,6 +132,7 @@
 					jBPaddle.remove();
 				});
 				self.paddles = [];
+				self.$blocks.remove();
 
 				var $fail = $('<div class="fail" style="display:none">FAIL!</div>');
 				self.$field.css({cursor:'default'});
@@ -134,11 +151,46 @@
 			//console.log('%d remaining balls found.', i)
 		}
 	},
+	// test
+	drawBlocks:function(){
+		this.$blocks = $('<div style="position:absolute;left:32px;top:32px;display:none"/>');
+		this.blocks = [
+			//0  1  2  3  4  5  6  7  8
+			[ 1, 1, 1, 1, 1, 1, 1, 1, 1], // 0
+			[ 1, 1, 1, 1, 1, 1, 1, 1, 1], // 1
+			[ 1, 1, 1, 1, 1, 1, 1, 1, 1], // 2
+			[ 1, 1, 1, 1, 1, 1, 1, 1, 1], // 3
+			[ 1, 1, 1, 1, 1, 1, 1, 1, 1], // 4
+			[ 1, 1, 1, 1, 1, 1, 1, 1, 1], // 5
+			[ 1, 1, 1, 1, 1, 1, 1, 1, 1], // 6
+			[ 1, 1, 1, 1, 1, 1, 1, 1, 1], // 7
+			[ 1, 1, 1, 1, 1, 1, 1, 1, 1]  // 8
+		];
+
+		this.blocks.forEach(function(horizontalBlocks, y){
+			horizontalBlocks.forEach(function(block, x){
+				if(block > 0){
+					var $block = $('<div style="width:62px;height:14px;border:1px solid gray;background-color:black;position:absolute"/>');
+					$block.css({textAlign:'center',color:'white',fontSize:'11px'});
+					$block.append(x+'.'+y);
+					$block.addClass('jBreakBlock');
+					$block.addClass(x+'_'+y);
+					$block.css({left:x*64,top:y*16});
+					this.$blocks.append($block);
+				}
+			}, this);
+		}, this);
+
+		this.$field.append(this.$blocks);
+		this.$blocks.fadeIn('slow');
+	},
 	// public variables
 	$field:null,
+	$blocks:null,
 	fieldSize:null,
 	paddles:null,
 	balls:null,
+	blocks:null,
 	// objects
 	options:{
 		showOptions:function(){
@@ -529,8 +581,35 @@ jBreak.ball.prototype = {
 			left:false
 		}
 
+		// only run checks if a block could be hit
+		if(y <= jBreak.fieldSize.height - 32 || y >= 32 || x >= 32 || x <= jBreak.fieldSize.width - 32){
+			if(this._speed.y > 0){
+				var blockY = Math.floor((y-(32-this._size.height)) / 16);
+			} else {
+				var blockY = Math.floor((y-32) / 16);
+			}
+
+			if(this._speed.x > 0){
+				var blockX = Math.floor((x-(32-this._size.width)) / 64);
+			} else {
+				var blockX = Math.floor((x-32) / 64);
+			}
+
+			var blockExists = jBreak.blocks[blockX] != undefined
+			               && jBreak.blocks[blockX][blockY] != undefined
+
+			if(blockExists){
+				if(jBreak.blocks[blockX][blockY] > 0){
+					//console.log('I hit %d,%d', blockX,blockY);
+					$('.'+blockX+'_'+blockY).remove();
+					jBreak.blocks[blockX][blockY] = 0;
+					return;
+				}
+			}
+		}
+
 		// only run checks if a paddle could be hit
-		if(y >= jBreak.fieldSize.height - 16 || y <= 8 || x <= 8 || x >= jBreak.fieldSize.width - 16){
+		if(y >= jBreak.fieldSize.height - 16 || y <=  8 || x <=  8 || x >= jBreak.fieldSize.width - 16){
 			jBreak.paddles.forEach(function(jBPaddle){
 				var paddleMissed;
 				var paddleHit;
