@@ -47,13 +47,14 @@ jBreak = {
 
 				self.paddles.forEach(function(jBPaddle){
 					jBPaddle.start();
+					var jBPaddlePosition = jBPaddle.getPosition();
 					var position = (
-						jBPaddle.position.relative === 'top' ||
-						jBPaddle.position.relative === 'bottom'
+						jBPaddlePosition.relative === 'top' ||
+						jBPaddlePosition.relative === 'bottom'
 							? e.pageX - this.offsetLeft
 							: e.pageY - this.offsetTop);
 
-					jBPaddle.move(jBPaddle.position.relative, position);
+					jBPaddle.move(jBPaddlePosition.relative, position);
 				}, this);
 
 				self.$field.bind('click.jBreakLaunchPaddleBalls', function(){
@@ -517,7 +518,7 @@ jBreak.paddle.prototype = {
 		this.$paddle.remove();
 		//delete this;
 	},
-	get position(){
+	getPosition:function(){
 		return this._position;
 	},
 	// private variables
@@ -630,24 +631,27 @@ jBreak.ball.prototype = {
 		if(y >= jB.fieldSize.height - 16 || y <=  8 || x <=  8 || x >= jB.fieldSize.width - 16){
 			for(var i=jB.paddles.length;i--;){
 				var jBPaddle = jB.paddles[i];
-				var paddleMissed, paddleHit, angle;
+				var paddleMissed,
+				    paddleHit,
+				    angle,
+				    jBPaddlePosition = jBPaddle.getPosition();
 
-				switch(jBPaddle.position.relative){
+				switch(jBPaddlePosition.relative){
 					default:
 					case 'bottom':
 						paddle.bottom = true;
 
 						paddleHit = this._speed.y > 0
 						         && y <= jBreak.fieldSize.height - 8
-						         && Math.ceil(y) >= jBPaddle.position.y - jBPaddle.$paddle.height()
-						         && x >= jBPaddle.position.x
-						         && x <= jBPaddle.position.x + jBPaddle.$paddle.width();
+						         && Math.ceil(y) >= jBPaddlePosition.y - jBPaddle.$paddle.height()
+						         && x >= jBPaddlePosition.x
+						         && x <= jBPaddlePosition.x + jBPaddle.$paddle.width();
 
 						paddleMissed = y > jB.fieldSize.height + 2;
 
 						if(paddleHit){
 							angle =
-								(this.position.x - jBPaddle.position.x + this._size.width/2)
+								(this.position.x - jBPaddlePosition.x + this._size.width/2)
 								 * 180 / (jBPaddle._size.width / 2)
 								 - 360;
 
@@ -662,15 +666,15 @@ jBreak.ball.prototype = {
 						paddle.top = true;
 
 						paddleHit = this._speed.y < 0 && y >= 4
-						         && Math.ceil(y) <= jBPaddle.position.y + jBPaddle.$paddle.height()
-						         && x >= jBPaddle.position.x
-						         && x <= jBPaddle.position.x + jBPaddle.$paddle.width();
+						         && Math.ceil(y) <= jBPaddlePosition.y + jBPaddle.$paddle.height()
+						         && x >= jBPaddlePosition.x
+						         && x <= jBPaddlePosition.x + jBPaddle.$paddle.width();
 
 						paddleMissed = y < -10;
 
 						if(paddleHit){
 							angle =
-								(this.position.x - jBPaddle.position.x + this._size.width/2)
+								(this.position.x - jBPaddlePosition.x + this._size.width/2)
 								 * 180 / (jBPaddle._size.width / 2)
 								 - 360;
 
@@ -685,9 +689,9 @@ jBreak.ball.prototype = {
 						paddle.left = true;
 
 						paddleHit = this._speed.x < 0 && x >= 4
-						         && Math.ceil(x) <= jBPaddle.position.x + jBPaddle.$paddle.width()
-						         && y >= jBPaddle.position.y
-						         && y <= jBPaddle.position.y + jBPaddle.$paddle.height();
+						         && Math.ceil(x) <= jBPaddlePosition.x + jBPaddle.$paddle.width()
+						         && y >= jBPaddlePosition.y
+						         && y <= jBPaddlePosition.y + jBPaddle.$paddle.height();
 
 						paddleMissed = x < -10;
 
@@ -699,9 +703,9 @@ jBreak.ball.prototype = {
 
 						paddleHit = this._speed.x > 0
 						         && x <= jBreak.fieldSize.width - 8
-						         && Math.ceil(x) >= jBPaddle.position.x - jBPaddle.$paddle.width()
-						         && y >= jBPaddle.position.y
-						         && y <= jBPaddle.position.y + jBPaddle.$paddle.height();
+						         && Math.ceil(x) >= jBPaddlePosition.x - jBPaddle.$paddle.width()
+						         && y >= jBPaddlePosition.y
+						         && y <= jBPaddlePosition.y + jBPaddle.$paddle.height();
 
 						paddleMissed = x > jB.fieldSize.width + 2;
 
