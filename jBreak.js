@@ -1,6 +1,6 @@
 ﻿(function($){
 
-jBreak = {
+var jBreak = {
 	// methods
 	start:function(showOptions){
 		var $jBreak = $('#jBreak').empty();
