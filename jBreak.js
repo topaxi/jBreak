@@ -377,16 +377,17 @@ jBreak.paddle.prototype = {
 		//console.log('%s paddle created and moved to initial position -> %o', position, this);
 	},
 	start:function(){
-		var self = this;
+		var self = this,
+		    relativePosition = this._position.relative,
+		    fieldOffset = jBreak.$field.offset();
 
 		$(document)./*jBreak.$field.*/mousemove(function(e){
-			var fieldOffset = jBreak.$field.offset();
-			var position = (self._position.relative === 'top'
-			            ||  self._position.relative === 'bottom'
-			               ? e.pageX - fieldOffset.left
-			               : e.pageY - fieldOffset.top);
+			var newPosition = (relativePosition === 'top'
+			               ||  relativePosition === 'bottom'
+			                   ? e.pageX - fieldOffset.left
+			                   : e.pageY - fieldOffset.top);
 
-			self.move(self._position.relative, position);
+			self.move(relativePosition, newPosition);
 		});
 	},
 	connectBall:function(ballID){
