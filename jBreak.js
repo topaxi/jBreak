@@ -1,4 +1,4 @@
-﻿;(function($){
+﻿(function($){
 
 jBreak = {
 	// methods
@@ -27,7 +27,7 @@ jBreak = {
 		audio.play();
 	},
 	addBall:function(paddleID){
-		var ballID = (this.balls.length == undefined ? 0 : this.balls.length+1);
+		var ballID = (this.balls.length === undefined ? 0 : this.balls.length+1);
 		this.balls[ballID] = new jBreak.ball(ballID);
 		this.paddles[paddleID].connectBall(ballID);
 
@@ -48,8 +48,8 @@ jBreak = {
 				self.paddles.forEach(function(jBPaddle){
 					jBPaddle.start();
 					var position = (
-						jBPaddle.position.relative == 'top' ||
-						jBPaddle.position.relative == 'bottom'
+						jBPaddle.position.relative === 'top' ||
+						jBPaddle.position.relative === 'bottom'
 							? e.pageX - this.offsetLeft
 							: e.pageY - this.offsetTop);
 
@@ -66,9 +66,9 @@ jBreak = {
 
 				$(document).unbind('.jBreakPause');
 				$(document).bind('keydown.jBreakPause', function(e){
-					if(e.keyCode == 32){
+					if(e.keyCode === 32){
 						// @todo stop paddle movement too and unpause only by clicking a paddle
-						for(jBBall in self.balls){
+						for(var jBBall in self.balls){
 							self.balls[jBBall].pause();
 						}
 					}
@@ -82,22 +82,25 @@ jBreak = {
 		this.$field.unbind('mousemove');
 	},
 	blockChecker:function(){
-		var i=0;
-		this.blocks.forEach(function(horizontalBlocks, y){
-			horizontalBlocks.forEach(function(block, x){
-				i += block;
-			}, this);
-		}, this);
+		var blockVal = 0,
+		    blocks   = this.blocks;
 
-		if(i == 0){
-			for(ball in this.balls){
+		for(var y = blocks.length;y--;){
+			for(var x = blocks[y].length;x--;){
+				blockVal += blocks[y][x];
+			}
+		}
+
+		if(blockVal === 0){
+			for(var ball in this.balls){
 				this.balls[ball].remove();
 			}
 
-			this.paddles.forEach(function(jBPaddle){
-				jBPaddle.$paddle.remove();
-				jBPaddle.remove();
-			});
+			var paddles = this.paddles;
+			for(var i = paddles.length;i--;){
+				paddles[i].$paddle.remove();
+				paddles[i].remove();
+			}
 
 			this.destroyField();
 			this._levelID += 1;
@@ -109,10 +112,10 @@ jBreak = {
 	ballChecker:function(){
 		//console.log('Checking remaining balls...');
 		var i = 0;
-		for(ball in this.balls)
+		for(var ball in this.balls)
 			i++;
 
-		if(i == 0){
+		if(i === 0){
 			//console.log('No remaining balls found... FAIL!')
 			var self = this;
 
@@ -147,7 +150,7 @@ jBreak = {
 		}
 	},
 	loadLevel:function(levelID){
-		levelID = (levelID != undefined ? levelID : 0);
+		levelID = (levelID !== undefined ? levelID : 0);
 
 		var level;
 		$.ajax({
@@ -334,7 +337,7 @@ jBreak.paddle.prototype = {
 			x:null,
 			y:null,
 			relative:position
-		}
+		};
 
 		this.balls = [];
 
@@ -377,8 +380,8 @@ jBreak.paddle.prototype = {
 
 		$(document)./*jBreak.$field.*/mousemove(function(e){
 			var fieldOffset = jBreak.$field.offset();
-			var position = (self._position.relative == 'top'
-			            ||  self._position.relative == 'bottom'
+			var position = (self._position.relative === 'top'
+			            ||  self._position.relative === 'bottom'
 			               ? e.pageX - fieldOffset.left
 			               : e.pageY - fieldOffset.top);
 
@@ -432,7 +435,7 @@ jBreak.paddle.prototype = {
 				  + this._size.height / 2
 				  - jBreak.balls[ballID].$ball.width() / 2;
 				jBreak.balls[ballID].setAngle(-90);
-				var effectDirection = 'right';
+				effectDirection = 'right';
 				break;
 		}
 
@@ -454,7 +457,7 @@ jBreak.paddle.prototype = {
 		this.balls = [];
 	},
 	move:function(relativePosition, position){
-		if(relativePosition == 'top' || relativePosition == 'bottom'){
+		if(relativePosition === 'top' || relativePosition === 'bottom'){
 			var x = position;
 			x -= this._size.width / 2;
 
@@ -502,7 +505,7 @@ jBreak.paddle.prototype = {
 	},
 	remove:function(){
 		jBreak.paddles.forEach(function(jBPaddle, i, self){
-			if(jBPaddle._position.relative == this._position.relative){
+			if(jBPaddle._position.relative === this._position.relative){
 				self.remove(i);
 			}
 		}, this);
@@ -551,7 +554,7 @@ jBreak.ball.prototype = {
 		this._animate();
 	},
 	setAngle:function(angle){
-		if(angle != undefined)
+		if(angle !== undefined)
 			this._angle = angle;
 
 		var speed = this._angle / 360 * Math.PI;
@@ -559,27 +562,28 @@ jBreak.ball.prototype = {
 		this._speed.y = Math.sin(speed);
 	},
 	_hitCheck:function(x,y){
+		var jB = jBreak; // store jBreak in this scope to access it faster!
 		var paddle = {
 			top:false,
 			right:false,
 			bottom:false,
 			left:false
-		}
+		};
 
 		// only run checks if a block could be hit
-		if(y <= jBreak.fieldSize.height || y >= 0 || x >= 0 || x <= jBreak.fieldSize.width){
-			var ballY = (this._speed.y > 0 ? y + this._size.height : y);
-			var ballX = (this._speed.x > 0 ? x + this._size.width  : x);
+		if(y <= jB.fieldSize.height || y >= 0 || x >= 0 || x <= jB.fieldSize.width){
+			var ballY = (this._speed.y > 0 ? y + this._size.height : y),
+			    ballX = (this._speed.x > 0 ? x + this._size.width  : x);
 
-			var blockX = Math.floor(ballX / 64);
-			var blockY = Math.floor(ballY / 16);
+			var blockX = Math.floor(ballX / 64),
+			    blockY = Math.floor(ballY / 16);
 
-			var blockExists = jBreak.blocks[blockY] != undefined
-			               && jBreak.blocks[blockY][blockX] != undefined
+			var blockExists = jB.blocks[blockY] !== undefined
+			               && jB.blocks[blockY][blockX] !== undefined;
 
 			if(blockExists){
-				if(jBreak.blocks[blockY][blockX] > 0){
-					jBreak.playSound('sound/pling1s.ogg');
+				if(jB.blocks[blockY][blockX] > 0){
+					jB.playSound('sound/pling1s.ogg');
 					ballX = Math.floor(ballX);
 					ballY = Math.floor(ballY);
 
@@ -605,17 +609,17 @@ jBreak.ball.prototype = {
 								(hHit && this._speed.x < 0 ? 'right' :
 									/*vHit && this._speed.y < 0*/ 'down')));
 
-					if(jBreak.blocks[blockY][blockX] > 1){
-						$block.css({'opacity':1-1/jBreak.blocks[blockY][blockX]});
-						jBreak.blocks[blockY][blockX] -= 1;
+					if(jB.blocks[blockY][blockX] > 1){
+						$block.css({'opacity':1-1/jB.blocks[blockY][blockX]});
+						jB.blocks[blockY][blockX] -= 1;
 					} else {
 						$block.css('background-image',
 							$block.css('background-image').replace(/\/(.*)\.png/g, '/$1_h.png'));
 						$block.effect('drop', {direction:direction}, 'fast', function(){
 							$block.remove();
 						});
-						jBreak.blocks[blockY][blockX] = 0;
-						jBreak.blockChecker();
+						jB.blocks[blockY][blockX] = 0;
+						jB.blockChecker();
 						return;
 					}
 				}
@@ -623,9 +627,10 @@ jBreak.ball.prototype = {
 		}
 
 		// only run checks if a paddle could be hit
-		if(y >= jBreak.fieldSize.height - 16 || y <=  8 || x <=  8 || x >= jBreak.fieldSize.width - 16){
-			jBreak.paddles.forEach(function(jBPaddle){
-				var paddleMissed, paddleHit;
+		if(y >= jB.fieldSize.height - 16 || y <=  8 || x <=  8 || x >= jB.fieldSize.width - 16){
+			for(var i=jB.paddles.length;i--;){
+				var jBPaddle = jB.paddles[i];
+				var paddleMissed, paddleHit, angle;
 
 				switch(jBPaddle.position.relative){
 					default:
@@ -638,10 +643,10 @@ jBreak.ball.prototype = {
 						         && x >= jBPaddle.position.x
 						         && x <= jBPaddle.position.x + jBPaddle.$paddle.width();
 
-						paddleMissed = y > jBreak.fieldSize.height + 2;
+						paddleMissed = y > jB.fieldSize.height + 2;
 
 						if(paddleHit){
-							var angle =
+							angle =
 								(this.position.x - jBPaddle.position.x + this._size.width/2)
 								 * 180 / (jBPaddle._size.width / 2)
 								 - 360;
@@ -664,7 +669,7 @@ jBreak.ball.prototype = {
 						paddleMissed = y < -10;
 
 						if(paddleHit){
-							var angle =
+							angle =
 								(this.position.x - jBPaddle.position.x + this._size.width/2)
 								 * 180 / (jBPaddle._size.width / 2)
 								 - 360;
@@ -698,7 +703,7 @@ jBreak.ball.prototype = {
 						         && y >= jBPaddle.position.y
 						         && y <= jBPaddle.position.y + jBPaddle.$paddle.height();
 
-						paddleMissed = x > jBreak.fieldSize.width + 2;
+						paddleMissed = x > jB.fieldSize.width + 2;
 
 						if(paddleHit)
 							this._speed.x *= -1;
@@ -706,31 +711,30 @@ jBreak.ball.prototype = {
 				}
 
 				if(paddleHit){
-					jBreak.playSound('sound/pling1s.ogg');
+					jB.playSound('sound/pling1s.ogg');
 					this._interval -= (this._interval > 12.5 ? .20 : 0);
 					return true;
 				} else if(paddleMissed){
-					jBreak.$field.effect('highlight','slow');
 					this.remove();
-					jBreak.ballChecker(); // any balls left?
+					jB.ballChecker(); // any balls left?
 				}
-			}, this);
+			}
 		}
 
 		var check;
 
 		check = x < 0 && !paddle.left
-		     || x > jBreak.fieldSize.width - this._size.width && !paddle.right;
+		     || x > jB.fieldSize.width - this._size.width && !paddle.right;
 		if(check){
-			jBreak.playSound('sound/pling1s.ogg');
+			jB.playSound('sound/pling1s.ogg');
 			this._speed.x *= -1;
 			this._interval -= (this._interval > 10 ? .075 : 0);
 		}
 
 		check = y < 0 && !paddle.top
-		     || y > jBreak.fieldSize.height - this._size.height && !paddle.bottom;
+		     || y > jB.fieldSize.height - this._size.height && !paddle.bottom;
 		if(check){
-			jBreak.playSound('sound/pling1s.ogg');
+			jB.playSound('sound/pling1s.ogg');
 			this._speed.y *= -1;
 			this._interval -= (this._interval > 10 ? .075 : 0);
 		}
