@@ -458,25 +458,29 @@ jBreak.paddle.prototype = {
 		this.balls = [];
 	},
 	move:function(relativePosition, position){
+		var jB = jBreak,
+		    jBFieldSize = jB.fieldSize,
+		    jBBalls = jB.balls;
+
 		if(relativePosition === 'top' || relativePosition === 'bottom'){
 			var x = position;
 			x -= this._size.width / 2;
 
 			if(x < 0){
 				x = 0;
-			} else if(x > jBreak.fieldSize.width - this._size.width){
-				x = jBreak.fieldSize.width - this._size.width;
+			} else if(x > jBFieldSize.width - this._size.width){
+				x = jBFieldSize.width - this._size.width;
 			}
 
-			this.balls.forEach(function(i){
+			for(var i = this.balls.length;i--;){
 				var ballX = x
 				          + this._size.width / 2
-				          - jBreak.balls[i].$ball.width() / 2;
+				          - jBBalls[i].$ball.width() / 2;
 
-				jBreak.balls[i].move(
+				jBBalls[i].move(
 					ballX,
-					jBreak.balls[i].position.y);
-			}, this);
+					jBBalls[i].position.y);
+			}
 
 			this._position.x = x;
 			this.$paddle.css({left:x});
@@ -486,19 +490,19 @@ jBreak.paddle.prototype = {
 
 			if(y < 0){
 				y = 0;
-			} else if(y > jBreak.fieldSize.height - this._size.height){
-				y = jBreak.fieldSize.height - this._size.height;
+			} else if(y > jBFieldSize.height - this._size.height){
+				y = jBFieldSize.height - this._size.height;
 			}
 
-			this.balls.forEach(function(i){
+			for(var i = this.balls.length;i--;){
 				var ballY = y
 				          + this._size.height / 2
-				          - jBreak.balls[i].$ball.height() / 2;
+				          - jBBalls[i].$ball.height() / 2;
 
-				jBreak.balls[i].move(
-					jBreak.balls[i].position.x,
+				jBBalls[i].move(
+					jBBalls[i].position.x,
 					ballY);
-			}, this);
+			}
 
 			this._position.y = y;
 			this.$paddle.css({top:y});
