@@ -47,12 +47,13 @@ var jBreak = {
 
 				self.paddles.forEach(function(jBPaddle){
 					jBPaddle.start();
-					var jBPaddlePosition = jBPaddle.getPosition();
+					var jBPaddlePosition = jBPaddle.getPosition(),
+					    fieldOffset = self.$field.offset();
 					var position = (
 						jBPaddlePosition.relative === 'top' ||
 						jBPaddlePosition.relative === 'bottom'
-							? e.pageX - this.offsetLeft
-							: e.pageY - this.offsetTop);
+							? e.pageX - fieldOffset.left
+							: e.pageY - fieldOffset.top);
 
 					jBPaddle.move(jBPaddlePosition.relative, position);
 				}, this);
