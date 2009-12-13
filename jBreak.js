@@ -21,7 +21,7 @@ var jBreak = {
 		//console.log('Playing field initialized -> %o', this);
 	},
 	playSound:function(soundFile){
-		if(!Audio) return; // return if Audio is undefined
+		if(typeof Audio === 'undefined') return; // return if Audio is undefined
 		var audio = new Audio(soundFile);
 		audio.volume = this._volume/100;
 		audio.play();
@@ -617,11 +617,15 @@ jBreak.ball.prototype = {
 								(hHit && this._speed.x < 0 ? 'right' :
 									/*vHit && this._speed.y < 0*/ 'down')));
 
-					var hitImage = $block.css('background-image').replace(/\/(.*)\.png/g, '/$1_h.png');
+					var hitImage = $block.css('background-image')
+						.replace(/\/(.*)\.png/g, '/$1_h.png');
+
 					if(jB.blocks[blockY][blockX] > 1){
 						var oldImage = $block.css('background-image');
-						$block.css({'opacity':1-1/jB.blocks[blockY][blockX]});
-						$block.css('background-image', hitImage);
+						$block.css({
+							opacity:1-1/jB.blocks[blockY][blockX],
+							backgroundImage:hitImage
+						});
 						jB.blocks[blockY][blockX] -= 1;
 
 						setTimeout(function(){
@@ -642,9 +646,9 @@ jBreak.ball.prototype = {
 
 		// only run checks if a paddle could be hit
 		if(y >= jB.fieldSize.height - 16 || y <=  8 || x <=  8 || x >= jB.fieldSize.width - 16){
-			for(var i=jB.paddles.length;i--;){
-				var jBPaddle = jB.paddles[i];
-				var paddleMissed,
+			for(var i = jB.paddles.length;i--;){
+				var jBPaddle = jB.paddles[i],
+				    paddleMissed,
 				    paddleHit,
 				    angle,
 				    jBPaddlePosition = jBPaddle.getPosition();
@@ -655,9 +659,9 @@ jBreak.ball.prototype = {
 						paddle.bottom = true;
 
 						paddleHit = this._speed.y > 0
-						         && y <= jBreak.fieldSize.height - 8
-						         && Math.ceil(y) >= jBPaddlePosition.y - jBPaddle.$paddle.height()
+						         && y <= jB.fieldSize.height - 8
 						         && x >= jBPaddlePosition.x
+						         && Math.ceil(y) >= jBPaddlePosition.y - jBPaddle.$paddle.height()
 						         && x <= jBPaddlePosition.x + jBPaddle.$paddle.width();
 
 						paddleMissed = y > jB.fieldSize.height + 2;
@@ -678,9 +682,10 @@ jBreak.ball.prototype = {
 					case 'top':
 						paddle.top = true;
 
-						paddleHit = this._speed.y < 0 && y >= 4
-						         && Math.ceil(y) <= jBPaddlePosition.y + jBPaddle.$paddle.height()
+						paddleHit = this._speed.y < 0
+						         && y >= 4
 						         && x >= jBPaddlePosition.x
+						         && Math.ceil(y) <= jBPaddlePosition.y + jBPaddle.$paddle.height()
 						         && x <= jBPaddlePosition.x + jBPaddle.$paddle.width();
 
 						paddleMissed = y < -10;
@@ -701,9 +706,10 @@ jBreak.ball.prototype = {
 					case 'left':
 						paddle.left = true;
 
-						paddleHit = this._speed.x < 0 && x >= 4
-						         && Math.ceil(x) <= jBPaddlePosition.x + jBPaddle.$paddle.width()
+						paddleHit = this._speed.x < 0 
+						         && x >= 4
 						         && y >= jBPaddlePosition.y
+						         && Math.ceil(x) <= jBPaddlePosition.x + jBPaddle.$paddle.width()
 						         && y <= jBPaddlePosition.y + jBPaddle.$paddle.height();
 
 						paddleMissed = x < -10;
@@ -715,9 +721,9 @@ jBreak.ball.prototype = {
 						paddle.right = true;
 
 						paddleHit = this._speed.x > 0
-						         && x <= jBreak.fieldSize.width - 8
-						         && Math.ceil(x) >= jBPaddlePosition.x - jBPaddle.$paddle.width()
 						         && y >= jBPaddlePosition.y
+						         && x <= jB.fieldSize.width - 8
+						         && Math.ceil(x) >= jBPaddlePosition.x - jBPaddle.$paddle.width()
 						         && y <= jBPaddlePosition.y + jBPaddle.$paddle.height();
 
 						paddleMissed = x > jB.fieldSize.width + 2;
@@ -804,7 +810,7 @@ jBreak.ball.prototype = {
 };
 
 // method to remove array indices
-Array.prototype.remove = function(from, to) {
+Array.prototype.remove = function(from, to){
 	var rest = this.slice((to || from) + 1 || this.length);
 	this.length = from < 0 ? this.length + from : from;
 	return this.push.apply(this, rest);
