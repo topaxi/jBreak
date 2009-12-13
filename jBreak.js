@@ -2,7 +2,7 @@
 
 var jBreak = {
 	// methods
-	start:function(showOptions){
+	start:function(initial){
 		var $jBreak = $('#jBreak').empty();
 		this.$field = $('<div id="jBreakField"/>');
 		$jBreak.append(this.$field);
@@ -15,7 +15,8 @@ var jBreak = {
 			height:this.$field.height()
 		};
 
-		if(showOptions){
+		if(initial){
+			this.lives = 3;
 			this.options.showOptions();
 		}
 		//console.log('Playing field initialized -> %o', this);
@@ -62,7 +63,6 @@ var jBreak = {
 					self.paddles.forEach(function(jBPaddle){
 						jBPaddle.startBalls();
 					});
-					self.$field.unbind('click.jBreakLaunchPaddleBalls');
 				});
 				self.$field.unbind('click.jBreakCreatePaddles');
 
@@ -216,6 +216,7 @@ var jBreak = {
 	balls:null,
 	blocks:null,
 	// private variables
+	lives:0,
 	_volume:70,
 	_levelID:0,
 	// objects
@@ -240,7 +241,7 @@ var jBreak = {
 			this.$optionTabs.append('<ul style="font-size:12px"><li><a href="#tabs-1">Sound</a></li><li><a href="#tabs-2">Level</a></li><li><a href="#tabs-3">About</a></li></ul>');
 			this.$optionTabs.append(this.soundOptions());
 			this.$optionTabs.append('<div id="tabs-2" style="text-align:center;height:220px">-under construction-</div>');
-			this.$optionTabs.append('<div id="tabs-3" style="text-align:center;height:220px"><p>jBreak 0.1.2</p><p style="font-size:11px">Written by Damian Senn<br /><br />Graphics and Sounds<br />by <a href="http://www.helleresonnen.com/">Jan Neversil</a><br /><br />Music (coming soon)<br />by <a href="http://www.alphatronic.net/">Dani Whiler</a></p></div>');
+			this.$optionTabs.append('<div id="tabs-3" style="text-align:center;height:220px"><p>jBreak 0.1.5</p><p style="font-size:11px">Written by Damian Senn<br /><br />Graphics and Sounds<br />by <a href="http://www.helleresonnen.com/">Jan Neversil</a><br /><br />Music (coming soon)<br />by <a href="http://www.alphatronic.net/">Dani Whiler</a></p></div>');
 
 			var $startButton = $(
 				'<button class="ui-state-default ui-corner-all" style="cursor:pointer" id="jBreakStart">Start</button>'
@@ -447,15 +448,20 @@ jBreak.paddle.prototype = {
 			direction:effectDirection,
 			distance:40,
 			times:5
+		}, function(){
+			var ball = jBreak.balls[ballID];
+			ball.move(ball.position.x,ball.position.y);
 		});
 		this.balls.push(ballID);
 
 		//console.log('Ball %d connected to %o and moved to %d,%d', ballID, this, x, y);
 	},
 	startBalls:function(){
-		this.balls.forEach(function(i){
-			jBreak.balls[i].start();
-		}, this);
+		var balls = jBreak.balls;
+		for(var i = this.balls.length;i--;){
+			balls[i].$ball.stop(true, true);
+			balls[i].start();
+		}
 		// flush balls
 		this.balls = [];
 	},
@@ -475,13 +481,24 @@ jBreak.paddle.prototype = {
 			}
 
 			for(var i = this.balls.length;i--;){
-				var ballX = x
+				var ball = jBBalls[i],
+				    ballX = x
 				          + this._size.width / 2
-				          - jBBalls[i].$ball.width() / 2;
+				          - ball.$ball.width() / 2;
 
-				jBBalls[i].move(
-					ballX,
-					jBBalls[i].position.y);
+				// @todo fix this "workaround" or maybe even kill the "bounce" effect
+				var $parent = ball.$ball.parent();
+				if($parent.hasClass('ui-effects-wrapper')){
+					$parent.css({
+						left:ballX,
+						top:ball.position.y
+					});
+					ball.position.x = ballX;
+				} else {
+					ball.move(
+						ballX,
+						ball.position.y);
+				}
 			}
 
 			this._position.x = x;
@@ -497,12 +514,13 @@ jBreak.paddle.prototype = {
 			}
 
 			for(var i = this.balls.length;i--;){
-				var ballY = y
+				var ball  = jBBalls[i],
+				    ballY = y
 				          + this._size.height / 2
-				          - jBBalls[i].$ball.height() / 2;
+				          - ball.$ball.height() / 2;
 
-				jBBalls[i].move(
-					jBBalls[i].position.x,
+				ball.move(
+					ball.position.x,
 					ballY);
 			}
 
@@ -739,7 +757,13 @@ jBreak.ball.prototype = {
 					return true;
 				} else if(paddleMissed){
 					this.remove();
-					jB.ballChecker(); // any balls left?
+
+					if(jB.lives > 0){
+						jB.lives -= 1;
+						jB.addBall(i);
+					} else {
+						jB.ballChecker(); // any balls left?
+					}
 				}
 			}
 		}
