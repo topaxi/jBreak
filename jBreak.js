@@ -518,6 +518,7 @@ jBreak.paddle.prototype = {
 		}, this);
 
 		this.balls.forEach(function(i){
+			// do not use remove() here and remove the method from the Array object
 			this.balls[i].remove();
 		}, jBreak);
 
@@ -616,12 +617,18 @@ jBreak.ball.prototype = {
 								(hHit && this._speed.x < 0 ? 'right' :
 									/*vHit && this._speed.y < 0*/ 'down')));
 
+					var hitImage = $block.css('background-image').replace(/\/(.*)\.png/g, '/$1_h.png');
 					if(jB.blocks[blockY][blockX] > 1){
+						var oldImage = $block.css('background-image');
 						$block.css({'opacity':1-1/jB.blocks[blockY][blockX]});
+						$block.css('background-image', hitImage);
 						jB.blocks[blockY][blockX] -= 1;
+
+						setTimeout(function(){
+							$block.css('background-image', oldImage);
+						}, 150);
 					} else {
-						$block.css('background-image',
-							$block.css('background-image').replace(/\/(.*)\.png/g, '/$1_h.png'));
+						$block.css('background-image', hitImage);
 						$block.effect('drop', {direction:direction}, 'fast', function(){
 							$block.remove();
 						});
