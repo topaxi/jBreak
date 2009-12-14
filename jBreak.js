@@ -325,8 +325,9 @@ var jBreak = {
 		// this references to the jBreak.ball object!
 		this.init(ballID, position);
 	},
-	bonus:function(){
-		// @todo
+	bonus:function(jBBall,x,y,angle){
+		// this references to the jBreak.bonus object!
+		this.init(jBBall,x,y,angle);
 	}
 };
 
@@ -377,6 +378,27 @@ jBreak.paddle.prototype = {
 			top:this._position.y
 		});
 		//console.log('%s paddle created and moved to initial position -> %o', position, this);
+	},
+	grow:function(){
+		var size = this._size;
+		this.setSize(size.width > size.height
+			? size.width  + 16
+			: size.height + 16);
+	},
+	shrink:function(){
+		var size = this._size;
+		this.setSize(size.width > size.height
+			? size.width  - 16
+			: size.height - 16);
+	},
+	setSize:function(size){
+		var width = this._size.width, height = this._size.height;
+		(width > height
+			? width = size
+			: height = size);
+
+		this.$paddle.css({width:width+'px', height:height+'px'});
+		this._size = {width:width, height:height};
 	},
 	start:function(){
 		var self = this,
@@ -650,6 +672,11 @@ jBreak.ball.prototype = {
 							$block.css('background-image', oldImage);
 						}, 150);
 					} else {
+						var rand = Math.random();
+						if(rand < .06){
+							new jB.bonus(this,x,y,180); // spawn bonus
+						}
+
 						$block.css('background-image', hitImage);
 						$block.effect('drop', {direction:direction}, 'fast', function(){
 							$block.remove();
@@ -754,13 +781,14 @@ jBreak.ball.prototype = {
 				if(paddleHit){
 					jB.playSound('sound/pling1s.ogg');
 					this._interval -= (this._interval > 12.5 ? .20 : 0);
-					return true;
+					return true; // @todo why? ^^
 				} else if(paddleMissed){
 					this.remove();
 
 					if(jB.lives > 0){
 						jB.lives -= 1;
 						jB.addBall(i);
+						jBPaddle.setSize(64); // reset size
 					} else {
 						jB.ballChecker(); // any balls left?
 					}
@@ -805,6 +833,13 @@ jBreak.ball.prototype = {
 		this.$ball.css({left:x, top:y});
 		this.position = {x:x, y:y};
 	},
+	interval:function(i){
+		if(i !== undefined){
+			this._interval = (this._interval < 10 ? 10 : i);
+		} else {
+			return this._interval;
+		}
+	},
 	remove:function(){
 		this._timer = false;
 		this.$ball.remove();
@@ -830,7 +865,216 @@ jBreak.ball.prototype = {
 	_size:null,
 	// public variables @todo these should be private too
 	$ball:null,
-	position:null //@todo getter
+	position:null, //@todo getter
+	oldInterval:30
+};
+
+jBreak.bonus.prototype = {
+	init:function(jBBall,x,y,angle){
+		var random, background;
+
+		// 50% chance to get a bad or a good powerup
+		if(Math.floor(Math.random()+.5)){
+			random = Math.floor(Math.random() * this._good.length);
+			this._action = this._good[random];
+			background = 'green';
+			console.log('Spawning "good" %o -> %d', this, random); 
+		} else {
+			random = Math.floor(Math.random() * this._bad.length);
+			this._action = this._bad[random];
+			background = 'red';
+			console.log('Spawning "bad" %o -> %d', this, random); 
+		}
+
+		var $bonus = $('<div class="jBreakBonus"/>');
+
+		jBreak.$field.append($bonus);
+
+		this._ball = jBBall;
+		
+		this._position = {x:x,y:y};
+		this._speed = {
+			x:null,
+			y:null
+		};
+
+		$bonus.css({
+			left:x,
+			top:y,
+			position:'absolute',
+			width:'16px',
+			height:'16px',
+			background:background
+		});
+
+		this.$bonus = $bonus;
+		this.setAngle(angle);
+		this._timer = true;
+		this._animate();
+	},
+	setAngle:function(angle){
+		if(angle !== undefined)
+			this._angle = angle;
+
+		var speed = this._angle / 360 * Math.PI;
+		this._speed.x = Math.cos(speed);
+		this._speed.y = Math.sin(speed);
+	},
+	_hitCheck:function(x,y){
+		var jB = jBreak;
+		// only run checks if a paddle could be hit
+		if(y >= jB.fieldSize.height - 16 || y <=  8 || x <=  8 || x >= jB.fieldSize.width - 16){
+			for(var i = jB.paddles.length;i--;){
+				var jBPaddle = jB.paddles[i],
+				    paddleMissed,
+				    paddleHit,
+				    angle,
+				    jBPaddlePosition = jBPaddle.getPosition();
+
+				switch(jBPaddlePosition.relative){
+					default:
+					case 'bottom':
+						paddleHit = this._speed.y > 0
+						         && y <= jB.fieldSize.height - 8
+						         && x >= jBPaddlePosition.x
+						         && Math.ceil(y) >= jBPaddlePosition.y - jBPaddle.$paddle.height()
+						         && x <= jBPaddlePosition.x + jBPaddle.$paddle.width();
+
+						paddleMissed = y > jB.fieldSize.height + 2;
+
+						if(paddleHit){
+							return this._powerUpPaddle(jBPaddle);
+						}
+						break;
+					case 'top':
+						paddleHit = this._speed.y < 0
+						         && y >= 4
+						         && x >= jBPaddlePosition.x
+						         && Math.ceil(y) <= jBPaddlePosition.y + jBPaddle.$paddle.height()
+						         && x <= jBPaddlePosition.x + jBPaddle.$paddle.width();
+
+						paddleMissed = y < -10;
+
+						if(paddleHit){
+							return this._powerUpPaddle(jBPaddle);
+						}
+						break;
+					case 'left':
+						paddleHit = this._speed.x < 0 
+						         && x >= 4
+						         && y >= jBPaddlePosition.y
+						         && Math.ceil(x) <= jBPaddlePosition.x + jBPaddle.$paddle.width()
+						         && y <= jBPaddlePosition.y + jBPaddle.$paddle.height();
+
+						paddleMissed = x < -10;
+
+						if(paddleHit){
+							return this._powerUpPaddle(jBPaddle);
+						}
+						break;
+					case 'right':
+						paddleHit = this._speed.x > 0
+						         && y >= jBPaddlePosition.y
+						         && x <= jB.fieldSize.width - 8
+						         && Math.ceil(x) >= jBPaddlePosition.x - jBPaddle.$paddle.width()
+						         && y <= jBPaddlePosition.y + jBPaddle.$paddle.height();
+
+						paddleMissed = x > jB.fieldSize.width + 2;
+
+						if(paddleHit){
+							return this._powerUpPaddle(jBPaddle);
+						}
+						break;
+				}
+
+				if(paddleMissed){
+					this.remove();
+				}
+			}
+		}
+	},
+	_powerUpPaddle:function(jBPaddle){
+		jBreak.playSound('sound/pling1s.ogg');
+
+		this._action(jBPaddle);
+		this.remove();
+	},
+	_animate:function(){
+		var x = this._position.x + this._speed.x*4;
+		var y = this._position.y + this._speed.y*4;
+
+		this.move(x,y);
+		this._hitCheck(x,y);
+
+		if(this._timer){
+			// setTimeout(this._animate, 15) kills the "this" reference :(
+			var self = this;
+			setTimeout(function(){
+				self._animate();
+			}, this._interval);
+		}
+	},
+	move:function(x,y){
+		this.$bonus.css({left:x, top:y});
+		this._position = {x:x,y:y};
+	},
+	remove:function(){
+		this._timer = false;
+		this.$bonus.fadeOut('fast', function(){
+			$(this).remove();
+		});
+	},
+	$bonus:null,
+	_direction:null,
+	_position:null,
+	_speed:null,
+	_timer:false,
+	_interval:30,
+	_angle:180,
+	_ball:null, // the ball who triggered this bonus
+	_action:null, // will hold the function to be executed
+	_bad:[
+		function(jBPaddle){
+			jBPaddle.shrink();
+		},
+		function(){ // ball speedup for 15 seconds
+			var ball = this._ball;
+
+			ball.oldInterval = (ball.oldInterval
+				? ball.oldInterval
+				: ball.interval());
+
+			// clear previous 
+			clearTimeout(ball.bonusTimeoutID);
+			ball.bonusTimeoutID = setTimeout(function(){
+				ball.interval(ball.oldInterval);
+			}, 15000);
+
+			ball.interval(10);
+		},
+		function(){ // permanent interval reduction
+			var ball = this._ball;
+
+			ball.oldInterval -= 3;
+			ball.interval(ball.interval() - 3);
+		}
+	],
+	_good:[
+		function(jBPaddle){
+			jBPaddle.grow();
+		},
+		function(){
+			var ball = this._ball;
+			clearTimeout(ball.bonusTimeoutID);
+
+			if(ball.interval() < 25){
+				ball.interval(25);
+			}
+		},
+		function(){
+			jBreak.lives += 1;
+		}
+	]
 };
 
 // method to remove array indices
