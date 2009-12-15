@@ -1041,7 +1041,7 @@ jBreak.bonus.prototype = {
 	},
 	remove:function(){
 		this._timer = false;
-		this.$bonus.fadeOut('fast', function(){
+		this.$bonus.fadeOut('slow', function(){
 			$(this).remove();
 		});
 	},
