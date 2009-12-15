@@ -158,7 +158,9 @@ var jBreak = {
 		$.ajax({
 			url:'getLevel.php',
 			method:'get',
-			data:{levelID:levelID},
+			data:{
+				levelID:levelID
+			},
 			dataType:'json',
 			async:false,
 			success:function(data, textStatus){
@@ -635,19 +637,23 @@ jBreak.ball.prototype = {
 					ballX = Math.floor(ballX);
 					ballY = Math.floor(ballY);
 
-					var hHit = (ballX % 64 <= 63 && ballX % 64 >= 61 && this._speed.x < 0)
-					        || (ballX % 64 <=  2 && this._speed.x > 0);
-					var vHit = (ballY % 16 <= 15 && ballY % 16 >= 13 && this._speed.y < 0)
-					        || (ballY % 16 <=  2 && this._speed.y > 0);
+					var hHit = (ballX % 64 <= 63 && ballX % 64 >= 60 && this._speed.x < 0)
+					        || (ballX % 64 <=  4 && this._speed.x > 0);
+					var vHit = (ballY % 16 <= 15 && ballY % 16 >= 12 && this._speed.y < 0)
+					        || (ballY % 16 <=  4 && this._speed.y > 0);
 
 					if(vHit && hHit) // don't mirror both speeds, mirror the slower one
 						(this._speed.y > this._speed.x ? hHit = false : vHit = false);
 
-					if(vHit || !hHit) // workaround, a hit must occur here...
+					if(vHit)
 						this._speed.y *= -1;
 
 					if(hHit)
 						this._speed.x *= -1;
+
+					/*if(!hHit && !vHit){
+						console.log('ballX: %d speed: %o', ballX, this._speed);
+					}*/
 
 					//console.log('I hit %d,%d', blockX,blockY);
 					var $block = $('.x'+blockX+'.y'+blockY);
@@ -878,12 +884,12 @@ jBreak.bonus.prototype = {
 			random = Math.floor(Math.random() * this._good.length);
 			this._action = this._good[random];
 			background = 'green';
-			console.log('Spawning "good" %o -> %d', this, random); 
+			//console.log('Spawning "good" %o -> %d', this, random); 
 		} else {
 			random = Math.floor(Math.random() * this._bad.length);
 			this._action = this._bad[random];
 			background = 'red';
-			console.log('Spawning "bad" %o -> %d', this, random); 
+			//console.log('Spawning "bad" %o -> %d', this, random); 
 		}
 
 		var $bonus = $('<div class="jBreakBonus"/>');
