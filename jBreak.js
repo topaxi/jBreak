@@ -40,45 +40,43 @@ var jBreak = {
 	},
 	createPaddles:function(){
 		var self = this;
-		setTimeout(function(){
-			self.$field.bind('click.jBreakCreatePaddles', function(e){
-				e.stopPropagation(); // do not bubble
-				//console.log('Creating paddles...');
-				$('#jBreak').css({cursor:'none'});
+		this.$field.bind('click.jBreakCreatePaddles', function(e){
+			e.stopPropagation(); // do not bubble
+			//console.log('Creating paddles...');
+			$('#jBreak').css({cursor:'none'});
 
-				self.paddles.forEach(function(jBPaddle){
-					jBPaddle.start();
-					var jBPaddlePosition = jBPaddle.getPosition(),
-					    fieldOffset = self.$field.offset();
-					var position = (
-						jBPaddlePosition.relative === 'top' ||
-						jBPaddlePosition.relative === 'bottom'
-							? e.pageX - fieldOffset.left
-							: e.pageY - fieldOffset.top);
+			self.paddles.forEach(function(jBPaddle){
+				jBPaddle.start();
+				var jBPaddlePosition = jBPaddle.getPosition(),
+						fieldOffset = self.$field.offset();
+				var position = (
+					jBPaddlePosition.relative === 'top' ||
+					jBPaddlePosition.relative === 'bottom'
+						? e.pageX - fieldOffset.left
+						: e.pageY - fieldOffset.top);
 
-					jBPaddle.move(jBPaddlePosition.relative, position);
-				}, this);
-
-				self.$field.bind('click.jBreakLaunchPaddleBalls', function(){
-					self.paddles.forEach(function(jBPaddle){
-						jBPaddle.startBalls();
-					});
-				});
-				self.$field.unbind('click.jBreakCreatePaddles');
-
-				$(document).unbind('.jBreakPause');
-				$(document).bind('keydown.jBreakPause', function(e){
-					if(e.keyCode === 32){
-						// @todo stop paddle movement too and unpause only by clicking a paddle
-						for(var jBBall in self.balls){
-							self.balls[jBBall].pause();
-						}
-					}
-				});
-
-				//console.log('Paddles created');
+				jBPaddle.move(jBPaddlePosition.relative, position);
 			});
-		}, 1000);
+
+			self.$field.bind('click.jBreakLaunchPaddleBalls', function(){
+				self.paddles.forEach(function(jBPaddle){
+					jBPaddle.startBalls();
+				});
+			});
+			self.$field.unbind('click.jBreakCreatePaddles');
+
+			$(document).unbind('.jBreakPause');
+			$(document).bind('keydown.jBreakPause', function(e){
+				if(e.keyCode === 32){
+					// @todo stop paddle movement too and unpause only by clicking a paddle
+					for(var jBBall in self.balls){
+						self.balls[jBBall].pause();
+					}
+				}
+			});
+
+			//console.log('Paddles created');
+		});
 	},
 	destroyField:function(){
 		this.$field.unbind('mousemove');
@@ -417,64 +415,67 @@ jBreak.paddle.prototype = {
 		});
 	},
 	connectBall:function(ballID){
-		var x,y,effectDirection;
+		var x,y,effectDirection,jBBall = jBreak.balls[ballID];
 
 		switch(this._position.relative){
 			case 'top':
 				x = this._position.x
 				  + this._size.width / 2
-				  - jBreak.balls[ballID].$ball.width() / 2;
+				  - jBBall.$ball.width() / 2;
 
 				y = this._position.y
 				  + this._size.height / 2
-				  + jBreak.balls[ballID].$ball.height() / 2;
+				  + jBBall.$ball.height() / 2;
 
-				jBreak.balls[ballID].setAngle(90);
+				jBBall.setAngle(90);
 				effectDirection = 'down';
 				break;
 			case 'right':
 				x = this._position.x
-				  - jBreak.balls[ballID].$ball.width();
+				  - jBBalls.$ball.width();
 
 				y = this._position.y
 				  + this._size.height / 2
-				  - jBreak.balls[ballID].$ball.width() / 2;
+				  - jBBall.$ball.width() / 2;
 
-				jBreak.balls[ballID].setAngle(90);
+				jBBall.setAngle(90);
 				effectDirection = 'left';
 				break;
 			default:
 			case 'bottom':
 				x = this._position.x
 				  + this._size.width / 2
-				  - jBreak.balls[ballID].$ball.width() / 2;
+				  - jBBall.$ball.width() / 2;
 
 				y = this._position.y
 				  - this._size.height / 2
-				  - jBreak.balls[ballID].$ball.height() / 2;
-				jBreak.balls[ballID].setAngle(-90);
+				  - jBBall.$ball.height() / 2;
+
+				jBBall.setAngle(-90);
 				effectDirection = 'up';
 				break;
 			case 'left':
 				x = this.position.x
-				  + jBreak.balls[ballID].$ball.width();
+				  + jBBall.$ball.width();
 
 				y = this._position.y
 				  + this._size.height / 2
-				  - jBreak.balls[ballID].$ball.width() / 2;
-				jBreak.balls[ballID].setAngle(-90);
+				  - jBBall.$ball.width() / 2;
+
+				jBBall.setAngle(-90);
 				effectDirection = 'right';
 				break;
 		}
 
-		jBreak.balls[ballID].move(x,y);
-		jBreak.balls[ballID].$ball.show('bounce', {
+		jBBall.move(x,y);
+		jBBall.$ball.show('bounce', {
 			direction:effectDirection,
 			distance:40,
 			times:5
 		}, function(){
 			var ball = jBreak.balls[ballID];
 			ball.move(ball.position.x,ball.position.y);
+			ball.ready(true);
 		});
 		this.balls.push(ballID);
 
@@ -483,11 +484,13 @@ jBreak.paddle.prototype = {
 	startBalls:function(){
 		var balls = jBreak.balls;
 		for(var i = this.balls.length;i--;){
-			balls[i].$ball.stop(true, true);
-			balls[i].start();
+			var ball = balls[i];
+
+			if(ball.ready()){
+				ball.start();
+				this.balls.remove(i);
+			}
 		}
-		// flush balls
-		this.balls = [];
 	},
 	move:function(relativePosition, position){
 		var jB = jBreak,
@@ -599,9 +602,20 @@ jBreak.ball.prototype = {
 		};
 	},
 	start:function(){
-		this.setAngle();
-		this._timer = true;
-		this._animate();
+		if(this._ready){
+			this.setAngle();
+			this._timer = true;
+			this._animate();
+		}
+	},
+	ready:function(ready){
+		if(ready !== undefined){
+			this._ready = ready;
+
+			return this;
+		}
+
+		return this._ready;
 	},
 	setAngle:function(angle){
 		if(angle !== undefined)
@@ -869,6 +883,7 @@ jBreak.ball.prototype = {
 	_timer:null,
 	_interval:30,
 	_size:null,
+	_ready:false, // ready to start?
 	// public variables @todo these should be private too
 	$ball:null,
 	position:null, //@todo getter
