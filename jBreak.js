@@ -1076,8 +1076,8 @@ jBreak.bonus.prototype = {
 		function(){ // permanent interval reduction
 			var ball = this._ball;
 
-			ball.oldInterval -= 3;
-			ball.interval(ball.interval() - 3);
+			ball.oldInterval -= 5;
+			ball.interval(ball.interval() - 5);
 		}
 	],
 	_good:[
