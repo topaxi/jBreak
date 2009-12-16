@@ -44,16 +44,17 @@ var jBreak = {
 		audio.volume = this._volume/100;
 		audio.play();
 	},
-	addBall:function(paddleID){
+	addBall:function(jBPaddle){
 		var ballID = (this.balls.length === undefined ? 0 : this.balls.length+1);
 		this.balls[ballID] = new jBreak.ball(ballID);
-		this.paddles[paddleID].connectBall(ballID);
+		jBPaddle.connectBall(ballID);
 
 		return ballID;
 	},
 	addPaddle:function(position){
-		this.paddles.push(new jBreak.paddle(position));
-		return this.paddles.length-1;
+		var jBPaddle = new jBreak.paddle(position);
+		this.paddles.push(jBPaddle);
+		return jBPaddle;
 	},
 	createPaddles:function(){
 		var self = this;
@@ -126,44 +127,49 @@ var jBreak = {
 			this.createPaddles();
 		}
 	},
-	ballChecker:function(){
+	ballChecker:function(jBPaddle){
 		//console.log('Checking remaining balls...');
 		var i = 0;
 		for(var ball in this.balls)
 			i++;
 
 		if(i === 0){
+			var lives = this._lives;
+			if(lives > 0){
+				this.lives(lives-1);
+				this.addBall(jBPaddle);
+				jBPaddle.setSize(64); // reset size
+			} else {
 			//console.log('No remaining balls found... FAIL!')
-			var self = this;
+				var self = this;
 
-			this.destroyField();
-			this.$field.find('.jBreakPaddle').effect('puff', {}, 750);
-			this.$blocks.find('div').effect('drop', {direction:'down'}, 750);
+				this.destroyField();
+				this.$field.find('.jBreakPaddle').effect('puff', {}, 750);
+				this.$blocks.find('div').effect('drop', {direction:'down'}, 750);
 
-			setTimeout(function(){
-				self.paddles.forEach(function(jBPaddle){
-					jBPaddle.$paddle.remove();
-					jBPaddle.remove();
-				});
-				self.paddles = [];
-				self.$blocks.remove();
-
-				var $fail = $('<div class="fail" style="display:none">FAIL!</div>');
-				$('#jBreak').css({cursor:'default'});
-				self.$field.append($fail);
-				var failOffset = $fail.offset();
-
-				$fail.css({
-					top:self.$field.height()/2 - $fail.height()/2 + 'px'
-				}).fadeIn('slow', function(){
-					$(this).effect('pulsate', {times:2,mode:'hide'}, 2000, function(){
-						self._levelID = 0;
-						self.start(true); // restart game
+				setTimeout(function(){
+					self.paddles.forEach(function(jBPaddle){
+						jBPaddle.$paddle.remove();
+						jBPaddle.remove();
 					});
-				});
-			}, 1000);
-		} else {
-			//console.log('%d remaining balls found.', i)
+					self.paddles = [];
+					self.$blocks.remove();
+
+					var $fail = $('<div class="fail" style="display:none">FAIL!</div>');
+					$('#jBreak').css({cursor:'default'});
+					self.$field.append($fail);
+					var failOffset = $fail.offset();
+
+					$fail.css({
+						top:self.$field.height()/2 - $fail.height()/2 + 'px'
+					}).fadeIn('slow', function(){
+						$(this).effect('pulsate', {times:2,mode:'hide'}, 2000, function(){
+							self._levelID = 0;
+							self.start(true); // restart game
+						});
+					});
+				}, 1000);
+			}
 		}
 	},
 	loadLevel:function(levelID){
@@ -190,9 +196,9 @@ var jBreak = {
 			self.createPaddles();
 
 			level.paddles.forEach(function(jBPaddle){
-				var paddleID = self.addPaddle(jBPaddle.position);
+				var paddle = self.addPaddle(jBPaddle.position);
 				if(jBPaddle.ball)
-					self.addBall(paddleID);
+					self.addBall(paddle);
 			});
 		}, 250);
 	},
@@ -828,15 +834,7 @@ jBreak.ball.prototype = {
 					return true; // @todo why? ^^
 				} else if(paddleMissed){
 					this.remove();
-
-					var lives = jB.lives();
-					if(lives > 0){
-						jB.lives(lives-1);
-						jB.addBall(i);
-						jBPaddle.setSize(64); // reset size
-					} else {
-						jB.ballChecker(); // any balls left?
-					}
+					jB.ballChecker(jBPaddle); // any balls left?
 				}
 			}
 		}
