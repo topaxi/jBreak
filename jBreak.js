@@ -65,8 +65,10 @@ var jBreak = {
 
 			self.paddles.forEach(function(jBPaddle){
 				jBPaddle.start();
+
 				var jBPaddlePosition = jBPaddle.getPosition(),
-						fieldOffset = self.$field.offset();
+				    fieldOffset = self.$field.offset();
+
 				var position = (
 					jBPaddlePosition.relative === 'top' ||
 					jBPaddlePosition.relative === 'bottom'
