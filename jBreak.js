@@ -710,7 +710,11 @@ jBreak.ball.prototype = {
 					var hitImage = $block.css('background-image')
 						.replace(/\/(.*)\.png/g, '/$1_h.png');
 
+					var rand = Math.random();
 					if(jB.blocks[blockY][blockX] > 1 && !this._pierce){
+						if(rand < .02)
+							new jB.bonus(this,x,y,180); // spawn bonus
+
 						var oldImage = $block.css('background-image');
 						$block.css({
 							opacity:1-1/jB.blocks[blockY][blockX],
@@ -722,10 +726,8 @@ jBreak.ball.prototype = {
 							$block.css('background-image', oldImage);
 						}, 100);
 					} else {
-						var rand = Math.random();
-						if(rand < .06){
+						if(rand < .06)
 							new jB.bonus(this,x,y,180); // spawn bonus
-						}
 
 						$block.css('background-image', hitImage);
 						$block.effect('drop', {direction:direction}, 'fast', function(){
@@ -733,7 +735,6 @@ jBreak.ball.prototype = {
 						});
 						jB.blocks[blockY][blockX] = 0;
 						jB.blockChecker();
-						return;
 					}
 				}
 			}
