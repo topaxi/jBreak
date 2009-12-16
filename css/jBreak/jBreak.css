@@ -126,5 +126,5 @@ div#jBreakLives div.jBreakLive {
 	height:8px;
 	background-image:url(../../images/paddles/pad32x8.png);
 	float:left;
-	margin:4px
+	margin:4px 1px
 }
