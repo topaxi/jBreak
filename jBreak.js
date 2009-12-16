@@ -714,7 +714,7 @@ jBreak.ball.prototype = {
 
 						setTimeout(function(){
 							$block.css('background-image', oldImage);
-						}, 150);
+						}, 100);
 					} else {
 						var rand = Math.random();
 						if(rand < .06){
