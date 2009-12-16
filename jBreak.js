@@ -15,8 +15,9 @@ var jBreak = {
 			height:this.$field.height()
 		};
 
+		this.lives(this._lives); // draw lives
+
 		if(initial){
-			this.lives(3);
 			this.options.showOptions();
 		}
 		//console.log('Playing field initialized -> %o', this);
@@ -232,7 +233,7 @@ var jBreak = {
 	balls:null,
 	blocks:null,
 	// private variables
-	_lives:0,
+	_lives:3,
 	_volume:70,
 	_levelID:0,
 	// objects
