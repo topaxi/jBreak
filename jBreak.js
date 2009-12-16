@@ -16,10 +16,26 @@ var jBreak = {
 		};
 
 		if(initial){
-			this.lives = 3;
+			this.lives(3);
 			this.options.showOptions();
 		}
 		//console.log('Playing field initialized -> %o', this);
+	},
+	lives:function(lives){
+		if(lives === undefined){
+			return this._lives;
+		}
+
+		this._lives = lives;
+
+		$('#jBreakLives').remove();
+		var $lives = $('<div id="jBreakLives"/>');
+
+		for(var i = this._lives;i--;){
+			$lives.append('<div class="jBreakLive"/>');
+		}
+
+		$('#jBreak').append($lives);
 	},
 	playSound:function(soundFile){
 		if(typeof Audio === 'undefined') return; // return if Audio is undefined
@@ -216,7 +232,7 @@ var jBreak = {
 	balls:null,
 	blocks:null,
 	// private variables
-	lives:0,
+	_lives:0,
 	_volume:70,
 	_levelID:0,
 	// objects
@@ -397,7 +413,11 @@ jBreak.paddle.prototype = {
 			? width = size
 			: height = size);
 
-		this.$paddle.css({width:width+'px', height:height+'px'});
+		this.$paddle.css({
+			width:width+'px',
+			height:height+'px',
+			backgroundImage:'url(images/paddles/pad'+width+'x'+height+'.png)'
+		});
 		this._size = {width:width, height:height};
 	},
 	start:function(){
@@ -648,26 +668,29 @@ jBreak.ball.prototype = {
 			if(blockExists){
 				if(jB.blocks[blockY][blockX] > 0){
 					jB.playSound('sound/pling1s.ogg');
-					ballX = Math.floor(ballX);
-					ballY = Math.floor(ballY);
 
-					var hHit = (ballX % 64 <= 63 && ballX % 64 >= 60 && this._speed.x < 0)
-					        || (ballX % 64 <=  4 && this._speed.x > 0);
-					var vHit = (ballY % 16 <= 15 && ballY % 16 >= 12 && this._speed.y < 0)
-					        || (ballY % 16 <=  4 && this._speed.y > 0);
+					if(!this._pierce){
+						ballX = Math.floor(ballX);
+						ballY = Math.floor(ballY);
 
-					if(vHit && hHit) // don't mirror both speeds, mirror the slower one
-						(this._speed.y > this._speed.x ? hHit = false : vHit = false);
+						var hHit = (ballX % 64 <= 63 && ballX % 64 >= 60 && this._speed.x < 0)
+										|| (ballX % 64 <=  4 && this._speed.x > 0);
+						var vHit = (ballY % 16 <= 15 && ballY % 16 >= 12 && this._speed.y < 0)
+										|| (ballY % 16 <=  4 && this._speed.y > 0);
 
-					if(vHit)
-						this._speed.y *= -1;
+						if(vHit && hHit) // don't mirror both speeds, mirror the slower one
+							(this._speed.y > this._speed.x ? hHit = false : vHit = false);
 
-					if(hHit)
-						this._speed.x *= -1;
+						if(vHit)
+							this._speed.y *= -1;
 
-					/*if(!hHit && !vHit){
-						console.log('ballX: %d speed: %o', ballX, this._speed);
-					}*/
+						if(hHit)
+							this._speed.x *= -1;
+
+						/*if(!hHit && !vHit){
+							console.log('ballX: %d speed: %o', ballX, this._speed);
+						}*/
+					}
 
 					//console.log('I hit %d,%d', blockX,blockY);
 					var $block = $('.x'+blockX+'.y'+blockY);
@@ -680,7 +703,7 @@ jBreak.ball.prototype = {
 					var hitImage = $block.css('background-image')
 						.replace(/\/(.*)\.png/g, '/$1_h.png');
 
-					if(jB.blocks[blockY][blockX] > 1){
+					if(jB.blocks[blockY][blockX] > 1 && !this._pierce){
 						var oldImage = $block.css('background-image');
 						$block.css({
 							opacity:1-1/jB.blocks[blockY][blockX],
@@ -726,7 +749,7 @@ jBreak.ball.prototype = {
 						paddleHit = this._speed.y > 0
 						         && y <= jB.fieldSize.height - 8
 						         && x >= jBPaddlePosition.x
-						         && Math.ceil(y) >= jBPaddlePosition.y - jBPaddle.$paddle.height()
+						         && Math.ceil(y) >= jBPaddlePosition.y - this._size.height
 						         && x <= jBPaddlePosition.x + jBPaddle.$paddle.width();
 
 						paddleMissed = y > jB.fieldSize.height + 2;
@@ -750,7 +773,7 @@ jBreak.ball.prototype = {
 						paddleHit = this._speed.y < 0
 						         && y >= 4
 						         && x >= jBPaddlePosition.x
-						         && Math.ceil(y) <= jBPaddlePosition.y + jBPaddle.$paddle.height()
+						         && Math.ceil(y) <= jBPaddlePosition.y + this._size.height
 						         && x <= jBPaddlePosition.x + jBPaddle.$paddle.width();
 
 						paddleMissed = y < -10;
@@ -774,7 +797,7 @@ jBreak.ball.prototype = {
 						paddleHit = this._speed.x < 0 
 						         && x >= 4
 						         && y >= jBPaddlePosition.y
-						         && Math.ceil(x) <= jBPaddlePosition.x + jBPaddle.$paddle.width()
+						         && Math.ceil(x) <= jBPaddlePosition.x + this._size.width
 						         && y <= jBPaddlePosition.y + jBPaddle.$paddle.height();
 
 						paddleMissed = x < -10;
@@ -788,7 +811,7 @@ jBreak.ball.prototype = {
 						paddleHit = this._speed.x > 0
 						         && y >= jBPaddlePosition.y
 						         && x <= jB.fieldSize.width - 8
-						         && Math.ceil(x) >= jBPaddlePosition.x - jBPaddle.$paddle.width()
+						         && Math.ceil(x) >= jBPaddlePosition.x - this._size.width
 						         && y <= jBPaddlePosition.y + jBPaddle.$paddle.height();
 
 						paddleMissed = x > jB.fieldSize.width + 2;
@@ -805,8 +828,9 @@ jBreak.ball.prototype = {
 				} else if(paddleMissed){
 					this.remove();
 
-					if(jB.lives > 0){
-						jB.lives -= 1;
+					var lives = jB.lives();
+					if(lives > 0){
+						jB.lives(lives-1);
 						jB.addBall(i);
 						jBPaddle.setSize(64); // reset size
 					} else {
@@ -876,6 +900,14 @@ jBreak.ball.prototype = {
 			this._animate();
 		}
 	},
+	pierce:function(b){
+		this._pierce = b;
+		if(b){
+			this.$ball.css('background-image', 'url(images/ball1-88.png)');
+		} else {
+			this.$ball.css('background-image', 'url(images/ball4-88.png)');
+		}
+	},
 	// private variables
 	_ballID:null,
 	_speed:null,
@@ -883,6 +915,7 @@ jBreak.ball.prototype = {
 	_timer:null,
 	_interval:30,
 	_size:null,
+	_pierce:false,
 	_ready:false, // ready to start?
 	// public variables @todo these should be private too
 	$ball:null,
@@ -944,7 +977,7 @@ jBreak.bonus.prototype = {
 	_hitCheck:function(x,y){
 		var jB = jBreak;
 		// only run checks if a paddle could be hit
-		if(y >= jB.fieldSize.height - 16 || y <=  8 || x <=  8 || x >= jB.fieldSize.width - 16){
+		if(y >= jB.fieldSize.height - 24 || y <=  16 || x <=  16 || x >= jB.fieldSize.width - 24){
 			for(var i = jB.paddles.length;i--;){
 				var jBPaddle = jB.paddles[i],
 				    paddleMissed,
@@ -958,7 +991,7 @@ jBreak.bonus.prototype = {
 						paddleHit = this._speed.y > 0
 						         && y <= jB.fieldSize.height - 8
 						         && x >= jBPaddlePosition.x
-						         && Math.ceil(y) >= jBPaddlePosition.y - jBPaddle.$paddle.height()
+						         && Math.ceil(y) >= jBPaddlePosition.y - 16
 						         && x <= jBPaddlePosition.x + jBPaddle.$paddle.width();
 
 						paddleMissed = y > jB.fieldSize.height + 2;
@@ -971,7 +1004,7 @@ jBreak.bonus.prototype = {
 						paddleHit = this._speed.y < 0
 						         && y >= 4
 						         && x >= jBPaddlePosition.x
-						         && Math.ceil(y) <= jBPaddlePosition.y + jBPaddle.$paddle.height()
+						         && Math.ceil(y) <= jBPaddlePosition.y + 16
 						         && x <= jBPaddlePosition.x + jBPaddle.$paddle.width();
 
 						paddleMissed = y < -10;
@@ -984,7 +1017,7 @@ jBreak.bonus.prototype = {
 						paddleHit = this._speed.x < 0 
 						         && x >= 4
 						         && y >= jBPaddlePosition.y
-						         && Math.ceil(x) <= jBPaddlePosition.x + jBPaddle.$paddle.width()
+						         && Math.ceil(x) <= jBPaddlePosition.x + 16
 						         && y <= jBPaddlePosition.y + jBPaddle.$paddle.height();
 
 						paddleMissed = x < -10;
@@ -997,7 +1030,7 @@ jBreak.bonus.prototype = {
 						paddleHit = this._speed.x > 0
 						         && y >= jBPaddlePosition.y
 						         && x <= jB.fieldSize.width - 8
-						         && Math.ceil(x) >= jBPaddlePosition.x - jBPaddle.$paddle.width()
+						         && Math.ceil(x) >= jBPaddlePosition.x - 16
 						         && y <= jBPaddlePosition.y + jBPaddle.$paddle.height();
 
 						paddleMissed = x > jB.fieldSize.width + 2;
@@ -1066,8 +1099,8 @@ jBreak.bonus.prototype = {
 				: ball.interval());
 
 			// clear previous 
-			clearTimeout(ball.bonusTimeoutID);
-			ball.bonusTimeoutID = setTimeout(function(){
+			clearTimeout(ball.speedBonusTimeoutID);
+			ball.speedBonusTimeoutID = setTimeout(function(){
 				ball.interval(ball.oldInterval);
 			}, 15000);
 
@@ -1086,14 +1119,23 @@ jBreak.bonus.prototype = {
 		},
 		function(){
 			var ball = this._ball;
-			clearTimeout(ball.bonusTimeoutID);
+			clearTimeout(ball.speedBonusTimeoutID);
 
 			if(ball.interval() < 25){
 				ball.interval(25);
 			}
 		},
 		function(){
-			jBreak.lives += 1;
+			jBreak.lives(jBreak.lives()+1);
+		},
+		function(){
+			var ball = this._ball;
+			
+			clearTimeout(ball.pierceBonusTimeoutID);
+			ball.pierce(true);
+			ball.pierceBonusTimeoutID = setTimeout(function(){
+				ball.pierce(false);
+			}, 7500);
 		}
 	]
 };
