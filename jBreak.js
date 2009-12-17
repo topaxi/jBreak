@@ -167,6 +167,7 @@ var jBreak = {
 					}).fadeIn('slow', function(){
 						$(this).effect('pulsate', {times:2,mode:'hide'}, 2000, function(){
 							self._levelID = 0;
+							self._lives = 3;
 							self.start(true); // restart game
 						});
 					});
