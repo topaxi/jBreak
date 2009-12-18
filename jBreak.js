@@ -772,7 +772,7 @@ jBreak.ball.prototype = {
 
 						paddleHit = this._speed.y > 0
 						         && y <= jB.fieldSize.height - 8
-						         && x >= jBPaddlePosition.x
+						         && x >= jBPaddlePosition.x - this._size.width
 						         && Math.ceil(y) >= jBPaddlePosition.y - this._size.height
 						         && x <= jBPaddlePosition.x + jBPaddle.$paddle.width();
 
@@ -796,7 +796,7 @@ jBreak.ball.prototype = {
 
 						paddleHit = this._speed.y < 0
 						         && y >= 4
-						         && x >= jBPaddlePosition.x
+						         && x >= jBPaddlePosition.x - this._size.width
 						         && Math.ceil(y) <= jBPaddlePosition.y + this._size.height
 						         && x <= jBPaddlePosition.x + jBPaddle.$paddle.width();
 
@@ -820,7 +820,7 @@ jBreak.ball.prototype = {
 
 						paddleHit = this._speed.x < 0 
 						         && x >= 4
-						         && y >= jBPaddlePosition.y
+						         && y >= jBPaddlePosition.y - this._size.height
 						         && Math.ceil(x) <= jBPaddlePosition.x + this._size.width
 						         && y <= jBPaddlePosition.y + jBPaddle.$paddle.height();
 
@@ -833,7 +833,7 @@ jBreak.ball.prototype = {
 						paddle.right = true;
 
 						paddleHit = this._speed.x > 0
-						         && y >= jBPaddlePosition.y
+						         && y >= jBPaddlePosition.y - this._size.height
 						         && x <= jB.fieldSize.width - 8
 						         && Math.ceil(x) >= jBPaddlePosition.x - this._size.width
 						         && y <= jBPaddlePosition.y + jBPaddle.$paddle.height();
@@ -960,20 +960,19 @@ jBreak.ball.prototype = {
 
 jBreak.bonus.prototype = {
 	init:function(jBBall,x,y,angle){
-		var random, background;
+		var random, background, powerup;
 
 		// 50% chance to get a bad or a good powerup
 		if(Math.floor(Math.random()+.5)){
 			random = Math.floor(Math.random() * this._good.length);
-			this._action = this._good[random];
-			background = 'green';
+			powerup = this._good[random];
 			//console.log('Spawning "good" %o -> %d', this, random); 
 		} else {
 			random = Math.floor(Math.random() * this._bad.length);
-			this._action = this._bad[random];
-			background = 'red';
+			powerup = this._bad[random];
 			//console.log('Spawning "bad" %o -> %d', this, random); 
 		}
+		this._action = powerup.action;
 
 		var $bonus = $('<div class="jBreakBonus"/>');
 
@@ -991,10 +990,11 @@ jBreak.bonus.prototype = {
 			left:x,
 			top:y,
 			position:'absolute',
-			width:'16px',
-			height:'16px',
-			background:background
+			width:'24px',
+			height:'24px',
+			backgroundImage:powerup.background
 		});
+		console.log($bonus);
 
 		this.$bonus = $bonus;
 		this.setAngle(angle);
@@ -1012,7 +1012,7 @@ jBreak.bonus.prototype = {
 	_hitCheck:function(x,y){
 		var jB = jBreak;
 		// only run checks if a paddle could be hit
-		if(y >= jB.fieldSize.height - 24 || y <=  16 || x <=  16 || x >= jB.fieldSize.width - 24){
+		if(y >= jB.fieldSize.height - 32 || y <=  24 || x <=  24 || x >= jB.fieldSize.width - 32){
 			for(var i = jB.paddles.length;i--;){
 				var jBPaddle = jB.paddles[i],
 				    paddleMissed,
@@ -1025,8 +1025,8 @@ jBreak.bonus.prototype = {
 					case 'bottom':
 						paddleHit = this._speed.y > 0
 						         && y <= jB.fieldSize.height - 8
-						         && x >= jBPaddlePosition.x
-						         && Math.ceil(y) >= jBPaddlePosition.y - 16
+						         && x >= jBPaddlePosition.x - 24
+						         && Math.ceil(y) >= jBPaddlePosition.y - 24
 						         && x <= jBPaddlePosition.x + jBPaddle.$paddle.width();
 
 						paddleMissed = y > jB.fieldSize.height + 2;
@@ -1038,8 +1038,8 @@ jBreak.bonus.prototype = {
 					case 'top':
 						paddleHit = this._speed.y < 0
 						         && y >= 4
-						         && x >= jBPaddlePosition.x
-						         && Math.ceil(y) <= jBPaddlePosition.y + 16
+						         && x >= jBPaddlePosition.x + 24
+						         && Math.ceil(y) <= jBPaddlePosition.y + 24
 						         && x <= jBPaddlePosition.x + jBPaddle.$paddle.width();
 
 						paddleMissed = y < -10;
@@ -1051,8 +1051,8 @@ jBreak.bonus.prototype = {
 					case 'left':
 						paddleHit = this._speed.x < 0 
 						         && x >= 4
-						         && y >= jBPaddlePosition.y
-						         && Math.ceil(x) <= jBPaddlePosition.x + 16
+						         && y >= jBPaddlePosition.y + 24
+						         && Math.ceil(x) <= jBPaddlePosition.x + 24
 						         && y <= jBPaddlePosition.y + jBPaddle.$paddle.height();
 
 						paddleMissed = x < -10;
@@ -1063,9 +1063,9 @@ jBreak.bonus.prototype = {
 						break;
 					case 'right':
 						paddleHit = this._speed.x > 0
-						         && y >= jBPaddlePosition.y
+						         && y >= jBPaddlePosition.y - 24
 						         && x <= jB.fieldSize.width - 8
-						         && Math.ceil(x) >= jBPaddlePosition.x - 16
+						         && Math.ceil(x) >= jBPaddlePosition.x - 24
 						         && y <= jBPaddlePosition.y + jBPaddle.$paddle.height();
 
 						paddleMissed = x > jB.fieldSize.width + 2;
@@ -1123,58 +1123,76 @@ jBreak.bonus.prototype = {
 	_ball:null, // the ball who triggered this bonus
 	_action:null, // will hold the function to be executed
 	_bad:[
-		function(jBPaddle){
-			jBPaddle.shrink();
-		},
-		function(){ // ball speedup for 15 seconds
-			var ball = this._ball;
+		{
+			action:function(jBPaddle){
+				jBPaddle.shrink();
+			},
+			background:'url(images/bonuses/shrink.png)'
+		},{
+			action:function(){ // ball speedup for 15 seconds
+				var ball = this._ball;
 
-			ball.oldInterval = (ball.oldInterval
-				? ball.oldInterval
-				: ball.interval());
+				ball.oldInterval = (ball.oldInterval
+					? ball.oldInterval
+					: ball.interval());
 
-			// clear previous 
-			clearTimeout(ball.speedBonusTimeoutID);
-			ball.speedBonusTimeoutID = setTimeout(function(){
-				ball.interval(ball.oldInterval);
-				ball.oldInterval = false;
-			}, 15000);
+				// clear previous 
+				clearTimeout(ball.speedBonusTimeoutID);
+				ball.speedBonusTimeoutID = setTimeout(function(){
+					ball.interval(ball.oldInterval);
+					ball.oldInterval = false;
+				}, 15000);
 
-			ball.interval(10);
-		},
-		function(){ // permanent interval reduction
-			var ball = this._ball;
+				ball.interval(10);
+			},
+			background:'url(images/bonuses/15+speed.png)',
+		},{
+			action:function(){ // permanent interval reduction
+				var ball = this._ball;
 
-			ball.oldInterval -= 5;
-			ball.interval(ball.interval() - 5);
+				ball.oldInterval -= 5;
+				ball.interval(ball.interval() - 5);
+			},
+			background:'url(images/bonuses/faster.png)'
 		}
 	],
 	_good:[
-		function(jBPaddle){
-			jBPaddle.grow();
-		},
-		function(){
-			var ball = this._ball;
-			clearTimeout(ball.speedBonusTimeoutID);
+		{
+			action:function(jBPaddle){
+				jBPaddle.grow();
+			},
+			background:'url(images/bonuses/grow.png)'
+		},{
+			action:function(){
+				var ball = this._ball;
+				clearTimeout(ball.speedBonusTimeoutID);
 
-			if(ball.interval() < 25){
-				ball.interval(25);
-			}
-		},
-		function(){
-			jBreak.lives(jBreak.lives()+1);
-		},
-		function(){
-			var ball = this._ball;
-			
-			clearTimeout(ball.pierceBonusTimeoutID);
-			ball.pierce(true);
-			ball.pierceBonusTimeoutID = setTimeout(function(){
-				ball.pierce(false);
-			}, 7500);
-		},
-		function(){
-			this._ball.clone().start();
+				if(ball.interval() < 25){
+					ball.interval(25);
+				}
+			},
+			background:'url(images/bonuses/slower.png)',
+		},{
+			action:function(){
+				jBreak.lives(jBreak.lives()+1);
+			},
+			background:'url(images/bonuses/life.png)'
+		},{
+			action:function(){
+				var ball = this._ball;
+				
+				clearTimeout(ball.pierceBonusTimeoutID);
+				ball.pierce(true);
+				ball.pierceBonusTimeoutID = setTimeout(function(){
+					ball.pierce(false);
+				}, 7500);
+			},
+			background:'url(images/bonuses/powerball.png)'
+		},{
+			action:function(){
+				this._ball.clone().start();
+			},
+			background:'url(images/bonuses/multiball.png'
 		}
 	]
 };
