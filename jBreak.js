@@ -64,7 +64,8 @@ var jBreak = {
 		this.$field.bind('click.jBreakCreatePaddles', function(e){
 			e.stopPropagation(); // do not bubble
 			//console.log('Creating paddles...');
-			$('#jBreak').css({cursor:'none'});
+			$('#jBreak').css('cursor',
+				'url(images/cursor/cursor.gif), url(images/cursor/cursor.ico), none');
 
 			self.paddles.forEach(function(jBPaddle){
 				jBPaddle.start();
