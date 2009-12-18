@@ -426,7 +426,7 @@ jBreak.paddle.prototype = {
 			: size.height - 16);
 	},
 	setSize:function(size){
-		if(size >= 96 || size <= 32)
+		if(size > 96 || size < 32)
 			return;
 
 		var width = this._size.width, height = this._size.height;
@@ -994,7 +994,6 @@ jBreak.bonus.prototype = {
 			height:'24px',
 			backgroundImage:powerup.background
 		});
-		console.log($bonus);
 
 		this.$bonus = $bonus;
 		this.setAngle(angle);
