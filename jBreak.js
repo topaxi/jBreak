@@ -45,11 +45,14 @@ var jBreak = {
 		audio.play();
 	},
 	addBall:function(jBPaddle){
-		var ballID = (this.balls.length === undefined ? 0 : this.balls.length+1);
-		this.balls[ballID] = new jBreak.ball(ballID);
-		jBPaddle.connectBall(ballID);
+		var ballID = this.countBalls();
+		var ball = new jBreak.ball(ballID);
+		this.balls[ballID] = ball;
+		
+		if(jBPaddle !== undefined)
+			jBPaddle.connectBall(ballID);
 
-		return ballID;
+		return ball;
 	},
 	addPaddle:function(position){
 		var jBPaddle = new jBreak.paddle(position);
@@ -129,13 +132,16 @@ var jBreak = {
 			this.createPaddles();
 		}
 	},
-	ballChecker:function(jBPaddle){
-		//console.log('Checking remaining balls...');
+	countBalls:function(){
 		var i = 0;
 		for(var ball in this.balls)
 			i++;
-
-		if(i === 0){
+		
+		return i;
+	},
+	ballChecker:function(jBPaddle){
+		//console.log('Checking remaining balls...');
+		if(this.countBalls() === 0){
 			var lives = this._lives;
 			if(lives > 0){
 				this.lives(lives-1);
@@ -289,6 +295,7 @@ var jBreak = {
 				e.stopPropagation();
 				$('#jBreak .optionsContainer').fadeOut(750);
 				jBreak.loadLevel(jBreak._levelID);
+				$startButton.unbind('.jBreakCreatePaddles');
 			});
 			
 			this.$options.fadeIn('slow');
@@ -485,7 +492,7 @@ jBreak.paddle.prototype = {
 				effectDirection = 'up';
 				break;
 			case 'left':
-				x = this.position.x
+				x = this._position.x
 				  + jBBall.$ball.width();
 
 				y = this._position.y
@@ -503,8 +510,10 @@ jBreak.paddle.prototype = {
 			distance:40,
 			times:5
 		}, function(){
-			var ball = jBreak.balls[ballID];
-			ball.move(ball.position.x,ball.position.y);
+			var ball = jBreak.balls[ballID],
+			    position = ball.getPosition();
+
+			ball.move(position.x,position.y);
 			ball.ready(true);
 		});
 		this.balls.push(ballID);
@@ -548,13 +557,13 @@ jBreak.paddle.prototype = {
 				if($parent.hasClass('ui-effects-wrapper')){
 					$parent.css({
 						left:ballX,
-						top:ball.position.y
+						top:ball.getPosition().y
 					});
-					ball.position.x = ballX;
+					ball.getPosition().x = ballX;
 				} else {
 					ball.move(
 						ballX,
-						ball.position.y);
+						ball.getPosition().y);
 				}
 			}
 
@@ -577,7 +586,7 @@ jBreak.paddle.prototype = {
 				          - ball.$ball.height() / 2;
 
 				ball.move(
-					ball.position.x,
+					ball.getPosition().x,
 					ballY);
 			}
 
@@ -625,7 +634,7 @@ jBreak.ball.prototype = {
 			height:this.$ball.height()
 		};
 
-		this.position = position;
+		this._position = position;
 		this._speed = {
 			x:null,
 			y:null
@@ -715,7 +724,7 @@ jBreak.ball.prototype = {
 
 					var rand = Math.random();
 					if(jB.blocks[blockY][blockX] > 1 && !this._pierce){
-						if(rand < .02)
+						if(rand < .04)
 							new jB.bonus(this,x,y,180); // spawn bonus
 
 						var oldImage = $block.css('background-image');
@@ -729,7 +738,7 @@ jBreak.ball.prototype = {
 							$block.css('background-image', oldImage);
 						}, 100);
 					} else {
-						if(rand < .06)
+						if(rand < .08)
 							new jB.bonus(this,x,y,180); // spawn bonus
 
 						$block.css('background-image', hitImage);
@@ -767,7 +776,7 @@ jBreak.ball.prototype = {
 
 						if(paddleHit){
 							angle =
-								(this.position.x - jBPaddlePosition.x + this._size.width/2)
+								(this._position.x - jBPaddlePosition.x + this._size.width/2)
 								 * 180 / (jBPaddle._size.width / 2)
 								 - 360;
 
@@ -791,7 +800,7 @@ jBreak.ball.prototype = {
 
 						if(paddleHit){
 							angle =
-								(this.position.x - jBPaddlePosition.x + this._size.width/2)
+								(this._position.x - jBPaddlePosition.x + this._size.width/2)
 								 * 180 / (jBPaddle._size.width / 2)
 								 - 360;
 
@@ -863,8 +872,8 @@ jBreak.ball.prototype = {
 		}
 	},
 	_animate:function(){
-		var x = this.position.x + this._speed.x*4;
-		var y = this.position.y + this._speed.y*4;
+		var x = this._position.x + this._speed.x*4;
+		var y = this._position.y + this._speed.y*4;
 
 		this.move(x,y);
 		this._hitCheck(x,y);
@@ -879,7 +888,7 @@ jBreak.ball.prototype = {
 	},
 	move:function(x,y){
 		this.$ball.css({left:x, top:y});
-		this.position = {x:x, y:y};
+		this._position = {x:x, y:y};
 	},
 	interval:function(i){
 		if(i !== undefined){
@@ -887,6 +896,9 @@ jBreak.ball.prototype = {
 		} else {
 			return this._interval;
 		}
+	},
+	getPosition:function(){
+		return this._position;
 	},
 	remove:function(){
 		this._timer = false;
@@ -906,25 +918,41 @@ jBreak.ball.prototype = {
 	},
 	pierce:function(b){
 		this._pierce = b;
+
 		if(b){
 			this.$ball.css('background-image', 'url(images/ball1-88.png)');
 		} else {
 			this.$ball.css('background-image', 'url(images/ball4-88.png)');
 		}
 	},
+	clone:function(){
+		var jB = jBreak,
+		    ball = $.extend(true, {}, this),
+		    ballID = jB.countBalls();
+
+		ball = $.extend(true, ball, {
+			_ballID:ballID,
+			$ball:this.$ball.clone()
+		});
+
+		jB.balls[ballID] = ball;
+
+		jBreak.$field.append(ball.$ball);
+
+		return ball;
+	},
 	// private variables
 	_ballID:null,
 	_speed:null,
 	_angle:-90,
+	_position:null,
 	_timer:null,
 	_interval:30,
 	_size:null,
 	_pierce:false,
 	_ready:false, // ready to start?
 	// public variables @todo these should be private too
-	$ball:null,
-	position:null, //@todo getter
-	oldInterval:30
+	$ball:null
 };
 
 jBreak.bonus.prototype = {
@@ -1106,6 +1134,7 @@ jBreak.bonus.prototype = {
 			clearTimeout(ball.speedBonusTimeoutID);
 			ball.speedBonusTimeoutID = setTimeout(function(){
 				ball.interval(ball.oldInterval);
+				ball.oldInterval = false;
 			}, 15000);
 
 			ball.interval(10);
@@ -1140,6 +1169,9 @@ jBreak.bonus.prototype = {
 			ball.pierceBonusTimeoutID = setTimeout(function(){
 				ball.pierce(false);
 			}, 7500);
+		},
+		function(){
+			this._ball.clone().start();
 		}
 	]
 };
