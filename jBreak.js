@@ -696,9 +696,9 @@ jBreak.ball.prototype = {
 						ballY = Math.floor(ballY);
 
 						var hHit = (ballX % 64 <= 63 && ballX % 64 >= 60 && this._speed.x < 0)
-										|| (ballX % 64 <=  4 && this._speed.x > 0);
+						        || (ballX % 64 <=  4 && this._speed.x > 0);
 						var vHit = (ballY % 16 <= 15 && ballY % 16 >= 12 && this._speed.y < 0)
-										|| (ballY % 16 <=  4 && this._speed.y > 0);
+						        || (ballY % 16 <=  4 && this._speed.y > 0);
 
 						if(vHit && hHit) // don't mirror both speeds, mirror the slower one
 							(this._speed.y > this._speed.x ? hHit = false : vHit = false);
@@ -919,14 +919,13 @@ jBreak.ball.prototype = {
 			this._animate();
 		}
 	},
-	pierce:function(b){
-		this._pierce = b;
+	pierce:function(pierce){
+		this._pierce = pierce;
 
-		if(b){
-			this.$ball.css('background-image', 'url(images/ball1-88.png)');
-		} else {
-			this.$ball.css('background-image', 'url(images/ball4-88.png)');
-		}
+		this.$ball.css('background-image', (pierce
+			? 'url(images/ball1-88.png)'
+			: 'url(images/ball4-88.png)'
+		));
 	},
 	clone:function(){
 		var jB = jBreak,
