@@ -425,6 +425,9 @@ jBreak.paddle.prototype = {
 			: size.height - 16);
 	},
 	setSize:function(size){
+		if(size >= 96 || size <= 32)
+			return;
+
 		var width = this._size.width, height = this._size.height;
 		(width > height
 			? width = size
