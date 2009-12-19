@@ -213,6 +213,8 @@ var jBreak = {
 		}, 250);
 	},
 	_drawBlocks:function(level){
+		this._imageCache = {};
+
 		this.$blocks = $('<div style="position:absolute;left:0;top:0;display:none"/>');
 		this.blocks.forEach(function(horizontalBlocks, y){
 			horizontalBlocks.forEach(function(block, x){
@@ -231,7 +233,7 @@ var jBreak = {
 						background:
 							'transparent url(images/blocks/'+block.theme+'/'+random+'.png) scroll no-repeat'});
 					// prefetch hit block image
-					$('<img src="images/blocks/'+block.theme+'/'+random+'_h.png"/>').remove();
+					this._imageCache[block.theme+random] = $('<img src="images/blocks/'+block.theme+'/'+random+'_h.png"/>');
 					this.$blocks.append($block);
 					this.blocks[y][x] = block.value;
 				}
@@ -249,6 +251,7 @@ var jBreak = {
 	balls:null,
 	blocks:null,
 	// private variables
+	_imageCache:null,
 	_lives:3,
 	_volume:70,
 	_levelID:0,
@@ -377,7 +380,7 @@ jBreak.paddle.prototype = {
 			relative:position
 		};
 
-		this.balls = [];
+		this._balls = [];
 
 		this.$paddle.addClass(position);
 		jBreak.$field.append(this.$paddle);
@@ -520,18 +523,18 @@ jBreak.paddle.prototype = {
 			ball.move(position.x,position.y);
 			ball.ready(true);
 		});
-		this.balls.push(ballID);
+		this._balls.push(ballID);
 
 		//console.log('Ball %d connected to %o and moved to %d,%d', ballID, this, x, y);
 	},
 	startBalls:function(){
 		var balls = jBreak.balls;
-		for(var i = this.balls.length;i--;){
+		for(var i = this._balls.length;i--;){
 			var ball = balls[i];
 
 			if(ball.ready()){
 				ball.start();
-				this.balls.remove(i);
+				this._balls.remove(i);
 			}
 		}
 	},
@@ -550,7 +553,7 @@ jBreak.paddle.prototype = {
 				x = jBFieldSize.width - this._size.width;
 			}
 
-			for(var i = this.balls.length;i--;){
+			for(var i = this._balls.length;i--;){
 				var ball = jBBalls[i],
 				    ballX = x
 				          + this._size.width / 2
@@ -583,7 +586,7 @@ jBreak.paddle.prototype = {
 				y = jBFieldSize.height - this._size.height;
 			}
 
-			for(var i = this.balls.length;i--;){
+			for(var i = this._balls.length;i--;){
 				var ball  = jBBalls[i],
 				    ballY = y
 				          + this._size.height / 2
@@ -605,7 +608,7 @@ jBreak.paddle.prototype = {
 			}
 		}, this);
 
-		this.balls.forEach(function(i){
+		this._balls.forEach(function(i){
 			// do not use remove() here and remove the method from the Array object
 			this.balls[i].remove();
 		}, jBreak);
@@ -619,9 +622,9 @@ jBreak.paddle.prototype = {
 	// private variables
 	_size:null,
 	_position:null,
+	_balls:null,
 	// public variables @todo these should be private too
-	$paddle:null,
-	balls:null
+	$paddle:null
 };
 
 jBreak.ball.prototype = {
