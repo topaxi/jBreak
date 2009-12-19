@@ -18,9 +18,50 @@ var jBreak = {
 		this.lives(this._lives); // draw lives
 
 		if(initial){
+			this._cacheImages();
 			this.options.showOptions();
 		}
 		//console.log('Playing field initialized -> %o', this);
+	},
+	_cacheImages:function(){
+		var cache = this._imageCache;
+
+		cache.paddle = [];
+		var paddleImages = [
+			'pad32x8',
+			'pad48x8',
+			'pad64x8',
+			'pad80x8',
+			'pad96x8'
+		];
+		for(var i = paddleImages.length;i--;){
+			cache.paddle[i] = $('<img src="images/paddles/'+paddleImages[i]+'.png"/>');
+			console.log(cache.paddle[i]);
+		}
+
+		cache.ball = [];
+		var ballImages = [
+			'ball1-88',
+			'ball4-88'
+		];
+		for(var i = ballImages.length;i--;){
+			cache.ball[i] = $('<img src="images/'+ballImages[i]+'.png"/>');
+		}
+
+		cache.bonus = [];
+		var bonusImages = [
+			'shrink',
+			'15+speed',
+			'faster',
+			'grow',
+			'slower',
+			'life',
+			'powerball',
+			'multiball'
+		];
+		for(var i = bonusImages.length;i--;){
+			cache.bonus[i] = $('<img src="images/bonuses/'+bonusImages[i]+'.png"/>');
+		}
 	},
 	lives:function(lives){
 		if(lives === undefined){
@@ -213,7 +254,7 @@ var jBreak = {
 		}, 250);
 	},
 	_drawBlocks:function(level){
-		this._imageCache = {};
+		this._imageCache.blocks = {};
 
 		this.$blocks = $('<div style="position:absolute;left:0;top:0;display:none"/>');
 		this.blocks.forEach(function(horizontalBlocks, y){
@@ -233,7 +274,10 @@ var jBreak = {
 						background:
 							'transparent url(images/blocks/'+block.theme+'/'+random+'.png) scroll no-repeat'});
 					// prefetch hit block image
-					this._imageCache[block.theme+random] = $('<img src="images/blocks/'+block.theme+'/'+random+'_h.png"/>');
+					if(this._imageCache.blocks[block.theme+random] === undefined){
+						this._imageCache.blocks[block.theme+random] = $('<img src="images/blocks/'+block.theme+'/'+random+'_h.png"/>');
+					}
+
 					this.$blocks.append($block);
 					this.blocks[y][x] = block.value;
 				}
@@ -251,7 +295,7 @@ var jBreak = {
 	balls:null,
 	blocks:null,
 	// private variables
-	_imageCache:null,
+	_imageCache:{},
 	_lives:3,
 	_volume:70,
 	_levelID:0,
