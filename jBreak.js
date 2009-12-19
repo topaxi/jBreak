@@ -36,7 +36,6 @@ var jBreak = {
 		];
 		for(var i = paddleImages.length;i--;){
 			cache.paddle[i] = $('<img src="images/paddles/'+paddleImages[i]+'.png"/>');
-			console.log(cache.paddle[i]);
 		}
 
 		cache.ball = [];
