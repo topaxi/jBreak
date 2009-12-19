@@ -253,7 +253,9 @@ var jBreak = {
 		}, 250);
 	},
 	_drawBlocks:function(level){
-		this._imageCache.blocks = {};
+		if(this._imageCache.blocks === undefined){
+			this._imageCache.blocks = {};
+		}
 
 		this.$blocks = $('<div style="position:absolute;left:0;top:0;display:none"/>');
 		this.blocks.forEach(function(horizontalBlocks, y){
