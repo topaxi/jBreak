@@ -79,7 +79,7 @@ var jBreak = {
 		$('#jBreak').append($lives);
 	},
 	playSound:function(soundFile){
-		if(typeof Audio === 'undefined') return; // return if Audio is undefined
+		if(typeof Audio === 'undefined') return;
 		var audio = new Audio(soundFile);
 		audio.volume = this._volume/100;
 		audio.play();
@@ -262,9 +262,8 @@ var jBreak = {
 			horizontalBlocks.forEach(function(block, x){
 				if(block !== 0){
 					var $block = $('<div/>');
-					$block.addClass('jBreakBlock');
-					$block.addClass('x'+x);
-					$block.addClass('y'+y);
+					$block.addClass('jBreakBlock x'+x+' y'+y);
+
 					var random = Math.ceil(Math.random()*10);
 					random = (random < 10 ? '0'+random : random);
 
