@@ -895,7 +895,6 @@ jBreak.ball.prototype = {
 				if(paddleHit){
 					jB.playSound('sound/pling1s.ogg');
 					this._interval -= (this._interval > 12.5 ? .20 : 0);
-					return;
 				} else if(paddleMissed){
 					this.remove();
 					jB.ballChecker(jBPaddle); // any balls left?
