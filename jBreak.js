@@ -1,7 +1,6 @@
 ﻿(function($){
 
 var jBreak = {
-	// methods
 	start:function(initial){
 		var $jBreak = $('#jBreak').empty();
 		this.$field = $('<div id="jBreakField"/>');
@@ -15,7 +14,7 @@ var jBreak = {
 			height:this.$field.height()
 		};
 
-		this.lives(this._lives); // draw lives
+		this.lives(this._lives);
 
 		if(initial){
 			this._cacheImages();
@@ -413,7 +412,6 @@ var jBreak = {
 };
 
 jBreak.paddle.prototype = {
-	// methods
 	init:function(position){
 		//console.log('Create %s paddle..', position);
 		this.$paddle = $('<div class="jBreakPaddle"/>');
@@ -672,7 +670,6 @@ jBreak.paddle.prototype = {
 };
 
 jBreak.ball.prototype = {
-	// methods
 	init:function(ballID, position){
 		// remember which instance we are
 		this._ballID = ballID;
