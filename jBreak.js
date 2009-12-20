@@ -667,7 +667,7 @@ jBreak.paddle.prototype = {
 	_size:null,
 	_position:null,
 	_balls:null,
-	// public variables @todo these should be private too
+	// public variables
 	$paddle:null
 };
 
@@ -1000,7 +1000,7 @@ jBreak.ball.prototype = {
 	_size:null,
 	_pierce:false,
 	_ready:false, // ready to start?
-	// public variables @todo these should be private too
+	// public variables
 	$ball:null
 };
 
@@ -1168,13 +1168,14 @@ jBreak.bonus.prototype = {
 	_ball:null, // the ball who triggered this bonus
 	_action:null, // will hold the function to be executed
 	_bad:[
-		{
+		{ // shrink paddle
+			background:'url(images/bonuses/shrink.png)',
 			action:function(jBPaddle){
 				jBPaddle.shrink();
-			},
-			background:'url(images/bonuses/shrink.png)'
-		},{
-			action:function(){ // ball speedup for 15 seconds
+			}
+		},{ // ball speedup for 15 seconds
+			background:'url(images/bonuses/15+speed.png)',
+			action:function(){
 				var ball = this._ball;
 
 				ball.oldInterval = (ball.oldInterval
@@ -1189,25 +1190,25 @@ jBreak.bonus.prototype = {
 				}, 15000);
 
 				ball.interval(10);
-			},
-			background:'url(images/bonuses/15+speed.png)',
-		},{
-			action:function(){ // permanent interval reduction
+			}
+		},{ // permanent interval reduction
+			background:'url(images/bonuses/faster.png)',
+			action:function(){
 				var ball = this._ball;
 
 				ball.oldInterval -= 5;
 				ball.interval(ball.interval() - 5);
-			},
-			background:'url(images/bonuses/faster.png)'
+			}
 		}
 	],
 	_good:[
-		{
+		{ // grow paddle
+			background:'url(images/bonuses/grow.png)',
 			action:function(jBPaddle){
 				jBPaddle.grow();
-			},
-			background:'url(images/bonuses/grow.png)'
-		},{
+			}
+		},{ // slow down ball
+			background:'url(images/bonuses/slower.png)',
 			action:function(){
 				var ball = this._ball;
 				clearTimeout(ball.speedBonusTimeoutID);
@@ -1215,14 +1216,14 @@ jBreak.bonus.prototype = {
 				if(ball.interval() < 25){
 					ball.interval(25);
 				}
-			},
-			background:'url(images/bonuses/slower.png)',
-		},{
+			}
+		},{ // +1 life
+			background:'url(images/bonuses/life.png)',
 			action:function(){
 				jBreak.lives(jBreak.lives()+1);
 			},
-			background:'url(images/bonuses/life.png)'
-		},{
+		},{ // piercing ball
+			background:'url(images/bonuses/powerball.png)',
 			action:function(){
 				var ball = this._ball;
 				
@@ -1231,13 +1232,12 @@ jBreak.bonus.prototype = {
 				ball.pierceBonusTimeoutID = setTimeout(function(){
 					ball.pierce(false);
 				}, 7500);
-			},
-			background:'url(images/bonuses/powerball.png)'
-		},{
+			}
+		},{ // split triggering ball
+			background:'url(images/bonuses/multiball.png',
 			action:function(){
 				this._ball.clone().start();
-			},
-			background:'url(images/bonuses/multiball.png'
+			}
 		}
 	]
 };
