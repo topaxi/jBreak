@@ -128,3 +128,13 @@ div#jBreakLives div.jBreakLive {
 	float:left;
 	margin:4px 1px
 }
+
+div#jBreakLevelTitle {
+	position:absolute;
+	top:1px;
+	width:100%;
+	font-size:12px;
+	font-family:sans-serif;
+	font-weight:bold;
+	text-align:center
+}
