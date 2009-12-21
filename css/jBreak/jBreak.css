@@ -100,8 +100,8 @@ div#jBreakField div.optionsContainer {
 		-webkit-border-radius:4px
 	}
 
-div#jBreakField div.jBreakBlock {
-	width:64px;
+div#jBreakField .jBreakBlock {
+	width:40px;
 	height:16px;
 	position:absolute
 }
