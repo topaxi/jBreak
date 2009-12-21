@@ -268,18 +268,19 @@ var jBreak = {
 		this.blocks.forEach(function(horizontalBlocks, y){
 			horizontalBlocks.forEach(function(block, x){
 				if(block !== 0){
-					var $block = $('<div/>');
+					var $block = $('<img/>');
 					$block.addClass('jBreakBlock x'+x+' y'+y);
 
 					var random = Math.ceil(Math.random()*10);
 					random = (random < 10 ? '0'+random : random);
 
 					// @todo create one a sprite image for each block theme to reduce http requests
+					$block.attr('src', 'images/blocks/'+block.theme+'/'+random+'.png');
 					$block.css({
 						left:x*40,
-						top:y*16,
-						background:
-							'transparent url(images/blocks/'+block.theme+'/'+random+'.png) scroll no-repeat'});
+						top:y*16
+					});
+
 					// prefetch hit block image
 					if(this._imageCache.blocks[block.theme+random] === undefined){
 						this._imageCache.blocks[block.theme+random] = $('<img src="images/blocks/'+block.theme+'/'+random+'_h.png"/>');
@@ -775,7 +776,7 @@ jBreak.ball.prototype = {
 								(hHit && this._speed.x < 0 ? 'right' :
 									/*vHit && this._speed.y < 0*/ 'down')));
 
-					var hitImage = $block.css('background-image')
+					var hitImage = $block.attr('src')
 						.replace(/\/(.*)\.png/g, '/$1_h.png');
 
 					var rand = Math.random();
@@ -783,21 +784,22 @@ jBreak.ball.prototype = {
 						if(rand < .04)
 							new jB.bonus(this,x,y,180); // spawn bonus
 
-						var oldImage = $block.css('background-image');
+						var oldImage = $block.attr('src');
 						$block.css({
-							opacity:1-1/jB.blocks[blockY][blockX],
-							backgroundImage:hitImage
+							opacity:1-1/jB.blocks[blockY][blockX]
 						});
+						$block.attr('src', hitImage);
+
 						jB.blocks[blockY][blockX] -= 1;
 
 						setTimeout(function(){
-							$block.css('background-image', oldImage);
+							$block.attr('src', oldImage);
 						}, 100);
 					} else {
 						if(rand < .08)
 							new jB.bonus(this,x,y,180); // spawn bonus
 
-						$block.css('background-image', hitImage);
+						$block.attr('src', hitImage);
 						$block.effect('drop', {direction:direction}, 'fast', function(){
 							$block.remove();
 						});
