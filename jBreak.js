@@ -1,6 +1,6 @@
 ﻿(function($){
 
-jBreak = {
+var jBreak = {
 	start:function(initial){
 		var $jBreak = $('#jBreak').empty();
 		this.$field = $('<div id="jBreakField"/>');
