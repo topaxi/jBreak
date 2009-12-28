@@ -7,6 +7,7 @@ var jBreak = {
 		$jBreak.append(this.$field);
 
 		this.paddles = [];
+		this.bonuses = [];
 		this.balls = {};
 
 		this.fieldSize = {
@@ -138,18 +139,37 @@ var jBreak = {
 			$(document).unbind('.jBreakPause');
 			$(document).bind('keydown.jBreakPause', function(e){
 				if(e.keyCode === 32){
-					// @todo stop paddle movement too and unpause only by clicking a paddle
-					for(var jBBall in self.balls){
-						self.balls[jBBall].pause();
-					}
+					self.togglePause();
 				}
 			});
 
 			//console.log('Paddles created');
 		});
 	},
+	togglePause:function(){
+		this._paused = !this._paused;
+
+		for(var jBBall in this.balls){
+			this.balls[jBBall].pause();
+		}
+
+		for(var i = this.bonuses.length;i--;){
+			var bonus = this.bonuses[i];
+
+			if(bonus instanceof this.bonus)
+				bonus.pause();
+		}
+
+		if(this._paused){
+			this.destroyField();
+		} else {
+			for(var i = this.paddles.length;i--;){
+				this.paddles[i].start();
+			}
+		}
+	},
 	destroyField:function(){
-		this.$field.unbind('mousemove');
+		$(document).unbind('mousemove');
 	},
 	blockChecker:function(){
 		var blockVal = 0,
@@ -303,6 +323,7 @@ var jBreak = {
 	fieldSize:null,
 	paddles:null,
 	balls:null,
+	bonuses:null,
 	blocks:null,
 	// private variables
 	_imageCache:{},
@@ -679,6 +700,7 @@ jBreak.paddle.prototype = {
 	_size:null,
 	_position:null,
 	_balls:null,
+	_paused:false,
 	// public variables
 	$paddle:null
 };
@@ -1053,6 +1075,8 @@ jBreak.bonus.prototype = {
 	init:function(jBBall,x,y,angle){
 		var random, background, powerup;
 
+		this._bonusID = jBreak.bonuses.push(this) - 1;
+
 		// 50% chance to get a bad or a good powerup
 		if(Math.floor(Math.random()+.5)){
 			random = Math.floor(Math.random() * this._good.length);
@@ -1202,13 +1226,24 @@ jBreak.bonus.prototype = {
 		this.$bonus.css({left:x, top:y});
 		this._position = {x:x,y:y};
 	},
+	pause:function(){
+		if(this._timer){
+			this._timer = false;
+		} else {
+			this._timer = true;
+			this._animate();
+		}
+	},
 	remove:function(){
 		this._timer = false;
 		this.$bonus.fadeOut('slow', function(){
 			$(this).remove();
 		});
+
+		delete jBreak.bonuses[this._bonusID];
 	},
 	$bonus:null,
+	_bonusID:null,
 	_direction:null,
 	_position:null,
 	_speed:null,
