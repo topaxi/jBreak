@@ -1275,7 +1275,7 @@ jBreak.bonus.prototype = {
 					action:function(){
 						this.pierce(false);
 					},
-					timeout:20//7.5
+					timeout:7.5
 				});
 			}
 		},{ // split triggering ball
