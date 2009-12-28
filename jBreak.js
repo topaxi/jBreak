@@ -21,6 +21,14 @@ var jBreak = {
 			this._cacheImages();
 			this.options.showOptions();
 			this._setLevelTitle('jBreak 0.1.7');
+
+			var self = this;
+			this.$field.mousemove(function(e){
+				self._mousePosition = {
+					pageX:e.pageX,
+					pageY:e.pageY
+				};
+			});
 		}
 		//console.log('Playing field initialized -> %o', this);
 	},
@@ -106,13 +114,20 @@ var jBreak = {
 		this.paddles.push(jBPaddle);
 		return jBPaddle;
 	},
+	hideCursor:function(hide){
+		if(hide){
+			$('#jBreak').css('cursor',
+				'url(images/cursor/cursor.gif), url(images/cursor/cursor.ico), none');
+		} else {
+			$('#jBreak').css('cursor', 'default');
+		}
+	},
 	createPaddles:function(){
 		var self = this;
 		this.$field.bind('click.jBreakCreatePaddles', function(e){
 			e.stopPropagation(); // do not bubble
 			//console.log('Creating paddles...');
-			$('#jBreak').css('cursor',
-				'url(images/cursor/cursor.gif), url(images/cursor/cursor.ico), none');
+			self.hideCursor(true);
 
 			self.paddles.forEach(function(jBPaddle){
 				jBPaddle.start();
@@ -136,14 +151,20 @@ var jBreak = {
 			});
 			self.$field.unbind('click.jBreakCreatePaddles');
 
-			$(document).unbind('.jBreakPause');
-			$(document).bind('keydown.jBreakPause', function(e){
-				if(e.keyCode === 32){
-					self.togglePause();
-				}
-			});
-
+			self.bindPause();
 			//console.log('Paddles created');
+		});
+	},
+	bindPause:function(){
+		var self = this;
+		$(document).unbind('.jBreakPause');
+		$(document).bind('keydown.jBreakPause', function(e){
+			if(e.keyCode === 32){
+				self.togglePause();
+
+				if(self._paused)
+					$(document).unbind('.jBreakPause');
+			}
 		});
 	},
 	togglePause:function(){
@@ -162,14 +183,36 @@ var jBreak = {
 
 		if(this._paused){
 			this.destroyField();
+
+			var $unpauseButton = $('<button>continue</button>'),
+			    fieldOffset = this.$field.offset();
+
+			this.$field.append($unpauseButton);
+			$unpauseButton.css({
+				position:'absolute',
+				width:'64px',
+				height:'24px',
+				left:this._mousePosition.pageX - fieldOffset.left - 32,
+				top: this._mousePosition.pageY - fieldOffset.top  - 12
+			});
+
+			var self = this;
+			$unpauseButton.click(function(){
+				self.togglePause();
+				self.bindPause();
+
+				$(this).remove();
+			});
 		} else {
 			for(var i = this.paddles.length;i--;){
 				this.paddles[i].start();
 			}
+			this.hideCursor(true);
 		}
 	},
 	destroyField:function(){
 		$(document).unbind('mousemove');
+		this.hideCursor(false);
 	},
 	blockChecker:function(){
 		var blockVal = 0,
@@ -233,7 +276,7 @@ var jBreak = {
 					self.$blocks.remove();
 
 					var $fail = $('<div class="fail" style="display:none">FAIL!</div>');
-					$('#jBreak').css({cursor:'default'});
+					self.hideCursor(false);
 					self.$field.append($fail);
 					var failOffset = $fail.offset();
 
@@ -329,6 +372,7 @@ var jBreak = {
 	_lives:3,
 	_volume:70,
 	_levelID:0,
+	_mousePosition:null,
 	// objects
 	options:{
 		showOptions:function(){
