@@ -1080,7 +1080,7 @@ jBreak.bonus.prototype = {
 			position:'absolute',
 			width:'24px',
 			height:'24px',
-			backgroundImage:powerup.background
+			background:powerup.background
 		});
 
 		this.$bonus = $bonus;
