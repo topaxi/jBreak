@@ -1248,6 +1248,11 @@ jBreak.bonus.prototype = {
 				ball.oldInterval -= 5;
 				ball.interval(ball.interval() - 5);
 			}
+		},{ // pulsate paddle
+			background:'blue',
+			action:function(){
+				this._paddle.$paddle.effect('pulsate', {times:10}, 3000);
+			}
 		}
 	],
 	_good:[
