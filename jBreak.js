@@ -1285,7 +1285,7 @@ jBreak.bonus.prototype = {
 				});
 			}
 		},{ // split triggering ball
-			background:'url(images/bonuses/multiball.png',
+			background:'url(images/bonuses/multiball.png)',
 			action:function(){
 				this._ball.clone().start();
 			}
