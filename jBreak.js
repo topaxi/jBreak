@@ -19,7 +19,7 @@ var jBreak = {
 		if(initial){
 			this._cacheImages();
 			this.options.showOptions();
-			this._setLevelTitle('jBreak 0.1.6');
+			this._setLevelTitle('jBreak 0.1.7');
 		}
 		//console.log('Playing field initialized -> %o', this);
 	},
@@ -331,7 +331,7 @@ var jBreak = {
 			this.$optionTabs.append('<ul style="font-size:12px"><li><a href="#tabs-1">Sound</a></li><li><a href="#tabs-2">Level</a></li><li><a href="#tabs-3">About</a></li></ul>');
 			this.$optionTabs.append(this.soundOptions());
 			this.$optionTabs.append('<div id="tabs-2" style="text-align:center;height:220px">-under construction-</div>');
-			this.$optionTabs.append('<div id="tabs-3" style="text-align:center;height:220px"><p>jBreak 0.1.6</p><p style="font-size:11px">Written by Damian Senn<br /><br />Graphics and Sounds<br />by <a href="http://www.helleresonnen.com/">Jan Neversil</a><br /><br />Music (coming soon)<br />by <a href="http://www.alphatronic.net/">Dani Whiler</a></p></div>');
+			this.$optionTabs.append('<div id="tabs-3" style="text-align:center;height:220px"><p>jBreak 0.1.7</p><p style="font-size:11px">Written by Damian Senn<br /><br />Graphics and Sounds<br />by <a href="http://www.helleresonnen.com/">Jan Neversil</a><br /><br />Music (coming soon)<br />by <a href="http://www.alphatronic.net/">Dani Whiler</a></p></div>');
 
 			var $startButton = $(
 				'<button class="ui-state-default ui-corner-all" style="cursor:pointer" id="jBreakStart">Start</button>'
