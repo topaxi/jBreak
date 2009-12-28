@@ -1,6 +1,6 @@
 ﻿(function($){
 
-var jBreak = {
+jBreak = {
 	start:function(initial){
 		var $jBreak = $('#jBreak').empty();
 		this.$field = $('<div id="jBreakField"/>');
@@ -695,11 +695,14 @@ jBreak.ball.prototype = {
 			x:null,
 			y:null
 		};
+
+		this._timers = {};
 	},
 	start:function(){
 		if(this._ready){
 			this.setAngle();
 			this._timer = true;
+			this._toggleTimers(true);
 			this._animate();
 		}
 	},
@@ -711,6 +714,26 @@ jBreak.ball.prototype = {
 		}
 
 		return this._ready;
+	},
+	_toggleTimers:function(on){
+		if(on){
+			var self = this;
+			this._timersID = setInterval(function(){
+				var timers = self._timers;
+
+				for(var i in timers){
+					var timer = timers[i];
+					timer.timeout -= .25;
+
+					if(timer.timeout <= 0){
+						timer.action.call(self);
+						self.deleteTimer(i);
+					}
+				}
+			}, 250);
+		} else {
+			clearInterval(this._timersID);
+		}
 	},
 	setAngle:function(angle){
 		if(angle !== undefined)
@@ -966,8 +989,10 @@ jBreak.ball.prototype = {
 	pause:function(){
 		if(this._timer){
 			this._timer = false;
+			this._toggleTimers(false);
 		} else {
 			this._timer = true;
+			this._toggleTimers(true);
 			this._animate();
 		}
 	},
@@ -995,6 +1020,12 @@ jBreak.ball.prototype = {
 
 		return ball;
 	},
+	addTimer:function(name, timer){
+		this._timers[name] = timer;
+	},
+	deleteTimer:function(name){
+		delete this._timers[name];
+	},
 	// private variables
 	_ballID:null,
 	_speed:null,
@@ -1005,6 +1036,8 @@ jBreak.ball.prototype = {
 	_size:null,
 	_pierce:false,
 	_ready:false, // ready to start?
+	_timers:null,
+	_timersID:null,
 	// public variables
 	$ball:null
 };
@@ -1191,12 +1224,13 @@ jBreak.bonus.prototype = {
 					? ball.oldInterval
 					: ball.interval());
 
-				// clear previous 
-				clearTimeout(ball.speedBonusTimeoutID);
-				ball.speedBonusTimeoutID = setTimeout(function(){
-					ball.interval(ball.oldInterval);
-					ball.oldInterval = false;
-				}, 15000);
+				ball.addTimer('speedUp15', {
+					action:function(){
+						this.interval(ball.oldInterval);
+						this.oldInterval = false;
+					},
+					timeout:15
+				});
 
 				ball.interval(10);
 			}
@@ -1220,7 +1254,7 @@ jBreak.bonus.prototype = {
 			background:'url(images/bonuses/slower.png)',
 			action:function(){
 				var ball = this._ball;
-				clearTimeout(ball.speedBonusTimeoutID);
+				ball.deleteTimer('speedUp15');
 
 				if(ball.interval() < 25){
 					ball.interval(25);
@@ -1236,11 +1270,13 @@ jBreak.bonus.prototype = {
 			action:function(){
 				var ball = this._ball;
 				
-				clearTimeout(ball.pierceBonusTimeoutID);
 				ball.pierce(true);
-				ball.pierceBonusTimeoutID = setTimeout(function(){
-					ball.pierce(false);
-				}, 7500);
+				ball.addTimer('pierce', {
+					action:function(){
+						this.pierce(false);
+					},
+					timeout:20//7.5
+				});
 			}
 		},{ // split triggering ball
 			background:'url(images/bonuses/multiball.png',
