@@ -194,8 +194,11 @@ var jBreak = {
 				this.lives(lives-1);
 				this.addBall(jBPaddle);
 				jBPaddle.size(64); // reset size
+
+				jBPaddle.$paddle.stop(true, true) // stop any effects on the paddle
+					.css('opacity', 1); // $paddle.stop doesn't seem to restore the opacity...
 			} else {
-			//console.log('No remaining balls found... FAIL!')
+				//console.log('No remaining balls found... FAIL!')
 				var self = this;
 
 				this.destroyField();
