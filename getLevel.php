@@ -16,18 +16,18 @@ $level[0]['name'] = 'Level 1';
 $level[0]['paddles'] = array(array('position' => 'bottom', 'ball' => true));
 $pB = block(1, 'Purple_bluish');
 $level[0]['blocks'] = array(
-	array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-	array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-	array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-	array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-	array(0, $pB, $pB, $pB, $pB, $pB, $pB, $pB, $pB, 0),
-	array(0, $pB, $pB, $pB, $pB, $pB, $pB, $pB, $pB, 0),
-	array(0, $pB, $pB, $pB, $pB, $pB, $pB, $pB, $pB, 0),
-	array(0, $pB, $pB, $pB, $pB, $pB, $pB, $pB, $pB, 0),
-	array(0, $pB, $pB, $pB, $pB, $pB, $pB, $pB, $pB, 0),
-	array(0, $pB, $pB, $pB, $pB, $pB, $pB, $pB, $pB, 0),
-	array(0, $pB, $pB, $pB, $pB, $pB, $pB, $pB, $pB, 0),
-	array(0, $pB, $pB, $pB, $pB, $pB, $pB, $pB, $pB, 0)
+	array(),
+	array(),
+	array(),
+	array(),
+	array(0, 0, $pB, $pB, $pB, $pB, $pB, $pB, $pB, $pB, $pB, $pB, $pB, $pB),
+	array(0, 0, $pB, $pB, $pB, $pB, $pB, $pB, $pB, $pB, $pB, $pB, $pB, $pB),
+	array(0, 0, $pB, $pB, $pB, $pB, $pB, $pB, $pB, $pB, $pB, $pB, $pB, $pB),
+	array(0, 0, $pB, $pB, $pB, $pB, $pB, $pB, $pB, $pB, $pB, $pB, $pB, $pB),
+	array(0, 0, $pB, $pB, $pB, $pB, $pB, $pB, $pB, $pB, $pB, $pB, $pB, $pB),
+	array(0, 0, $pB, $pB, $pB, $pB, $pB, $pB, $pB, $pB, $pB, $pB, $pB, $pB),
+	array(0, 0, $pB, $pB, $pB, $pB, $pB, $pB, $pB, $pB, $pB, $pB, $pB, $pB),
+	array(0, 0, $pB, $pB, $pB, $pB, $pB, $pB, $pB, $pB, $pB, $pB, $pB, $pB)
 );
 
 $level[1]['name'] = 'Rainbow';
@@ -39,20 +39,20 @@ $g = block(1, 'Green_greener');
 $b = block(1, 'Blue');
 $pG = block(1, 'Purple_gay');
 $level[1]['blocks'] = array(
-	array($r, $r, $r, $r, $r, $r, $r, $r, $r, $r),
-	array($r, $r, $r, $r, $r, $r, $r, $r, $r, $r),
-	array($o, $o, $o, $o, $o, $o, $o, $o, $o, $o),
-	array($o, $o, $o, $o, $o, $o, $o, $o, $o, $o),
-	array($y, $y, $y, $y, $y, $y, $y, $y, $y, $y),
-	array($y, $y, $y, $y, $y, $y, $y, $y, $y, $y),
-	array($g, $g, $g, $g, $g, $g, $g, $g, $g, $g),
-	array($g, $g, $g, $g, $g, $g, $g, $g, $g, $g),
-	array($b, $b, $b, $b, $b, $b, $b, $b, $b, $b),
-	array($b, $b, $b, $b, $b, $b, $b, $b, $b, $b),
-	array($pB, $pB, $pB, $pB, $pB, $pB, $pB, $pB, $pB, $pB),
-	array($pB, $pB, $pB, $pB, $pB, $pB, $pB, $pB, $pB, $pB),
-	array($pG, $pG, $pG, $pG, $pG, $pG, $pG, $pG, $pG, $pG),
-	array($pG, $pG, $pG, $pG, $pG, $pG, $pG, $pG, $pG, $pG)
+	array($r, $r, $r, $r, $r, $r, $r, $r, $r, $r, $r, $r, $r, $r, $r, $r),
+	array($r, $r, $r, $r, $r, $r, $r, $r, $r, $r, $r, $r, $r, $r, $r, $r),
+	array($o, $o, $o, $o, $o, $o, $o, $o, $o, $o, $o, $o, $o, $o, $o, $o),
+	array($o, $o, $o, $o, $o, $o, $o, $o, $o, $o, $o, $o, $o, $o, $o, $o),
+	array($y, $y, $y, $y, $y, $y, $y, $y, $y, $y, $y, $y, $y, $y, $y, $y),
+	array($y, $y, $y, $y, $y, $y, $y, $y, $y, $y, $y, $y, $y, $y, $y, $y),
+	array($g, $g, $g, $g, $g, $g, $g, $g, $g, $g, $g, $g, $g, $g, $g, $g),
+	array($g, $g, $g, $g, $g, $g, $g, $g, $g, $g, $g, $g, $g, $g, $g, $g),
+	array($b, $b, $b, $b, $b, $b, $b, $b, $b, $b, $b, $b, $b, $b, $b, $b),
+	array($b, $b, $b, $b, $b, $b, $b, $b, $b, $b, $b, $b, $b, $b, $b, $b),
+	array($pB, $pB, $pB, $pB, $pB, $pB, $pB, $pB, $pB, $pB, $pB, $pB, $pB, $pB, $pB, $pB),
+	array($pB, $pB, $pB, $pB, $pB, $pB, $pB, $pB, $pB, $pB, $pB, $pB, $pB, $pB, $pB, $pB),
+	array($pG, $pG, $pG, $pG, $pG, $pG, $pG, $pG, $pG, $pG, $pG, $pG, $pG, $pG, $pG, $pG),
+	array($pG, $pG, $pG, $pG, $pG, $pG, $pG, $pG, $pG, $pG, $pG, $pG, $pG, $pG, $pG, $pG)
 );
 
 $level[2]['name'] = 'Chaos';
@@ -63,16 +63,15 @@ $level[2]['paddles'] = array(
 $level[2]['blocks'] = array(
 	array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
 	array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-	array(block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)])),
-	array(block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)])),
-	array(block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)])),
-	array(block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(3, $themes[array_rand($themes)]), block(3, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)])),
-	array(block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(3, $themes[array_rand($themes)]), block(3, $themes[array_rand($themes)]), block(3, $themes[array_rand($themes)]), block(3, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)])),
-	array(block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(3, $themes[array_rand($themes)]), block(3, $themes[array_rand($themes)]), block(3, $themes[array_rand($themes)]), block(3, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)])),
-	array(block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(3, $themes[array_rand($themes)]), block(3, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)])),
-	array(block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)])),
-	array(block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)])),
-	array(block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)])),
+	array(block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)])),
+	array(block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)])),
+	array(block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)])),
+	array(block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)])),
+	array(block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)])),
+	array(block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)])),
+	array(block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)])),
+	array(block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)])),
+	array(block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]))
 );
 
 $return = array(

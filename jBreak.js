@@ -276,7 +276,7 @@ var jBreak = {
 
 					// @todo create one a sprite image for each block theme to reduce http requests
 					$block.css({
-						left:x*64,
+						left:x*40,
 						top:y*16,
 						background:
 							'transparent url(images/blocks/'+block.theme+'/'+random+'.png) scroll no-repeat'});
@@ -760,7 +760,7 @@ jBreak.ball.prototype = {
 			var ballY = (this._speed.y > 0 ? y + this._size.height : y),
 			    ballX = (this._speed.x > 0 ? x + this._size.width  : x);
 
-			var blockX = Math.floor(ballX / 64),
+			var blockX = Math.floor(ballX / 40),
 			    blockY = Math.floor(ballY / 16);
 
 			var blockExists = jB.blocks[blockY] !== undefined
@@ -774,8 +774,8 @@ jBreak.ball.prototype = {
 						ballX = Math.floor(ballX);
 						ballY = Math.floor(ballY);
 
-						var hHit = (ballX % 64 <= 63 && ballX % 64 >= 60 && this._speed.x < 0)
-						        || (ballX % 64 <=  4 && this._speed.x > 0);
+						var hHit = (ballX % 40 <= 39 && ballX % 40 >= 36 && this._speed.x < 0)
+						        || (ballX % 40 <=  4 && this._speed.x > 0);
 						var vHit = (ballY % 16 <= 15 && ballY % 16 >= 12 && this._speed.y < 0)
 						        || (ballY % 16 <=  4 && this._speed.y > 0);
 
