@@ -196,7 +196,6 @@ var jBreak = {
 			this._levelID += 1;
 			this.start(false);
 			this.loadLevel(this._levelID);
-			this.createPaddles();
 		}
 	},
 	countBalls:function(){
