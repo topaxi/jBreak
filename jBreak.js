@@ -193,7 +193,7 @@ jBreak = {
 			if(lives > 0){
 				this.lives(lives-1);
 				this.addBall(jBPaddle);
-				jBPaddle.setSize(64); // reset size
+				jBPaddle.size(64); // reset size
 			} else {
 			//console.log('No remaining balls found... FAIL!')
 				var self = this;
@@ -468,17 +468,20 @@ jBreak.paddle.prototype = {
 	},
 	grow:function(){
 		var size = this._size;
-		this.setSize(size.width > size.height
+		this.size(size.width > size.height
 			? size.width  + 16
 			: size.height + 16);
 	},
 	shrink:function(){
 		var size = this._size;
-		this.setSize(size.width > size.height
+		this.size(size.width > size.height
 			? size.width  - 16
 			: size.height - 16);
 	},
-	setSize:function(size){
+	size:function(size){
+		if(size === undefined)
+			return this._size;
+
 		if(size > 96 || size < 32)
 			return;
 
@@ -838,7 +841,8 @@ jBreak.ball.prototype = {
 				    paddleMissed,
 				    paddleHit,
 				    angle,
-				    jBPaddlePosition = jBPaddle.getPosition();
+				    jBPaddlePosition = jBPaddle.getPosition(),
+				    jBPaddleSize = jBPaddle.size();
 
 				switch(jBPaddlePosition.relative){
 					default:
@@ -849,7 +853,7 @@ jBreak.ball.prototype = {
 						         && y <= jB.fieldSize.height - 8
 						         && x >= jBPaddlePosition.x - this._size.width
 						         && Math.ceil(y) >= jBPaddlePosition.y - this._size.height
-						         && x <= jBPaddlePosition.x + jBPaddle.$paddle.width();
+						         && x <= jBPaddlePosition.x + jBPaddleSize.width;
 
 						paddleMissed = y > jB.fieldSize.height + 2;
 
@@ -873,7 +877,7 @@ jBreak.ball.prototype = {
 						         && y >= 4
 						         && x >= jBPaddlePosition.x - this._size.width
 						         && Math.ceil(y) <= jBPaddlePosition.y + this._size.height
-						         && x <= jBPaddlePosition.x + jBPaddle.$paddle.width();
+						         && x <= jBPaddlePosition.x + jBPaddleSize.width;
 
 						paddleMissed = y < -10;
 
@@ -897,7 +901,7 @@ jBreak.ball.prototype = {
 						         && x >= 4
 						         && y >= jBPaddlePosition.y - this._size.height
 						         && Math.ceil(x) <= jBPaddlePosition.x + this._size.width
-						         && y <= jBPaddlePosition.y + jBPaddle.$paddle.height();
+						         && y <= jBPaddlePosition.y + jBPaddleSize.height;
 
 						paddleMissed = x < -10;
 
@@ -911,7 +915,7 @@ jBreak.ball.prototype = {
 						         && y >= jBPaddlePosition.y - this._size.height
 						         && x <= jB.fieldSize.width - 8
 						         && Math.ceil(x) >= jBPaddlePosition.x - this._size.width
-						         && y <= jBPaddlePosition.y + jBPaddle.$paddle.height();
+						         && y <= jBPaddlePosition.y + jBPaddleSize.height;
 
 						paddleMissed = x > jB.fieldSize.width + 2;
 
@@ -1101,7 +1105,8 @@ jBreak.bonus.prototype = {
 				    paddleMissed,
 				    paddleHit,
 				    angle,
-				    jBPaddlePosition = jBPaddle.getPosition();
+				    jBPaddlePosition = jBPaddle.getPosition(),
+				    jBPaddleSize = jBPaddle.size();
 
 				switch(jBPaddlePosition.relative){
 					default:
@@ -1110,7 +1115,7 @@ jBreak.bonus.prototype = {
 						         && y <= jB.fieldSize.height - 8
 						         && x >= jBPaddlePosition.x - 24
 						         && Math.ceil(y) >= jBPaddlePosition.y - 24
-						         && x <= jBPaddlePosition.x + jBPaddle.$paddle.width();
+						         && x <= jBPaddlePosition.x + jBPaddleSize.width;
 
 						paddleMissed = y > jB.fieldSize.height + 2;
 
@@ -1124,7 +1129,7 @@ jBreak.bonus.prototype = {
 						         && y >= 4
 						         && x >= jBPaddlePosition.x + 24
 						         && Math.ceil(y) <= jBPaddlePosition.y + 24
-						         && x <= jBPaddlePosition.x + jBPaddle.$paddle.width();
+						         && x <= jBPaddlePosition.x + jBPaddleSize.width;
 
 						paddleMissed = y < -10;
 
@@ -1138,7 +1143,7 @@ jBreak.bonus.prototype = {
 						         && x >= 4
 						         && y >= jBPaddlePosition.y + 24
 						         && Math.ceil(x) <= jBPaddlePosition.x + 24
-						         && y <= jBPaddlePosition.y + jBPaddle.$paddle.height();
+						         && y <= jBPaddlePosition.y + jBPaddleSize.height;
 
 						paddleMissed = x < -10;
 
@@ -1152,7 +1157,7 @@ jBreak.bonus.prototype = {
 						         && y >= jBPaddlePosition.y - 24
 						         && x <= jB.fieldSize.width - 8
 						         && Math.ceil(x) >= jBPaddlePosition.x - 24
-						         && y <= jBPaddlePosition.y + jBPaddle.$paddle.height();
+						         && y <= jBPaddlePosition.y + jBPaddleSize.height;
 
 						paddleMissed = x > jB.fieldSize.width + 2;
 
