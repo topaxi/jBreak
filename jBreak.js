@@ -1082,7 +1082,8 @@ jBreak.bonus.prototype = {
 						paddleMissed = y > jB.fieldSize.height + 2;
 
 						if(paddleHit){
-							return this._powerUpPaddle(jBPaddle);
+							this._jBPaddle = jBPaddle;
+							return this._powerUpPaddle();
 						}
 						break;
 					case 'top':
@@ -1095,7 +1096,8 @@ jBreak.bonus.prototype = {
 						paddleMissed = y < -10;
 
 						if(paddleHit){
-							return this._powerUpPaddle(jBPaddle);
+							this._jBPaddle = jBPaddle;
+							return this._powerUpPaddle();
 						}
 						break;
 					case 'left':
@@ -1108,7 +1110,8 @@ jBreak.bonus.prototype = {
 						paddleMissed = x < -10;
 
 						if(paddleHit){
-							return this._powerUpPaddle(jBPaddle);
+							this._jBPaddle = jBPaddle;
+							return this._powerUpPaddle();
 						}
 						break;
 					case 'right':
@@ -1121,7 +1124,8 @@ jBreak.bonus.prototype = {
 						paddleMissed = x > jB.fieldSize.width + 2;
 
 						if(paddleHit){
-							return this._powerUpPaddle(jBPaddle);
+							this._jBPaddle = jBPaddle;
+							return this._powerUpPaddle();
 						}
 						break;
 				}
@@ -1175,8 +1179,8 @@ jBreak.bonus.prototype = {
 	_bad:[
 		{ // shrink paddle
 			background:'url(images/bonuses/shrink.png)',
-			action:function(jBPaddle){
-				jBPaddle.shrink();
+			action:function(){
+				this._jBPaddle.shrink();
 			}
 		},{ // ball speedup for 15 seconds
 			background:'url(images/bonuses/15+speed.png)',
@@ -1209,8 +1213,8 @@ jBreak.bonus.prototype = {
 	_good:[
 		{ // grow paddle
 			background:'url(images/bonuses/grow.png)',
-			action:function(jBPaddle){
-				jBPaddle.grow();
+			action:function(){
+				this._jBPaddle.grow();
 			}
 		},{ // slow down ball
 			background:'url(images/bonuses/slower.png)',
