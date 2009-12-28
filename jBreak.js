@@ -1120,7 +1120,7 @@ jBreak.bonus.prototype = {
 						paddleMissed = y > jB.fieldSize.height + 2;
 
 						if(paddleHit){
-							this._jBPaddle = jBPaddle;
+							this._paddle = jBPaddle;
 							return this._powerUpPaddle();
 						}
 						break;
@@ -1134,7 +1134,7 @@ jBreak.bonus.prototype = {
 						paddleMissed = y < -10;
 
 						if(paddleHit){
-							this._jBPaddle = jBPaddle;
+							this._paddle = jBPaddle;
 							return this._powerUpPaddle();
 						}
 						break;
@@ -1148,7 +1148,7 @@ jBreak.bonus.prototype = {
 						paddleMissed = x < -10;
 
 						if(paddleHit){
-							this._jBPaddle = jBPaddle;
+							this._paddle = jBPaddle;
 							return this._powerUpPaddle();
 						}
 						break;
@@ -1162,7 +1162,7 @@ jBreak.bonus.prototype = {
 						paddleMissed = x > jB.fieldSize.width + 2;
 
 						if(paddleHit){
-							this._jBPaddle = jBPaddle;
+							this._paddle = jBPaddle;
 							return this._powerUpPaddle();
 						}
 						break;
@@ -1213,12 +1213,13 @@ jBreak.bonus.prototype = {
 	_interval:30,
 	_angle:180,
 	_ball:null, // the ball who triggered this bonus
+	_paddle:null, // the paddle which caught this bonus
 	_action:null, // will hold the function to be executed
 	_bad:[
 		{ // shrink paddle
 			background:'url(images/bonuses/shrink.png)',
 			action:function(){
-				this._jBPaddle.shrink();
+				this._paddle.shrink();
 			}
 		},{ // ball speedup for 15 seconds
 			background:'url(images/bonuses/15+speed.png)',
@@ -1253,7 +1254,7 @@ jBreak.bonus.prototype = {
 		{ // grow paddle
 			background:'url(images/bonuses/grow.png)',
 			action:function(){
-				this._jBPaddle.grow();
+				this._paddle.grow();
 			}
 		},{ // slow down ball
 			background:'url(images/bonuses/slower.png)',
