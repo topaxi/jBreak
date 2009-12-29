@@ -246,7 +246,6 @@ var jBreak = {
 
 			var paddles = this.paddles;
 			for(var i = paddles.length;i--;){
-				paddles[i].$paddle.remove();
 				paddles[i].remove();
 			}
 
