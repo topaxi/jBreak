@@ -883,7 +883,7 @@ jBreak.ball.prototype = {
 							$block.css('background-image', oldImage);
 						}, 100);
 					} else {
-						if(rand < 1.08)
+						if(rand < .08)
 							new jB.bonus(this,x,y,180); // spawn bonus
 
 						$block.css('background-image', hitImage);
