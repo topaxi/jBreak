@@ -61,8 +61,10 @@ $level[2]['paddles'] = array(
 	array('position' => 'top', 'ball' => false)
 );
 $level[2]['blocks'] = array(
-	array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-	array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+	array(),
+	array(),
+	array(),
+	array(),
 	array(block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)])),
 	array(block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)])),
 	array(block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)]), block(2, $themes[array_rand($themes)])),
