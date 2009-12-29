@@ -98,7 +98,7 @@ var jBreak = {
 		this.balls[ballID] = ball;
 		
 		if(jBPaddle !== undefined)
-			jBPaddle.connectBall(ballID);
+			jBPaddle.connectBall(ball);
 
 		return ball;
 	},
@@ -593,8 +593,8 @@ jBreak.paddle.prototype = {
 			self.move(relativePosition, newPosition);
 		});
 	},
-	connectBall:function(ballID){
-		var x,y,effectDirection,jBBall = jBreak.balls[ballID];
+	connectBall:function(jBBall){
+		var x,y,effectDirection;
 
 		switch(this._position.relative){
 			case 'top':
@@ -652,20 +652,18 @@ jBreak.paddle.prototype = {
 			distance:40,
 			times:5
 		}, function(){
-			var ball = jBreak.balls[ballID],
-			    position = ball.getPosition();
+			var position = jBBall.getPosition();
 
-			ball.move(position.x,position.y);
-			ball.ready(true);
+			jBBall.move(position.x,position.y);
+			jBBall.ready(true);
 		});
-		this._balls.push(ballID);
+		this._balls.push(jBBall);
 
 		//console.log('Ball %d connected to %o and moved to %d,%d', ballID, this, x, y);
 	},
 	startBalls:function(){
-		var balls = jBreak.balls;
 		for(var i = this._balls.length;i--;){
-			var ball = balls[i];
+			var ball = this._balls[i];
 
 			if(ball.ready()){
 				ball.start();
@@ -675,8 +673,7 @@ jBreak.paddle.prototype = {
 	},
 	move:function(relativePosition, position){
 		var jB = jBreak,
-		    jBFieldSize = jB.fieldSize,
-		    jBBalls = jB.balls;
+		    jBFieldSize = jB.fieldSize;
 
 		if(relativePosition === 'top' || relativePosition === 'bottom'){
 			var x = position;
@@ -689,7 +686,7 @@ jBreak.paddle.prototype = {
 			}
 
 			for(var i = this._balls.length;i--;){
-				var ball = jBBalls[i],
+				var ball = this._balls[i],
 				    ballX = x
 				          + this._size.width / 2
 				          - ball.$ball.width() / 2;
@@ -722,14 +719,23 @@ jBreak.paddle.prototype = {
 			}
 
 			for(var i = this._balls.length;i--;){
-				var ball  = jBBalls[i],
+				var ball  = this._balls[i],
 				    ballY = y
 				          + this._size.height / 2
 				          - ball.$ball.height() / 2;
 
-				ball.move(
-					ball.getPosition().x,
-					ballY);
+				var $parent = ball.$ball.parent();
+				if($parent.hasClass('ui-effects-wrapper')){
+					$parent.css({
+						left:ball.getPosition().x,
+						top:ballY
+					});
+					ball.getPosition().y = ballY;
+				} else {
+					ball.move(
+						ball.getPosition().x,
+						ballY);
+				}
 			}
 
 			this._position.y = y;
@@ -737,16 +743,17 @@ jBreak.paddle.prototype = {
 		}
 	},
 	remove:function(){
-		jBreak.paddles.forEach(function(jBPaddle, i, self){
+		var jB = jBreak;
+
+		jB.paddles.forEach(function(jBPaddle, i, paddles){
 			if(jBPaddle._position.relative === this._position.relative){
-				self.remove(i);
+				paddles.remove(i);
 			}
 		}, this);
 
-		this._balls.forEach(function(i){
-			// do not use remove() here and remove the method from the Array object
-			this.balls[i].remove();
-		}, jBreak);
+		this._balls.forEach(function(jBBall){
+			jB.balls[jBBall.getBallID].remove();
+		});
 
 		this.$paddle.remove();
 		//delete this;
@@ -783,6 +790,9 @@ jBreak.ball.prototype = {
 		};
 
 		this._timers = {};
+	},
+	getBallID:function(){
+		return this._ballID;
 	},
 	start:function(){
 		if(this._ready){
@@ -1394,7 +1404,7 @@ jBreak.bonus.prototype = {
 	]
 };
 
-// method to remove array indices
+// Array Remove - By John Resig (MIT Licensed)
 Array.prototype.remove = function(from, to){
 	var rest = this.slice((to || from) + 1 || this.length);
 	this.length = from < 0 ? this.length + from : from;
