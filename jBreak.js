@@ -228,14 +228,12 @@ var jBreak = {
 		}
 
 		if(blockVal === 0){
-			for(var ball in this.balls){
-				this.balls[ball].remove();
-			}
+			for(var i = this.balls.length;i--;)
+				this.balls[i].remove();
 
 			var paddles = this.paddles;
-			for(var i = paddles.length;i--;){
+			for(var i = paddles.length;i--;)
 				paddles[i].remove();
-			}
 
 			this.destroyField();
 			this._levelID += 1;
