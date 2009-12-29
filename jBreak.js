@@ -8,7 +8,7 @@ var jBreak = {
 
 		this.paddles = [];
 		this.bonuses = [];
-		this.balls = {};
+		this.balls   = [];
 
 		this.fieldSize = {
 			width:this.$field.width(),
@@ -95,16 +95,6 @@ var jBreak = {
 		audio.volume = this._volume/100;
 		audio.play();
 	},
-	addBall:function(jBPaddle){
-		var ballID = this.countBalls();
-		var ball = new jBreak.ball(ballID);
-		this.balls[ballID] = ball;
-		
-		if(jBPaddle !== undefined)
-			jBPaddle.connectBall(ball);
-
-		return ball;
-	},
 	addPaddle:function(position){
 		var jBPaddle = new jBreak.paddle(position);
 		this.paddles.push(jBPaddle);
@@ -169,16 +159,11 @@ var jBreak = {
 	togglePause:function(){
 		this._paused = !this._paused;
 
-		for(var jBBall in this.balls){
-			this.balls[jBBall].pause();
-		}
+		for(var i = this.balls.length;i--;)
+			this.balls[i].pause();
 
-		for(var i = this.bonuses.length;i--;){
-			var bonus = this.bonuses[i];
-
-			if(bonus instanceof this.bonus)
-				bonus.pause();
-		}
+		for(var i = this.bonuses.length;i--;)
+			this.bonuses[i].pause();
 
 		this._trackMouseMovement(!this._paused);
 
@@ -258,20 +243,13 @@ var jBreak = {
 			this.loadLevel(this._levelID);
 		}
 	},
-	countBalls:function(){
-		var i = 0;
-		for(var ball in this.balls)
-			i++;
-		
-		return i;
-	},
 	ballChecker:function(jBPaddle){
 		//console.log('Checking remaining balls...');
-		if(this.countBalls() === 0){
+		if(this.balls.length === 0){
 			var lives = this._lives;
 			if(lives > 0){
 				this.lives(lives-1);
-				this.addBall(jBPaddle);
+				jBPaddle.connectBall(new jBreak.ball());
 				jBPaddle.size(64); // reset size
 
 				jBPaddle.$paddle.stop(true, true) // stop any effects on the paddle
@@ -337,7 +315,7 @@ var jBreak = {
 			level.paddles.forEach(function(jBPaddle){
 				var paddle = self.addPaddle(jBPaddle.position);
 				if(jBPaddle.ball)
-					self.addBall(paddle);
+					paddle.connectBall(new self.ball());
 			});
 		}, 250);
 	},
@@ -487,9 +465,9 @@ var jBreak = {
 		// this references to the jBreak.paddle object!
 		this.init(position);
 	},
-	ball:function(ballID, position){
+	ball:function(position){
 		// this references to the jBreak.ball object!
-		this.init(ballID, position);
+		this.init(position);
 	},
 	bonus:function(jBBall,x,y,angle){
 		// this references to the jBreak.bonus object!
@@ -767,9 +745,8 @@ jBreak.paddle.prototype = {
 };
 
 jBreak.ball.prototype = {
-	init:function(ballID, position){
-		// remember which instance we are
-		this._ballID = ballID;
+	init:function(position){
+		jBreak.balls.push(this);
 		//console.log('Create ball %d -> %o', ballID, this);
 		this.$ball = $('<div class="jBreakBall"/>');
 		jBreak.$field.append(this.$ball);
@@ -786,9 +763,6 @@ jBreak.ball.prototype = {
 		};
 
 		this._timers = {};
-	},
-	getBallID:function(){
-		return this._ballID;
 	},
 	start:function(){
 		if(this._ready){
@@ -909,7 +883,7 @@ jBreak.ball.prototype = {
 							$block.css('background-image', oldImage);
 						}, 100);
 					} else {
-						if(rand < .08)
+						if(rand < 1.08)
 							new jB.bonus(this,x,y,180); // spawn bonus
 
 						$block.css('background-image', hitImage);
@@ -1074,10 +1048,15 @@ jBreak.ball.prototype = {
 	remove:function(){
 		this._timer = false;
 		this.$ball.remove();
+
 		// delete me!
-		delete jBreak.balls[this._ballID];
+		var jBBalls = jBreak.balls;
+		for(var i = jBBalls.length;i--;){
+			if(jBBalls[i] === this)
+				return jBBalls.remove(i);
+		}
+
 		//console.log('Ball lost. Removed %o from jBreak field!', this);
-		//delete this;
 	},
 	pause:function(){
 		if(this._timer){
@@ -1099,15 +1078,13 @@ jBreak.ball.prototype = {
 	},
 	clone:function(){
 		var jB = jBreak,
-		    ball = $.extend(true, {}, this),
-		    ballID = jB.countBalls();
+		    ball = $.extend(true, {}, this);
 
 		ball = $.extend(true, ball, {
-			_ballID:ballID,
 			$ball:this.$ball.clone()
 		});
 
-		jB.balls[ballID] = ball;
+		jB.balls.push(ball);
 
 		jBreak.$field.append(ball.$ball);
 
@@ -1137,9 +1114,9 @@ jBreak.ball.prototype = {
 
 jBreak.bonus.prototype = {
 	init:function(jBBall,x,y,angle){
-		var random, background, powerup;
+		var random, background, powerup, jB = jBreak;
 
-		this._bonusID = jBreak.bonuses.push(this) - 1;
+		jB.bonuses.push(this);
 
 		// 50% chance to get a bad or a good powerup
 		if(Math.floor(Math.random()+.5)){
@@ -1155,7 +1132,7 @@ jBreak.bonus.prototype = {
 
 		var $bonus = $('<div class="jBreakBonus"/>');
 
-		jBreak.$field.append($bonus);
+		jB.$field.append($bonus);
 
 		this._ball = jBBall;
 		
@@ -1304,10 +1281,13 @@ jBreak.bonus.prototype = {
 			$(this).remove();
 		});
 
-		delete jBreak.bonuses[this._bonusID];
+		var jBBonuses = jBreak.bonuses;
+		for(var i = jBBonuses.length;i--;){
+			if(jBBonuses[i] === this)
+				return jBBonuses.remove(i);
+		}
 	},
 	$bonus:null,
-	_bonusID:null,
 	_direction:null,
 	_position:null,
 	_speed:null,
