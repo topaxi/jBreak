@@ -202,6 +202,8 @@ var jBreak = {
 				self.bindPause();
 
 				$(this).remove();
+			}).focus(function(){ // prevent button from beeing triggered with <return>
+				$(this).blur();
 			});
 		} else {
 			for(var i = this.paddles.length;i--;){
