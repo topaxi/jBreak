@@ -295,9 +295,9 @@ var jBreak = {
 					self.$field.append($fail);
 					var failOffset = $fail.offset();
 
-					$fail.css({
-						top:self.$field.height()/2 - $fail.height()/2 + 'px'
-					}).fadeIn('slow', function(){
+					$fail.css('top',
+						self.$field.height()/2 - $fail.height()/2 + 'px'
+					).fadeIn('slow', function(){
 						$(this).effect('pulsate', {times:2,mode:'hide'}, 2000, function(){
 							self._levelID = 0;
 							self._lives = 3;
@@ -392,9 +392,7 @@ var jBreak = {
 	options:{
 		showOptions:function(){
 			this.$options = $('<div class="optionsContainer"/>');
-			this.$options.css({
-				position:'absolute' // @todo remove this
-			});
+			this.$options.css('position', 'absolute'); // @todo remove this
 
 			var $draggableHandle = $('<p class="draggableHandle ui-widget-header">Settings</p>');
 			this.$options.prepend($draggableHandle);
@@ -442,9 +440,7 @@ var jBreak = {
 
 			var $soundVolumeControl = $('<div/>');
 			var $soundVolumeSlider = $('<div/>');
-			$soundVolumeControl.css({
-				fontSize:'11px'
-			});
+			$soundVolumeControl.css('font-size','11px');
 			$soundVolumeSlider.css({width:'170px',marginBottom:'8px'});
 			$soundVolumeSlider.slider({
 				animate:true,
@@ -464,10 +460,8 @@ var jBreak = {
 
 			var $musicVolumeControl = $('<div/>');
 			var $musicVolumeSlider = $('<div/>');
-			$musicVolumeControl.css({
-				fontSize:'11px'
-			});
-			$musicVolumeSlider.css({width:'170px'});
+			$musicVolumeControl.css('font-size','11px');
+			$musicVolumeSlider.css('width','170px');
 			$musicVolumeSlider.slider({
 				animate:true,
 				value:70,
@@ -707,7 +701,7 @@ jBreak.paddle.prototype = {
 			}
 
 			this._position.x = x;
-			this.$paddle.css({left:x});
+			this.$paddle.css('left', x);
 		} else {
 			var y = position;
 			y -= this._size.height / 2;
@@ -739,7 +733,7 @@ jBreak.paddle.prototype = {
 			}
 
 			this._position.y = y;
-			this.$paddle.css({top:y});
+			this.$paddle.css('top', y);
 		}
 	},
 	remove:function(){
