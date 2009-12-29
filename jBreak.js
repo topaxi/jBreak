@@ -752,7 +752,7 @@ jBreak.paddle.prototype = {
 		}, this);
 
 		this._balls.forEach(function(jBBall){
-			jB.balls[jBBall.getBallID].remove();
+			jB.balls[jBBall.getBallID()].remove();
 		});
 
 		this.$paddle.remove();
