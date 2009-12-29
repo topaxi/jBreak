@@ -22,6 +22,9 @@ var jBreak = {
 			this.options.showOptions();
 			this._setLevelTitle('jBreak 0.1.7');
 			this._trackMouseMovement(true);
+
+			if(window.location.hash == '#debug')
+				console.log(this);
 		}
 		//console.log('Playing field initialized -> %o', this);
 	},
