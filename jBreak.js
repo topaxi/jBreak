@@ -21,14 +21,7 @@ var jBreak = {
 			this._cacheImages();
 			this.options.showOptions();
 			this._setLevelTitle('jBreak 0.1.7');
-
-			var self = this;
-			this.$field.mousemove(function(e){
-				self._mousePosition = {
-					pageX:e.pageX,
-					pageY:e.pageY
-				};
-			});
+			this._trackMouseMovement(true);
 		}
 		//console.log('Playing field initialized -> %o', this);
 	},
@@ -145,27 +138,30 @@ var jBreak = {
 			});
 
 			self.$field.bind('click.jBreakLaunchPaddleBalls', function(){
+				self._trackMouseMovement(true);
+				self.bindPause();
+
 				self.paddles.forEach(function(jBPaddle){
 					jBPaddle.startBalls();
 				});
 			});
 			self.$field.unbind('click.jBreakCreatePaddles');
-
-			self.bindPause();
 			//console.log('Paddles created');
 		});
 	},
 	bindPause:function(){
 		var self = this;
-		$(document).unbind('.jBreakPause');
 		$(document).bind('keydown.jBreakPause', function(e){
 			if(e.keyCode === 32){
 				self.togglePause();
 
 				if(self._paused)
-					$(document).unbind('.jBreakPause');
+					self.unbindPause();
 			}
 		});
+	},
+	unbindPause:function(){
+		$(document).unbind('.jBreakPause');
 	},
 	togglePause:function(){
 		this._paused = !this._paused;
@@ -180,6 +176,8 @@ var jBreak = {
 			if(bonus instanceof this.bonus)
 				bonus.pause();
 		}
+
+		this._trackMouseMovement(!this._paused);
 
 		if(this._paused){
 			this.destroyField();
@@ -212,7 +210,22 @@ var jBreak = {
 			this.hideCursor(true);
 		}
 	},
+	_trackMouseMovement:function(track){
+		this.$field.unbind('mousemove');
+
+		if(track){
+			var self = this;
+			this.$field.mousemove(function(e){
+				self._mousePosition = {
+					pageX:e.pageX,
+					pageY:e.pageY
+				};
+			});
+		}
+	},
 	destroyField:function(){
+		this._trackMouseMovement(false);
+		this.unbindPause();
 		$(document).unbind('mousemove');
 		this.hideCursor(false);
 	},
