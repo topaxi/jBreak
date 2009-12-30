@@ -233,7 +233,7 @@ var jBreak = {
 
 		for(var y = blocks.length;y--;){
 			for(var x = blocks[y].length;x--;){
-				blockVal += blocks[y][x];
+				blockVal += blocks[y][x].value;
 			}
 		}
 
