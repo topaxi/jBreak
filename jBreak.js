@@ -124,7 +124,8 @@ var jBreak = {
 			//console.log('Creating paddles...');
 			self.hideCursor(true);
 
-			self.paddles.forEach(function(jBPaddle){
+			for(var i = self.paddles.length;i--;){
+				var jBPaddle = self.paddles[i];
 				jBPaddle.start();
 
 				var jBPaddlePosition = jBPaddle.getPosition(),
@@ -137,15 +138,15 @@ var jBreak = {
 						: e.pageY - fieldOffset.top);
 
 				jBPaddle.move(jBPaddlePosition.relative, position);
-			});
+			};
 
 			self.$field.bind('click.jBreakLaunchPaddleBalls', function(){
 				self._trackMouseMovement(true);
 				self.bindPause();
 
-				self.paddles.forEach(function(jBPaddle){
-					jBPaddle.startBalls();
-				});
+				for(var i = self.paddles.length;i--;){
+					self.paddles[i].startBalls();
+				};
 			});
 			self.$field.unbind('click.jBreakCreatePaddles');
 			//console.log('Paddles created');
@@ -270,10 +271,10 @@ var jBreak = {
 				this.$blocks.find('div').effect('drop', {direction:'down'}, 750);
 
 				setTimeout(function(){
-					self.paddles.forEach(function(jBPaddle){
-						jBPaddle.$paddle.remove();
-						jBPaddle.remove();
-					});
+					for(var i = self.paddles.length;i--;){
+						self.paddles[i].remove();
+					};
+
 					self.paddles = [];
 					self.$blocks.remove();
 
@@ -319,11 +320,12 @@ var jBreak = {
 		setTimeout(function(){
 			self.createPaddles();
 
-			level.paddles.forEach(function(jBPaddle){
-				var paddle = self.addPaddle(jBPaddle.position);
-				if(jBPaddle.ball)
-					paddle.connectBall(new self.ball());
-			});
+			for(var i = level.paddles.length;i--;){
+				var paddle = level.paddles[i];
+				var jBPaddle = self.addPaddle(paddle.position);
+				if(paddle.ball)
+					jBPaddle.connectBall(new self.ball());
+			};
 		}, 250);
 	},
 	_drawBlocks:function(level){
@@ -332,8 +334,11 @@ var jBreak = {
 		}
 
 		this.$blocks.empty();
-		this.blocks.forEach(function(horizontalBlocks, y){
-			horizontalBlocks.forEach(function(block, x){
+		for(var y = this.blocks.length;y--;){
+			var horizontalBlocks = this.blocks[y];
+			for(var x = horizontalBlocks.length;x--;){
+				var block = horizontalBlocks[x];
+
 				if(block !== 0){
 					var $block = $('<div/>');
 					$block.addClass('jBreakBlock x'+x+' y'+y);
@@ -363,8 +368,8 @@ var jBreak = {
 
 					this.$blocks.append($block);
 				}
-			}, this);
-		}, this);
+			}
+		}
 
 		this.$field.append(this.$blocks);
 		this.$blocks.fadeIn('slow');
@@ -737,15 +742,21 @@ jBreak.paddle.prototype = {
 	remove:function(){
 		var jB = jBreak;
 
-		jB.paddles.forEach(function(jBPaddle, i, paddles){
-			if(jBPaddle._position.relative === this._position.relative){
-				paddles.remove(i);
+		for(var i = jB.paddles.length;i--;){
+			if(jB.paddles[i]._position.relative === this._position.relative){
+				jB.paddles.remove(i);
 			}
-		}, this);
+		};
 
-		this._balls.forEach(function(jBBall){
-			jB.balls[jBBall.getBallID()].remove();
-		});
+		// remove connected balls
+		for(var i = this._balls.length;i--;){
+			var connectedBall = this._ball[i];
+			for(var o = jB.balls.length;o--;){
+				var jBBall = jB.balls[o];
+				if(connectedBall === jBBall)
+					jBBall.remove();
+			}
+		}
 
 		this.$paddle.remove();
 		//delete this;
@@ -1425,25 +1436,6 @@ function readCookie(name) {
 		if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
 	}
 	return null;
-}
-
-/* Implement forEach for non SpiderMonkey browsers.
- * Implemented in: JavaScript 1.6 (Gecko 1.8b2 and later)
- *
- * Syntax: array.forEach(callback(value, index, array)[, thisObject]);
- */
-if(!Array.prototype.forEach){
-	Array.prototype.forEach = function(fun /*, thisp*/){
-		var len = this.length >>> 0;
-		if(typeof fun != "function")
-			throw new TypeError();
-
-		var thisp = arguments[1];
-		for(var i = 0;i < len;i++){
-			if(i in this)
-				fun.call(thisp, this[i], i, this);
-		}
-	};
 }
 
 $(function(){
