@@ -859,7 +859,8 @@ jBreak.ball.prototype = {
 			               && jB.blocks[blockY][blockX] !== undefined;
 
 			if(blockExists){
-				if(jB.blocks[blockY][blockX].value > 0){
+				var blockValue = jB.blocks[blockY][blockX].value;
+				if(blockValue > 0){
 					jB.playSound('sound/pling1s.ogg');
 
 					if(!this._pierce){
@@ -897,13 +898,13 @@ jBreak.ball.prototype = {
 						.replace(/\/(.*)\.png/g, '/$1_h.png');
 
 					var rand = Math.random();
-					if(jB.blocks[blockY][blockX].value > 1 && !this._pierce){
+					if(blockValue > 1 && !this._pierce){
 						if(rand < .04)
 							new jB.bonus(this,x,y,180); // spawn bonus
 
 						var oldImage = $block.css('background-image');
 						$block.css({
-							opacity:1-1/jB.blocks[blockY][blockX],
+							opacity:1-1/blockValue,
 							backgroundImage:hitImage
 						});
 						jB.blocks[blockY][blockX] -= 1;
