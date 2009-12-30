@@ -1116,7 +1116,7 @@ jBreak.ball.prototype = {
 
 		jB.balls.push(ball);
 
-		jBreak.$field.append(ball.$ball);
+		jB.$field.append(ball.$ball);
 
 		return ball;
 	},
