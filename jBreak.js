@@ -589,7 +589,7 @@ jBreak.paddle.prototype = {
 			                   ? e.pageX - fieldOffset.left
 			                   : e.pageY - fieldOffset.top);
 
-			self.move(relativePosition, newPosition);
+			self.move(newPosition);
 		});
 	},
 	connectBall:function(jBBall){
@@ -670,9 +670,10 @@ jBreak.paddle.prototype = {
 			}
 		}
 	},
-	move:function(relativePosition, position){
+	move:function(position){
 		var jB = jBreak,
-		    jBFieldSize = jB.fieldSize;
+		    jBFieldSize = jB.fieldSize,
+		    relativePosition = this._position.relative;
 
 		if(relativePosition === 'top' || relativePosition === 'bottom'){
 			var x = position;
