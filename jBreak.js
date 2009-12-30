@@ -46,7 +46,7 @@ var jBreak = {
 			'pad80x8',
 			'pad96x8',
 			'pad112x8',
-			'pad128x8',
+			'pad128x8'
 		];
 		for(var i = paddleImages.length;i--;){
 			cache.paddle[i] = $('<img src="images/paddles/'+paddleImages[i]+'.png"/>');
