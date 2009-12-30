@@ -1387,7 +1387,7 @@ jBreak.bonus.prototype = {
 			background:'url(images/bonuses/life.png)',
 			action:function(){
 				jBreak.lives(jBreak.lives()+1);
-			},
+			}
 		},{ // piercing ball
 			background:'url(images/bonuses/powerball.png)',
 			action:function(){
