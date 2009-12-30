@@ -470,20 +470,20 @@ var jBreak = {
 	},
 	paddle:function(position){
 		// this references to the jBreak.paddle object!
-		this.init(position);
+		this._init(position);
 	},
 	ball:function(position){
 		// this references to the jBreak.ball object!
-		this.init(position);
+		this._init(position);
 	},
 	bonus:function(jBBall,x,y,angle){
 		// this references to the jBreak.bonus object!
-		this.init(jBBall,x,y,angle);
+		this._init(jBBall,x,y,angle);
 	}
 };
 
 jBreak.paddle.prototype = {
-	init:function(position){
+	_init:function(position){
 		//console.log('Create %s paddle..', position);
 		this.$paddle = $('<div class="jBreakPaddle"/>');
 
@@ -752,7 +752,7 @@ jBreak.paddle.prototype = {
 };
 
 jBreak.ball.prototype = {
-	init:function(position){
+	_init:function(position){
 		jBreak.balls.push(this);
 		//console.log('Create ball %d -> %o', ballID, this);
 		this.$ball = $('<div class="jBreakBall"/>');
@@ -1120,7 +1120,7 @@ jBreak.ball.prototype = {
 };
 
 jBreak.bonus.prototype = {
-	init:function(jBBall,x,y,angle){
+	_init:function(jBBall,x,y,angle){
 		var random, background, powerup, jB = jBreak;
 
 		jB.bonuses.push(this);
