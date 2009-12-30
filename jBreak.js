@@ -341,15 +341,24 @@ var jBreak = {
 					var random = Math.ceil(Math.random()*10);
 					random = (random < 10 ? '0'+random : random);
 
-					// @todo create one a sprite image for each block theme to reduce http requests
+					/* @todo
+					 * create one a sprite image for each block theme to reduce
+					 * http requests
+					 */
+					var blockName = block.theme+'/'+random;
 					$block.css({
 						left:x*40,
 						top:y*16,
 						background:
-							'transparent url(images/blocks/'+block.theme+'/'+random+'.png) scroll no-repeat'});
+							'transparent url(images/blocks/'
+								+blockName+'.png) scroll no-repeat'});
+
 					// prefetch hit block image
-					if(this._imageCache.blocks[block.theme+random] === undefined){
-						this._imageCache.blocks[block.theme+random] = $('<img src="images/blocks/'+block.theme+'/'+random+'_h.png"/>');
+					var imageBlockCache = this._imageCache.blocks;
+					if(imageBlockCache[blockName] === undefined){
+						imageBlockCache[blockName] = $(
+							'<img src="images/blocks/'+blockName+'_h.png"/>'
+						);
 					}
 
 					this.$blocks.append($block);
