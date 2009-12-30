@@ -19,13 +19,18 @@ var jBreak = {
 
 		if(initial){
 			this._cacheImages();
-			this.options.showOptions();
 			this._setLevelTitle('jBreak 0.1.7');
 			this._trackMouseMovement(true);
 			this.$blocks = $('<div style="position:absolute;left:0;top:0;display:none"/>');
 
+			var cookieSoundVolume = readCookie('soundVolume');
+			if(cookieSoundVolume !== null)
+				this._volume = cookieSoundVolume;
+
 			if(window.location.hash == '#debug')
 				console.log(this);
+
+			this.options.showOptions();
 		}
 		//console.log('Playing field initialized -> %o', this);
 	},
@@ -425,18 +430,19 @@ var jBreak = {
 			$soundVolumeSlider.css({width:'170px',marginBottom:'8px'});
 			$soundVolumeSlider.slider({
 				animate:true,
-				value:70,
+				value:jBreak._volume,
 				range:'min',
 				min:0,
 				max:100,
 				slide:function(e, ui){
 					jBreak._volume = ui.value;
+					createCookie('soundVolume', ui.value, 360);
 					$('#soundVolume').text(ui.value+'%');
 					jBreak.playSound('sound/pling1s.ogg');
 				}
 			});
 			$soundVolumeControl.append($soundVolumeSlider);
-			$soundVolumeControl.prepend('<p style="margin:0">Sound volume: <span id="soundVolume" style="float:right">70%</span></p>');
+			$soundVolumeControl.prepend('<p style="margin:0">Sound volume: <span id="soundVolume" style="float:right">'+jBreak._volume+'%</span></p>');
 			$soundOptions.append($soundVolumeControl);
 
 			var $musicVolumeControl = $('<div/>');
@@ -1387,6 +1393,28 @@ Array.prototype.remove = function(from, to){
 	this.length = from < 0 ? this.length + from : from;
 	return this.push.apply(this, rest);
 };
+
+// Cookie functions from quirksmode.org
+function createCookie(name,value,days) {
+	if (days) {
+		var date = new Date();
+		date.setTime(date.getTime()+(days*24*60*60*1000));
+		var expires = "; expires="+date.toGMTString();
+	}
+	else var expires = "";
+	document.cookie = name+"="+value+expires+"; path=/";
+}
+
+function readCookie(name) {
+	var nameEQ = name + "=";
+	var ca = document.cookie.split(';');
+	for(var i=0;i < ca.length;i++) {
+		var c = ca[i];
+		while (c.charAt(0)==' ') c = c.substring(1,c.length);
+		if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+	}
+	return null;
+}
 
 /* Implement forEach for non SpiderMonkey browsers.
  * Implemented in: JavaScript 1.6 (Gecko 1.8b2 and later)
