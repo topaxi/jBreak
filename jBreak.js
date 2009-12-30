@@ -232,8 +232,10 @@ var jBreak = {
 		    blocks   = this.blocks;
 
 		for(var y = blocks.length;y--;){
-			for(var x = blocks[y].length;x--;){
-				blockVal += blocks[y][x].value;
+			var blocksY = blocks[y]; 
+			for(var x = blocksY.length;x--;){
+				if(blocksY[x])
+					blockVal += blocksY[x].value;
 			}
 		}
 
@@ -920,7 +922,7 @@ jBreak.ball.prototype = {
 						$block.effect('drop', {direction:direction}, 'fast', function(){
 							$block.remove();
 						});
-						jB.blocks[blockY][blockX].value = 0;
+						delete jB.blocks[blockY][blockX];
 						jB.blockChecker();
 					}
 				}
