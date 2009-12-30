@@ -746,7 +746,7 @@ jBreak.paddle.prototype = {
 			if(jB.paddles[i]._position.relative === this._position.relative){
 				jB.paddles.remove(i);
 			}
-		};
+		}
 
 		// remove connected balls
 		for(var i = this._balls.length;i--;){
