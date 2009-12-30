@@ -907,7 +907,7 @@ jBreak.ball.prototype = {
 							opacity:1-1/blockValue,
 							backgroundImage:hitImage
 						});
-						jB.blocks[blockY][blockX] -= 1;
+						jB.blocks[blockY][blockX].value -= 1;
 
 						setTimeout(function(){
 							$block.css('background-image', oldImage);
@@ -920,7 +920,7 @@ jBreak.ball.prototype = {
 						$block.effect('drop', {direction:direction}, 'fast', function(){
 							$block.remove();
 						});
-						jB.blocks[blockY][blockX] = 0;
+						jB.blocks[blockY][blockX].value = 0;
 						jB.blockChecker();
 					}
 				}
