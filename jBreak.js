@@ -22,6 +22,7 @@ var jBreak = {
 			this.options.showOptions();
 			this._setLevelTitle('jBreak 0.1.7');
 			this._trackMouseMovement(true);
+			this.$blocks = $('<div style="position:absolute;left:0;top:0;display:none"/>');
 
 			if(window.location.hash == '#debug')
 				console.log(this);
@@ -33,11 +34,14 @@ var jBreak = {
 
 		cache.paddle = [];
 		var paddleImages = [
+			'pad16x8',
 			'pad32x8',
 			'pad48x8',
 			'pad64x8',
 			'pad80x8',
-			'pad96x8'
+			'pad96x8',
+			'pad112x8',
+			'pad128x8',
 		];
 		for(var i = paddleImages.length;i--;){
 			cache.paddle[i] = $('<img src="images/paddles/'+paddleImages[i]+'.png"/>');
@@ -322,7 +326,7 @@ var jBreak = {
 			this._imageCache.blocks = {};
 		}
 
-		this.$blocks = $('<div style="position:absolute;left:0;top:0;display:none"/>');
+		this.$blocks.empty();
 		this.blocks.forEach(function(horizontalBlocks, y){
 			horizontalBlocks.forEach(function(block, x){
 				if(block !== 0){
@@ -344,7 +348,6 @@ var jBreak = {
 					}
 
 					this.$blocks.append($block);
-					this.blocks[y][x] = block.value;
 				}
 			}, this);
 		}, this);
@@ -536,7 +539,7 @@ jBreak.paddle.prototype = {
 		if(size === undefined)
 			return this._size;
 
-		if(size > 96 || size < 32)
+		if(size > 128 || size < 16 || size % 16 !== 0)
 			return;
 
 		var width = this._size.width, height = this._size.height;
@@ -828,7 +831,7 @@ jBreak.ball.prototype = {
 			               && jB.blocks[blockY][blockX] !== undefined;
 
 			if(blockExists){
-				if(jB.blocks[blockY][blockX] > 0){
+				if(jB.blocks[blockY][blockX].value > 0){
 					jB.playSound('sound/pling1s.ogg');
 
 					if(!this._pierce){
@@ -866,7 +869,7 @@ jBreak.ball.prototype = {
 						.replace(/\/(.*)\.png/g, '/$1_h.png');
 
 					var rand = Math.random();
-					if(jB.blocks[blockY][blockX] > 1 && !this._pierce){
+					if(jB.blocks[blockY][blockX].value > 1 && !this._pierce){
 						if(rand < .04)
 							new jB.bonus(this,x,y,180); // spawn bonus
 
