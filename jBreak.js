@@ -915,7 +915,7 @@ jBreak.ball.prototype = {
 							new jB.bonus(this,x,y,180); // spawn bonus
 
 						$block.css({
-							opacity:1-1/blockValue,
+							opacity:1-1/block.value,
 							backgroundPosition:'0 '+block.sprite+'px'
 						});
 						block.value -= 1;
