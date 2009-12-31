@@ -81,4 +81,5 @@ $return = array(
 	'message' => $level[$_GET['levelID']]
 );
 
+header('Content-type: application/x-json');
 echo json_encode($return);
