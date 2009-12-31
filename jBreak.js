@@ -75,6 +75,28 @@ var jBreak = {
 		for(var i = bonusImages.length;i--;){
 			cache.bonus[i] = $('<img src="images/bonuses/'+bonusImages[i]+'.png"/>');
 		}
+
+		cache.block = [];
+		var blockImages = [
+			'Blue',
+			'Blue_purpled',
+			'Gray',
+			'Green_greener',
+			'Green_Yellowish_Light',
+			'Orange',
+			'Purple_bluish',
+			'Purple_gay',
+			'Purple_haze',
+			'Red_fire',
+			'Red_Pink',
+			'Turkoise_2',
+			'Turkoise_3',
+			'Turkoise_greenisch',
+			'Yellow'
+		];
+		for(var i = blockImages.length;i--;){
+			cache.block[i] = $('<img src="images/blocks/'+blockImages[i]+'.png"/>');
+		}
 	},
 	_setLevelTitle:function(title){
 		$('#jBreakLevelTitle').remove();
