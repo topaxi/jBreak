@@ -367,10 +367,13 @@ var jBreak = {
 					var $block = $('<div/>');
 					$block.addClass('jBreakBlock x'+x+' y'+y);
 
-					var random = Math.ceil(Math.random()*10);
-					random = (random < 10 ? '0'+random : random);
+					if(block.sprite === undefined){
+						var random = Math.ceil(Math.random()*10);
+						random = (random < 10 ? '0'+random : random);
 
-					block.sprite = (random-1)*-16;
+						block.sprite = (random-1)*-16;
+					}
+
 					$block.css({
 						left:x*40,
 						top:y*16,
