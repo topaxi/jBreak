@@ -911,7 +911,7 @@ jBreak.ball.prototype = {
 						block.value -= 1;
 
 						setTimeout(function(){
-							$block.css('background-position', '-40px'+block.sprite+'px');
+							$block.css('background-position', '-40px '+block.sprite+'px');
 						}, 100);
 					} else {
 						if(rand < .08)
