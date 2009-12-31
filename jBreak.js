@@ -159,7 +159,7 @@ var jBreak = {
 						? e.pageX - fieldOffset.left
 						: e.pageY - fieldOffset.top);
 
-				jBPaddle.move(jBPaddlePosition.relative, position);
+				jBPaddle.move(position);
 			};
 
 			self.$field.bind('click.jBreakLaunchPaddleBalls', function(){
