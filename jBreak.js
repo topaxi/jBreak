@@ -48,18 +48,16 @@ var jBreak = {
 			'pad112x8',
 			'pad128x8'
 		];
-		for(var i = paddleImages.length;i--;){
+		for(var i = paddleImages.length;i--;)
 			cache.paddle[i] = $('<img src="images/paddles/'+paddleImages[i]+'.png"/>');
-		}
 
 		cache.ball = [];
 		var ballImages = [
 			'ball1-88',
 			'ball4-88'
 		];
-		for(var i = ballImages.length;i--;){
+		for(var i = ballImages.length;i--;)
 			cache.ball[i] = $('<img src="images/'+ballImages[i]+'.png"/>');
-		}
 
 		cache.bonus = [];
 		var bonusImages = [
@@ -72,9 +70,8 @@ var jBreak = {
 			'powerball',
 			'multiball'
 		];
-		for(var i = bonusImages.length;i--;){
+		for(var i = bonusImages.length;i--;)
 			cache.bonus[i] = $('<img src="images/bonuses/'+bonusImages[i]+'.png"/>');
-		}
 
 		cache.block = [];
 		var blockImages = [
@@ -94,9 +91,8 @@ var jBreak = {
 			'Turkoise_greenisch',
 			'Yellow'
 		];
-		for(var i = blockImages.length;i--;){
+		for(var i = blockImages.length;i--;)
 			cache.block[i] = $('<img src="images/blocks/'+blockImages[i]+'.png"/>');
-		}
 	},
 	_setLevelTitle:function(title){
 		$('#jBreakLevelTitle').remove();
@@ -114,9 +110,8 @@ var jBreak = {
 		$('#jBreakLives').remove();
 		var $lives = $('<div id="jBreakLives"/>');
 
-		for(var i = this._lives;i--;){
+		for(var i = this._lives;i--;)
 			$lives.append('<div class="jBreakLive"/>');
-		}
 
 		$('#jBreak').append($lives);
 	},
@@ -132,12 +127,11 @@ var jBreak = {
 		return jBPaddle;
 	},
 	hideCursor:function(hide){
-		if(hide){
+		if(hide)
 			$('#jBreak').css('cursor',
 				'url(images/cursor/cursor.gif), url(images/cursor/cursor.ico), none');
-		} else {
+		else
 			$('#jBreak').css('cursor', 'default');
-		}
 	},
 	createPaddles:function(){
 		var self = this;
@@ -166,9 +160,8 @@ var jBreak = {
 				self._trackMouseMovement(true);
 				self.bindPause();
 
-				for(var i = self.paddles.length;i--;){
+				for(var i = self.paddles.length;i--;)
 					self.paddles[i].startBalls();
-				}
 			});
 			self.$field.unbind('click.jBreakCreatePaddles');
 			//console.log('Paddles created');
@@ -224,9 +217,9 @@ var jBreak = {
 				$(this).blur();
 			});
 		} else {
-			for(var i = this.paddles.length;i--;){
+			for(var i = this.paddles.length;i--;)
 				this.paddles[i].start();
-			}
+
 			this.hideCursor(true);
 		}
 	},
@@ -255,10 +248,9 @@ var jBreak = {
 
 		for(var y = blocks.length;y--;){
 			var blocksY = blocks[y]; 
-			for(var x = blocksY.length;x--;){
+			for(var x = blocksY.length;x--;)
 				if(blocksY[x])
 					blockVal += blocksY[x].value;
-			}
 		}
 
 		if(blockVal === 0){
@@ -295,9 +287,8 @@ var jBreak = {
 				this.$blocks.find('div').effect('drop', {direction:'down'}, 750);
 
 				setTimeout(function(){
-					for(var i = self.paddles.length;i--;){
+					for(var i = self.paddles.length;i--;)
 						self.paddles[i].remove();
-					}
 
 					self.paddles = [];
 					self.$blocks.remove();
@@ -353,9 +344,8 @@ var jBreak = {
 		}, 250);
 	},
 	_drawBlocks:function(level){
-		if(this._imageCache.blocks === undefined){
+		if(this._imageCache.blocks === undefined)
 			this._imageCache.blocks = {};
-		}
 
 		this.$blocks.empty();
 		for(var y = this.blocks.length;y--;){
@@ -581,7 +571,8 @@ jBreak.paddle.prototype = {
 		if(size > 128 || size < 16 || size % 16 !== 0)
 			return;
 
-		var width = this._size.width, height = this._size.height;
+		var width = this._size.width,
+		    height = this._size.height;
 		(width > height
 			? width = size
 			: height = size);
@@ -694,11 +685,10 @@ jBreak.paddle.prototype = {
 			var x = position;
 			x -= this._size.width / 2;
 
-			if(x < 0){
+			if(x < 0)
 				x = 0;
-			} else if(x > jBFieldSize.width - this._size.width){
+			else if(x > jBFieldSize.width - this._size.width)
 				x = jBFieldSize.width - this._size.width;
-			}
 
 			for(var i = this._balls.length;i--;){
 				var ball = this._balls[i],
@@ -727,11 +717,10 @@ jBreak.paddle.prototype = {
 			var y = position;
 			y -= this._size.height / 2;
 
-			if(y < 0){
+			if(y < 0)
 				y = 0;
-			} else if(y > jBFieldSize.height - this._size.height){
+			else if(y > jBFieldSize.height - this._size.height)
 				y = jBFieldSize.height - this._size.height;
-			}
 
 			for(var i = this._balls.length;i--;){
 				var ball  = this._balls[i],
@@ -760,11 +749,9 @@ jBreak.paddle.prototype = {
 	remove:function(){
 		var jB = jBreak;
 
-		for(var i = jB.paddles.length;i--;){
-			if(jB.paddles[i]._position.relative === this._position.relative){
+		for(var i = jB.paddles.length;i--;)
+			if(jB.paddles[i]._position.relative === this._position.relative)
 				jB.paddles.remove(i);
-			}
-		}
 
 		// remove connected balls
 		for(var i = this._balls.length;i--;){
@@ -934,6 +921,7 @@ jBreak.ball.prototype = {
 						$block.effect('drop', {direction:direction}, 'fast', function(){
 							$block.remove();
 						});
+
 						delete jB.blocks[blockY][blockX];
 						jB.blockChecker();
 					}
@@ -1080,11 +1068,10 @@ jBreak.ball.prototype = {
 		this._position = {x:x, y:y};
 	},
 	interval:function(i){
-		if(i !== undefined){
+		if(i !== undefined)
 			this._interval = (this._interval < 10 ? 10 : i);
-		} else {
+		else
 			return this._interval;
-		}
 	},
 	getPosition:function(){
 		return this._position;
@@ -1095,10 +1082,9 @@ jBreak.ball.prototype = {
 
 		// delete me!
 		var jBBalls = jBreak.balls;
-		for(var i = jBBalls.length;i--;){
+		for(var i = jBBalls.length;i--;)
 			if(jBBalls[i] === this)
 				return jBBalls.remove(i);
-		}
 
 		//console.log('Ball lost. Removed %o from jBreak field!', this);
 	},
@@ -1280,9 +1266,8 @@ jBreak.bonus.prototype = {
 						break;
 				}
 
-				if(paddleMissed){
+				if(paddleMissed)
 					this.remove();
-				}
 			}
 		}
 	},
@@ -1326,10 +1311,9 @@ jBreak.bonus.prototype = {
 		});
 
 		var jBBonuses = jBreak.bonuses;
-		for(var i = jBBonuses.length;i--;){
+		for(var i = jBBonuses.length;i--;)
 			if(jBBonuses[i] === this)
 				return jBBonuses.remove(i);
-		}
 	},
 	$bonus:null,
 	_direction:null,
