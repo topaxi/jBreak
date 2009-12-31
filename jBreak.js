@@ -160,7 +160,7 @@ var jBreak = {
 						: e.pageY - fieldOffset.top);
 
 				jBPaddle.move(position);
-			};
+			}
 
 			self.$field.bind('click.jBreakLaunchPaddleBalls', function(){
 				self._trackMouseMovement(true);
@@ -168,7 +168,7 @@ var jBreak = {
 
 				for(var i = self.paddles.length;i--;){
 					self.paddles[i].startBalls();
-				};
+				}
 			});
 			self.$field.unbind('click.jBreakCreatePaddles');
 			//console.log('Paddles created');
@@ -297,7 +297,7 @@ var jBreak = {
 				setTimeout(function(){
 					for(var i = self.paddles.length;i--;){
 						self.paddles[i].remove();
-					};
+					}
 
 					self.paddles = [];
 					self.$blocks.remove();
@@ -349,7 +349,7 @@ var jBreak = {
 				var jBPaddle = self.addPaddle(paddle.position);
 				if(paddle.ball)
 					jBPaddle.connectBall(new self.ball());
-			};
+			}
 		}, 250);
 	},
 	_drawBlocks:function(level){
