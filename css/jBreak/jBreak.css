@@ -68,6 +68,12 @@ div#jBreakField div.jBreakBall {
 	height:8px
 }
 
+div#jBreakField div.jBreakBonus {
+	position:absolute;
+	width:24px;
+	height:24px
+}
+
 div#jBreakField div.optionsContainer {
 	border:1px solid black;
 	right:16px;
@@ -100,11 +106,16 @@ div#jBreakField div.optionsContainer {
 		-webkit-border-radius:4px
 	}
 
-div#jBreakField .jBreakBlock {
-	width:40px;
-	height:16px;
-	position:absolute
+div#jBreakBlocks {
+	position:absolute;
+	display:none
 }
+
+	div#jBreakBlocks .jBreakBlock {
+		width:40px;
+		height:16px;
+		position:absolute
+	}
 
 div#jBreakField div.fail {
 	position:absolute;

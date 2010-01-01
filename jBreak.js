@@ -21,7 +21,7 @@ var jBreak = {
 			this._cacheImages();
 			this._setLevelTitle('jBreak 0.1.7');
 			this._trackMouseMovement(true);
-			this.$blocks = $('<div style="position:absolute;left:0;top:0;display:none"/>');
+			this.$blocks = $('<div id="jBreakBlocks"/>');
 
 			var cookieSoundVolume = readCookie('soundVolume');
 			if(cookieSoundVolume !== null)
@@ -1175,9 +1175,6 @@ jBreak.bonus.prototype = {
 		$bonus.css({
 			left:x,
 			top:y,
-			position:'absolute',
-			width:'24px',
-			height:'24px',
 			background:powerup.background
 		});
 
