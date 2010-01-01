@@ -27,10 +27,11 @@ var jBreak = {
 			if(cookieSoundVolume !== null)
 				this._volume = parseInt(cookieSoundVolume);
 
+			this.options.showOptions();
+
 			if(window.location.hash == '#debug')
 				console.log(window['jBreak' ] = this);
 
-			this.options.showOptions();
 		}
 		//console.log('Playing field initialized -> %o', this);
 	},
