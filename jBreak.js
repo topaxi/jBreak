@@ -473,9 +473,11 @@ jBreak.options = {
 			max:100,
 			slide:function(e, ui){
 				jBreak._volume = ui.value;
-				createCookie('soundVolume', ui.value, 7);
 				$('#soundVolume').text(ui.value+'%');
 				jBreak.playSound('sound/pling1s.ogg');
+			},
+			stop:function(e, ui){
+				createCookie('soundVolume', ui.value, 7);
 			}
 		});
 		$soundVolumeControl.append($soundVolumeSlider);
