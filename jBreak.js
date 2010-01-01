@@ -28,7 +28,7 @@ var jBreak = {
 				this._volume = parseInt(cookieSoundVolume);
 
 			if(window.location.hash == '#debug')
-				console.log(this);
+				console.log(window['jBreak' ] = this);
 
 			this.options.showOptions();
 		}
