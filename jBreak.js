@@ -30,7 +30,7 @@ var jBreak = {
 			this.options.showOptions();
 
 			if(window.location.hash == '#debug')
-				console.log(window['jBreak' ] = this);
+				console.log(window['jBreak'] = this);
 
 		}
 		//console.log('Playing field initialized -> %o', this);
