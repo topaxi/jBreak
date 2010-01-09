@@ -102,6 +102,8 @@ var jBreak = {
 	lives:function(lives){
 		if(lives === undefined){
 			return this._lives;
+		} else if(lives === 0){
+			this.gameOver();
 		}
 
 		this._lives = lives;
@@ -269,46 +271,46 @@ var jBreak = {
 	ballChecker:function(jBPaddle){
 		//console.log('Checking remaining balls...');
 		if(this.balls.length === 0){
-			var lives = this._lives;
-			if(lives > 0){
-				this.lives(lives-1);
+			if(this._lives > 0){
 				jBPaddle.connectBall(new jBreak.ball());
 				jBPaddle.size(64); // reset size
 
 				jBPaddle.$paddle.stop(true, true) // stop any effects on the paddle
 					.css('opacity', 1); // $paddle.stop doesn't seem to restore the opacity...
-			} else {
-				//console.log('No remaining balls found... FAIL!')
-				var self = this;
-
-				this.destroyField();
-				this.$field.find('.jBreakPaddle').effect('puff', {}, 750);
-				this.$blocks.find('div').effect('drop', {direction:'down'}, 750);
-
-				setTimeout(function(){
-					for(var i = self.paddles.length;i--;)
-						self.paddles[i].remove();
-
-					self.paddles = [];
-					self.$blocks.remove();
-
-					var $fail = $('<div class="fail" style="display:none">FAIL!</div>');
-					self.hideCursor(false);
-					self.$field.append($fail);
-					var failOffset = $fail.offset();
-
-					$fail.css('top',
-						self.$field.height()/2 - $fail.height()/2 + 'px'
-					).fadeIn('slow', function(){
-						$(this).effect('pulsate', {times:2,mode:'hide'}, 2000, function(){
-							self._levelID = 0;
-							self._lives = 3;
-							self.start(true); // restart game
-						});
-					});
-				}, 1000);
 			}
+
+			this.lives(lives-1);
 		}
+	},
+	gameOver:function(){
+		var self = this;
+
+		this.destroyField();
+		this.$field.find('.jBreakPaddle').effect('puff', {}, 750);
+		this.$blocks.find('div').effect('drop', {direction:'down'}, 750);
+
+		setTimeout(function(){
+			for(var i = self.paddles.length;i--;)
+				self.paddles[i].remove();
+
+			self.paddles = [];
+			self.$blocks.remove();
+
+			var $fail = $('<div class="fail" style="display:none">FAIL!</div>');
+			self.hideCursor(false);
+			self.$field.append($fail);
+			var failOffset = $fail.offset();
+
+			$fail.css('top',
+				self.$field.height()/2 - $fail.height()/2 + 'px'
+			).fadeIn('slow', function(){
+				$(this).effect('pulsate', {times:2,mode:'hide'}, 2000, function(){
+					self._levelID = 0;
+					self._lives = 3;
+					self.start(true); // restart game
+				});
+			});
+		}, 1000);
 	},
 	loadLevel:function(levelID){
 		levelID = (levelID !== undefined ? levelID : 0);
