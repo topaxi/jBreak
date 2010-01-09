@@ -302,7 +302,7 @@ jBreak.ball.prototype = {
 			x:x !== null ? x : this._position.x,
 			y:y !== null ? y : this._position.y
 		};
-	}
+	},
 	getPosition:function(){
 		return this._position;
 	},
