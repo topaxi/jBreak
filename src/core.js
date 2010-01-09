@@ -197,15 +197,21 @@ var jBreak = {
 			this.destroyField();
 
 			var $unpauseButton = $('<button>continue</button>'),
-			    fieldOffset = this.$field.offset();
+			    fieldOffset = this.$field.offset(),
+			    buttonLeft = this._mousePosition.pageX - fieldOffset.left - 32,
+			    buttonTop = this._mousePosition.pageY - fieldOffset.top  - 12;
 
 			this.$field.append($unpauseButton);
 			$unpauseButton.css({
 				position:'absolute',
 				width:'64px',
 				height:'24px',
-				left:this._mousePosition.pageX - fieldOffset.left - 32,
-				top: this._mousePosition.pageY - fieldOffset.top  - 12
+				left:(buttonLeft > this.fieldSize.width ? this.fieldSize.width-64 :
+					(buttonLeft < 0 ? 0 :
+						buttonLeft)),
+				top: (buttonTop > this.fieldSize.height ? this.fieldSize.height-24 :
+					(buttonTop < 0 ? 0 :
+						buttonTop))
 			});
 
 			var self = this;
@@ -229,7 +235,7 @@ var jBreak = {
 
 		if(track){
 			var self = this;
-			this.$field.mousemove(function(e){
+			$(document).mousemove(function(e){
 				self._mousePosition = {
 					pageX:e.pageX,
 					pageY:e.pageY
