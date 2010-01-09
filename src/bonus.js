@@ -220,6 +220,11 @@ jBreak.bonus.prototype = {
 			action:function(){
 				this._paddle.$paddle.effect('pulsate', {times:10}, 3000);
 			}
+		},{ // kill a life
+			background:'red',
+			action:function(){
+				jBreak.lives(jBreak.lives()-1);
+			}
 		}
 	],
 	_good:[
