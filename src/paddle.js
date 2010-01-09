@@ -200,7 +200,7 @@ jBreak.paddle.prototype = {
 						left:ballX,
 						top:ball.getPosition().y
 					});
-					ball.getPosition().x = ballX;
+					ball.setPosition(ballX, null);
 				} else {
 					ball.move(
 						ballX,
@@ -231,7 +231,7 @@ jBreak.paddle.prototype = {
 						left:ball.getPosition().x,
 						top:ballY
 					});
-					ball.getPosition().y = ballY;
+					ball.setPosition(null, ballY);
 				} else {
 					ball.move(
 						ball.getPosition().x,
