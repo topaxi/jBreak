@@ -285,7 +285,7 @@ var jBreak = {
 					.css('opacity', 1); // $paddle.stop doesn't seem to restore the opacity...
 			}
 
-			this.lives(lives-1);
+			this.lives(this._lives-1);
 		}
 	},
 	gameOver:function(){
