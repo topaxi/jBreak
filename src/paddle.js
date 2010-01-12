@@ -252,7 +252,7 @@ jBreak.paddle.prototype = {
 
 		// remove connected balls
 		for(var i = this._balls.length;i--;){
-			var connectedBall = this._ball[i];
+			var connectedBall = this._balls[i];
 			for(var o = jB.balls.length;o--;){
 				var jBBall = jB.balls[o];
 				if(connectedBall === jBBall)
