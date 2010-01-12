@@ -48,6 +48,7 @@ min: ${JB_MIN}
 ${JB_MIN}: ${JB}
 	@@echo "Building" ${JB_MIN}
 
+	@@echo "" > ${JB_MIN}
 	@@${MINJAR} --js ${JB} --warning_level QUIET >> ${JB_MIN}
 
 clean:
