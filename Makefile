@@ -20,7 +20,7 @@ JB = ${DIST_DIR}/jBreak.js
 JB_MIN = ${DIST_DIR}/jBreak.min.js
 
 JB_VER = `cat version.txt`
-VER = sed s/@VERSION/${JQ_VER}/
+VER = sed s/@VERSION/${JB_VER}/
 
 MINJAR = java -jar ${BUILD_DIR}/google-compiler-20091218.jar
 
