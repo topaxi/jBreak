@@ -136,6 +136,8 @@ var jBreak = {
 	},
 	createPaddles:function(){
 		var self = this;
+
+		this.$field.unbind('click.jBreakLaunchPaddleBalls');
 		this.$field.bind('click.jBreakCreatePaddles', function(e){
 			e.stopPropagation(); // do not bubble
 			//console.log('Creating paddles...');
@@ -261,16 +263,8 @@ var jBreak = {
 		}
 
 		if(blockVal === 0){
-			for(var i = this.balls.length;i--;)
-				this.balls[i].remove();
-
-			var paddles = this.paddles;
-			for(var i = paddles.length;i--;)
-				paddles[i].remove();
-
-			this.destroyField();
 			this._levelID += 1;
-			this.start(false);
+			this.destroyField();
 			this.loadLevel(this._levelID);
 		}
 	},
@@ -321,6 +315,19 @@ var jBreak = {
 	loadLevel:function(levelID){
 		levelID = (levelID !== undefined ? levelID : 0);
 
+		// clear previous levle first
+		for(var i = this.balls.length;i--;)
+			this.balls[i].remove();
+		this.balls = [];
+
+		for(var i = this.paddles.length;i--;)
+			this.paddles[i].remove();
+		this.paddles = [];
+
+		for(var i = this.bonuses.length;i--;)
+			this.bonuses[i].remove();
+		this.bonuses = [];
+
 		var level;
 		$.ajax({
 			url:'getLevel.php',
@@ -334,12 +341,12 @@ var jBreak = {
 				level = data.message;
 			}
 		});
-		this.blocks = level.blocks;
-		this._drawBlocks(level);
-		this._setLevelTitle(level.name);
 
 		var self = this;
 		setTimeout(function(){
+			self.blocks = level.blocks;
+			self._drawBlocks(level);
+			self._setLevelTitle(level.name);
 			self.createPaddles();
 
 			for(var i = level.paddles.length;i--;){
@@ -354,7 +361,7 @@ var jBreak = {
 		if(this._imageCache.blocks === undefined)
 			this._imageCache.blocks = {};
 
-		this.$blocks.empty();
+		this.$blocks.hide().empty();
 		for(var y = this.blocks.length;y--;){
 			var horizontalBlocks = this.blocks[y];
 			for(var x = horizontalBlocks.length;x--;){
