@@ -282,7 +282,7 @@ jBreak.ball.prototype = {
 		if(this._timer){
 			// setTimeout(this._animate, 15) kills the "this" reference :(
 			var self = this;
-			setTimeout(function(){
+			this._timerID = setTimeout(function(){
 				self._animate();
 			}, this._interval);
 		}
@@ -307,7 +307,9 @@ jBreak.ball.prototype = {
 		return this._position;
 	},
 	remove:function(){
+		clearTimeout(this._timerID);
 		this._timer = false;
+		this._toggleTimers(false);
 		this.$ball.remove();
 
 		// delete me!
@@ -320,6 +322,7 @@ jBreak.ball.prototype = {
 	},
 	pause:function(){
 		if(this._timer){
+			clearTimeout(this._timerID);
 			this._timer = false;
 			this._toggleTimers(false);
 		} else {
@@ -362,6 +365,7 @@ jBreak.ball.prototype = {
 	_angle:-90,
 	_position:null,
 	_timer:null,
+	_timerID:null,
 	_interval:30,
 	_size:null,
 	_pierce:false,
