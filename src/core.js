@@ -100,11 +100,10 @@ var jBreak = {
 		$('#jBreak').append($title);
 	},
 	lives:function(lives){
-		if(lives === undefined){
+		if(lives === undefined)
 			return this._lives;
-		} else if(lives === 0){
+		else if(lives === 0)
 			this.gameOver();
-		}
 
 		this._lives = lives;
 
@@ -117,7 +116,9 @@ var jBreak = {
 		$('#jBreak').append($lives);
 	},
 	playSound:function(soundFile){ // I'M LEAKING LOTS OF MEMORY!!
-		if(this._volume === 0 || typeof Audio === 'undefined') return;
+		if(this._volume === 0 || typeof Audio === 'undefined')
+			return;
+
 		var audio = new Audio(soundFile);
 		audio.volume = this._volume/100;
 		audio.play();
