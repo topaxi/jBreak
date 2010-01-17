@@ -24,7 +24,7 @@ jBreak.ball.prototype = {
 	},
 	start:function(){
 		if(this._ready){
-			this.setAngle();
+			this.angle(this._angle);
 			this._timer = true;
 			this._toggleTimers(true);
 			this._animate();
@@ -59,11 +59,12 @@ jBreak.ball.prototype = {
 			clearInterval(this._timersID);
 		}
 	},
-	setAngle:function(angle){
-		if(angle !== undefined)
-			this._angle = angle;
+	angle:function(angle){
+		if(angle === undefined)
+			return this._angle;
 
-		var speed = this._angle / 360 * Math.PI;
+		this._angle = angle;
+		var speed = angle / 360 * Math.PI;
 		this._speed.x = Math.cos(speed);
 		this._speed.y = Math.sin(speed);
 	},
@@ -186,7 +187,7 @@ jBreak.ball.prototype = {
 								(angle > -45 ? -45 :
 									(angle < -315 ? -315 : angle)));
 
-							this.setAngle(angle);
+							this.angle(angle);
 						}
 						break;
 					case 'top':
@@ -210,7 +211,7 @@ jBreak.ball.prototype = {
 								(angle > -45 ? -45 :
 									(angle < -315 ? -315 : angle)));
 
-							this.setAngle(angle*-1);
+							this.angle(angle*-1);
 						}
 						break;
 					case 'left':

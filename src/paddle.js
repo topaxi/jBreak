@@ -108,7 +108,7 @@ jBreak.paddle.prototype = {
 				  + this._size.height / 2
 				  + jBBall.$ball.height() / 2;
 
-				jBBall.setAngle(90);
+				jBBall.angle(90);
 				effectDirection = 'down';
 				break;
 			case 'right':
@@ -119,7 +119,7 @@ jBreak.paddle.prototype = {
 				  + this._size.height / 2
 				  - jBBall.$ball.width() / 2;
 
-				jBBall.setAngle(90);
+				jBBall.angle(90);
 				effectDirection = 'left';
 				break;
 			default:
@@ -132,7 +132,7 @@ jBreak.paddle.prototype = {
 				  - this._size.height / 2
 				  - jBBall.$ball.height() / 2;
 
-				jBBall.setAngle(-90);
+				jBBall.angle(-90);
 				effectDirection = 'up';
 				break;
 			case 'left':
@@ -143,7 +143,7 @@ jBreak.paddle.prototype = {
 				  + this._size.height / 2
 				  - jBBall.$ball.width() / 2;
 
-				jBBall.setAngle(-90);
+				jBBall.angle(-90);
 				effectDirection = 'right';
 				break;
 		}

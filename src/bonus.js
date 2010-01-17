@@ -39,15 +39,16 @@ jBreak.bonus.prototype = {
 		});
 
 		this.$bonus = $bonus;
-		this.setAngle(angle);
+		this.angle(angle);
 		this._timer = true;
 		this._animate();
 	},
-	setAngle:function(angle){
-		if(angle !== undefined)
-			this._angle = angle;
+	angle:function(angle){
+		if(angle === undefined)
+			return this._angle;
 
-		var speed = this._angle / 360 * Math.PI;
+		this._angle = angle;
+		var speed = angle / 360 * Math.PI;
 		this._speed.x = Math.cos(speed);
 		this._speed.y = Math.sin(speed);
 	},
