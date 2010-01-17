@@ -128,21 +128,21 @@ var jBreak = {
 		this.paddles.push(jBPaddle);
 		return jBPaddle;
 	},
-	hideCursor:function(hide){
+	_hideCursor:function(hide){
 		if(hide)
 			$('#jBreak').css('cursor',
 				'url(images/cursor/cursor.gif), url(images/cursor/cursor.ico), none');
 		else
 			$('#jBreak').css('cursor', 'default');
 	},
-	createPaddles:function(){
+	_createPaddles:function(){
 		var self = this;
 
 		this.$field.unbind('click.jBreakLaunchPaddleBalls');
 		this.$field.bind('click.jBreakCreatePaddles', function(e){
 			e.stopPropagation(); // do not bubble
 			//console.log('Creating paddles...');
-			self.hideCursor(true);
+			self._hideCursor(true);
 
 			for(var i = self.paddles.length;i--;){
 				var jBPaddle = self.paddles[i];
@@ -162,7 +162,7 @@ var jBreak = {
 
 			self.$field.bind('click.jBreakLaunchPaddleBalls', function(){
 				self._trackMouseMovement(true);
-				self.bindPause();
+				self._bindPause();
 
 				for(var i = self.paddles.length;i--;)
 					self.paddles[i].startBalls();
@@ -171,18 +171,18 @@ var jBreak = {
 			//console.log('Paddles created');
 		});
 	},
-	bindPause:function(){
+	_bindPause:function(){
 		var self = this;
 		$(document).bind('keydown.jBreakPause', function(e){
 			if(e.keyCode === 32){
 				self.togglePause();
 
 				if(self._paused)
-					self.unbindPause();
+					self._unbindPause();
 			}
 		});
 	},
-	unbindPause:function(){
+	_unbindPause:function(){
 		$(document).unbind('.jBreakPause');
 	},
 	togglePause:function(){
@@ -197,7 +197,7 @@ var jBreak = {
 		this._trackMouseMovement(!this._paused);
 
 		if(this._paused){
-			this.destroyField();
+			this._destroyField();
 
 			var $unpauseButton = $('<button>continue</button>'),
 			    fieldOffset = this.$field.offset(),
@@ -220,7 +220,7 @@ var jBreak = {
 			var self = this;
 			$unpauseButton.click(function(){
 				self.togglePause();
-				self.bindPause();
+				self._bindPause();
 
 				$(this).remove();
 			}).focus(function(){ // prevent button from beeing triggered with <return>
@@ -230,7 +230,7 @@ var jBreak = {
 			for(var i = this.paddles.length;i--;)
 				this.paddles[i].start();
 
-			this.hideCursor(true);
+			this._hideCursor(true);
 		}
 	},
 	_trackMouseMovement:function(track){
@@ -246,11 +246,11 @@ var jBreak = {
 			});
 		}
 	},
-	destroyField:function(){
+	_destroyField:function(){
 		this._trackMouseMovement(false);
-		this.unbindPause();
+		this._unbindPause();
 		$(document).unbind('mousemove');
-		this.hideCursor(false);
+		this._hideCursor(false);
 	},
 	blockChecker:function(){
 		var blockVal = 0,
@@ -265,7 +265,7 @@ var jBreak = {
 
 		if(blockVal === 0){
 			this._levelID += 1;
-			this.destroyField();
+			this._destroyField();
 			this.loadLevel(this._levelID);
 		}
 	},
@@ -286,7 +286,7 @@ var jBreak = {
 	gameOver:function(){
 		var self = this;
 
-		this.destroyField();
+		this._destroyField();
 		this.$field.find('.jBreakPaddle').effect('puff', {}, 750);
 		this.$blocks.find('div').effect('drop', {direction:'down'}, 750);
 
@@ -298,7 +298,7 @@ var jBreak = {
 			self.$blocks.remove();
 
 			var $fail = $('<div class="fail" style="display:none">FAIL!</div>');
-			self.hideCursor(false);
+			self._hideCursor(false);
 			self.$field.append($fail);
 			var failOffset = $fail.offset();
 
@@ -348,7 +348,7 @@ var jBreak = {
 			self.blocks = level.blocks;
 			self._drawBlocks(level);
 			self._setLevelTitle(level.name);
-			self.createPaddles();
+			self._createPaddles();
 
 			for(var i = level.paddles.length;i--;){
 				var paddle = level.paddles[i];
