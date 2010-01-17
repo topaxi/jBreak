@@ -103,7 +103,9 @@ jBreak.ball.prototype = {
 						        || (ballY % 16 <=  4 && this._speed.y > 0);
 
 						if(vHit && hHit) // don't mirror both speeds, mirror the slower one
-							(this._speed.y > this._speed.x ? hHit = false : vHit = false);
+							(this._speed.y > this._speed.x
+								? hHit = false
+								: vHit = false);
 
 						if(vHit)
 							this._speed.y *= -1;
