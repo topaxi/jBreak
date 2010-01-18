@@ -113,7 +113,7 @@ jBreak.paddle.prototype = {
 				break;
 			case 'right':
 				x = this._position.x
-				  - jBBalls.$ball.width();
+				  - jBBall.$ball.width();
 
 				y = this._position.y
 				  + this._size.height / 2
