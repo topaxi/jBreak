@@ -98,8 +98,8 @@ var jBreak = {
 	lives:function(lives){
 		if(lives === undefined)
 			return this._lives;
-		else if(lives === 0)
-			this.gameOver();
+		else if(lives < 0)
+			return this.gameOver();
 
 		this._lives = lives;
 
