@@ -174,7 +174,7 @@ var jBreak = {
 	_bindPause:function(){
 		var self = this;
 		$(document).bind('keydown.jBreakPause', function(e){
-			if(e.keyCode === 32){
+			if(e.keyCode === 32 || e.keyCode === 80){
 				self.togglePause();
 
 				if(self._paused)
