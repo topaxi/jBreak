@@ -20,9 +20,9 @@ jBreak.bonus.prototype = {
 		}
 		this._action = powerup.action;
 
-		var $bonus = $('<div class="jBreakBonus"/>');
+		var $el = $('<div class="jBreakBonus"/>');
 
-		jB.$field.append($bonus);
+		jB.$field.append($el);
 
 		this._ball = jBBall;
 		
@@ -32,13 +32,13 @@ jBreak.bonus.prototype = {
 			y:null
 		};
 
-		$bonus.css({
+		$el.css({
 			left:x,
 			top:y,
 			background:powerup.background
 		});
 
-		this.$bonus = $bonus;
+		this.$el = $el;
 		this.angle(angle);
 		this._timer = true;
 		this._animate();
@@ -151,7 +151,7 @@ jBreak.bonus.prototype = {
 		}
 	},
 	move:function(x,y){
-		this.$bonus.css({left:x, top:y});
+		this.$el.css({left:x, top:y});
 		this._position = {x:x,y:y};
 	},
 	pause:function(){
@@ -164,7 +164,7 @@ jBreak.bonus.prototype = {
 	},
 	remove:function(){
 		this._timer = false;
-		this.$bonus.fadeOut('slow', function(){
+		this.$el.fadeOut('slow', function(){
 			$(this).remove();
 		});
 
@@ -173,7 +173,7 @@ jBreak.bonus.prototype = {
 			if(jBBonuses[i] === this)
 				return jBBonuses.remove(i);
 	},
-	$bonus:null,
+	$el:null,
 	_direction:null,
 	_position:null,
 	_speed:null,
@@ -219,7 +219,7 @@ jBreak.bonus.prototype = {
 		},{ // pulsate paddle
 			background:'blue',
 			action:function(){
-				this._paddle.$paddle.effect('pulsate', {times:10}, 3000);
+				this._paddle.$el.effect('pulsate', {times:10}, 3000);
 			}
 		},{ // kill a life
 			background:'red',

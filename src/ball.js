@@ -6,12 +6,12 @@ jBreak.ball.prototype = {
 	_init:function(position){
 		jBreak.balls.push(this);
 		//console.log('Create ball %d -> %o', ballID, this);
-		this.$ball = $('<div class="jBreakBall"/>');
-		jBreak.$field.append(this.$ball);
+		this.$el = $('<div class="jBreakBall"/>');
+		jBreak.$field.append(this.$el);
 
 		this._size = {
-			width: this.$ball.width(),
-			height:this.$ball.height()
+			width: this.$el.width(),
+			height:this.$el.height()
 		};
 
 		this._position = position;
@@ -291,7 +291,7 @@ jBreak.ball.prototype = {
 		}
 	},
 	move:function(x,y){
-		this.$ball.css({left:x, top:y});
+		this.$el.css({left:x, top:y});
 		this._position = {x:x,y:y}
 	},
 	interval:function(i){
@@ -313,7 +313,7 @@ jBreak.ball.prototype = {
 		clearTimeout(this._timerID);
 		this._timer = false;
 		this._toggleTimers(false);
-		this.$ball.remove();
+		this.$el.remove();
 
 		// delete me!
 		var jBBalls = jBreak.balls;
@@ -337,7 +337,7 @@ jBreak.ball.prototype = {
 	pierce:function(pierce){
 		this._pierce = pierce;
 
-		this.$ball.css('background-image', (pierce
+		this.$el.css('background-image', (pierce
 			? 'url(images/ball1-88.png)'
 			: 'url(images/ball4-88.png)'
 		));
@@ -347,12 +347,12 @@ jBreak.ball.prototype = {
 		    ball = $.extend(true, {}, this);
 
 		ball = $.extend(true, ball, {
-			$ball:this.$ball.clone()
+			$el:this.$el.clone()
 		});
 
 		jB.balls.push(ball);
 
-		jB.$field.append(ball.$ball);
+		jB.$field.append(ball.$el);
 
 		return ball;
 	},
@@ -376,5 +376,5 @@ jBreak.ball.prototype = {
 	_timers:null,
 	_timersID:null,
 	// public variables
-	$ball:null
+	$el:null
 };

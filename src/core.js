@@ -276,8 +276,8 @@ var jBreak = {
 				jBPaddle.connectBall(new jBreak.ball());
 				jBPaddle.size(64); // reset size
 
-				jBPaddle.$paddle.stop(true, true) // stop any effects on the paddle
-					.css('opacity', 1); // $paddle.stop doesn't seem to restore the opacity...
+				jBPaddle.$el.stop(true, true) // stop any effects on the paddle
+					.css('opacity', 1); // $el.stop doesn't seem to restore the opacity...
 			}
 
 			this.lives(this._lives-1);

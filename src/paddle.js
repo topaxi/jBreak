@@ -5,7 +5,7 @@ jBreak.paddle = function(position){
 jBreak.paddle.prototype = {
 	_init:function(position){
 		//console.log('Create %s paddle..', position);
-		this.$paddle = $('<div class="jBreakPaddle"/>');
+		this.$el = $('<div class="jBreakPaddle"/>');
 
 		this._position = {
 			x:null,
@@ -15,12 +15,12 @@ jBreak.paddle.prototype = {
 
 		this._balls = [];
 
-		this.$paddle.addClass(position);
-		jBreak.$field.append(this.$paddle);
+		this.$el.addClass(position);
+		jBreak.$field.append(this.$el);
 
 		this._size = {
-			width:this.$paddle.width(),
-			height:this.$paddle.height()
+			width:this.$el.width(),
+			height:this.$el.height()
 		};
 
 		switch(position){
@@ -43,7 +43,7 @@ jBreak.paddle.prototype = {
 				break;
 		}
 
-		this.$paddle.css({
+		this.$el.css({
 			left:this._position.x,
 			top:this._position.y
 		});
@@ -74,7 +74,7 @@ jBreak.paddle.prototype = {
 			? width = size
 			: height = size);
 
-		this.$paddle.css({
+		this.$el.css({
 			width:width+'px',
 			height:height+'px',
 			backgroundImage:'url(images/paddles/pad'+width+'x'+height+'.png)'
@@ -102,22 +102,22 @@ jBreak.paddle.prototype = {
 			case 'top':
 				x = this._position.x
 				  + this._size.width / 2
-				  - jBBall.$ball.width() / 2;
+				  - jBBall.$el.width() / 2;
 
 				y = this._position.y
 				  + this._size.height / 2
-				  + jBBall.$ball.height() / 2;
+				  + jBBall.$el.height() / 2;
 
 				jBBall.angle(90);
 				effectDirection = 'down';
 				break;
 			case 'right':
 				x = this._position.x
-				  - jBBall.$ball.width();
+				  - jBBall.$el.width();
 
 				y = this._position.y
 				  + this._size.height / 2
-				  - jBBall.$ball.width() / 2;
+				  - jBBall.$el.width() / 2;
 
 				jBBall.angle(90);
 				effectDirection = 'left';
@@ -126,22 +126,22 @@ jBreak.paddle.prototype = {
 			case 'bottom':
 				x = this._position.x
 				  + this._size.width / 2
-				  - jBBall.$ball.width() / 2;
+				  - jBBall.$el.width() / 2;
 
 				y = this._position.y
 				  - this._size.height / 2
-				  - jBBall.$ball.height() / 2;
+				  - jBBall.$el.height() / 2;
 
 				jBBall.angle(-90);
 				effectDirection = 'up';
 				break;
 			case 'left':
 				x = this._position.x
-				  + jBBall.$ball.width();
+				  + jBBall.$el.width();
 
 				y = this._position.y
 				  + this._size.height / 2
-				  - jBBall.$ball.width() / 2;
+				  - jBBall.$el.width() / 2;
 
 				jBBall.angle(-90);
 				effectDirection = 'right';
@@ -149,7 +149,7 @@ jBreak.paddle.prototype = {
 		}
 
 		jBBall.move(x,y);
-		jBBall.$ball.show('bounce', {
+		jBBall.$el.show('bounce', {
 			direction:effectDirection,
 			distance:40,
 			times:5
@@ -191,10 +191,10 @@ jBreak.paddle.prototype = {
 				var ball = this._balls[i],
 				    ballX = x
 				          + this._size.width / 2
-				          - ball.$ball.width() / 2;
+				          - ball.$el.width() / 2;
 
 				// @todo fix this "workaround" or maybe even kill the "bounce" effect
-				var $parent = ball.$ball.parent();
+				var $parent = ball.$el.parent();
 				if($parent.hasClass('ui-effects-wrapper')){
 					$parent.css({
 						left:ballX,
@@ -209,7 +209,7 @@ jBreak.paddle.prototype = {
 			}
 
 			this._position.x = x;
-			this.$paddle.css('left', x);
+			this.$el.css('left', x);
 		} else {
 			var y = position;
 			y -= this._size.height / 2;
@@ -223,9 +223,9 @@ jBreak.paddle.prototype = {
 				var ball  = this._balls[i],
 				    ballY = y
 				          + this._size.height / 2
-				          - ball.$ball.height() / 2;
+				          - ball.$el.height() / 2;
 
-				var $parent = ball.$ball.parent();
+				var $parent = ball.$el.parent();
 				if($parent.hasClass('ui-effects-wrapper')){
 					$parent.css({
 						left:ball.position().x,
@@ -240,7 +240,7 @@ jBreak.paddle.prototype = {
 			}
 
 			this._position.y = y;
-			this.$paddle.css('top', y);
+			this.$el.css('top', y);
 		}
 	},
 	remove:function(){
@@ -260,7 +260,7 @@ jBreak.paddle.prototype = {
 			}
 		}
 
-		this.$paddle.remove();
+		this.$el.remove();
 		//delete this;
 	},
 	getPosition:function(){
@@ -272,5 +272,5 @@ jBreak.paddle.prototype = {
 	_balls:null,
 	_paused:false,
 	// public variables
-	$paddle:null
+	$el:null
 };
