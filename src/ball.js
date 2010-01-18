@@ -276,6 +276,7 @@ jBreak.ball.prototype = {
 			this._interval -= (this._interval > 10 ? .075 : 0);
 		}
 	},
+	_animate:null,
 	move:move,
 	interval:function(i){
 		if(i !== undefined)
