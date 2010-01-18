@@ -10,7 +10,7 @@ function animate(){
 
 function move(x,y){
 	this.$el.css({left:x, top:y});
-	this._position = {x:x,y:y}
+	this._position = {x:x,y:y};
 
 	return this;
 }
