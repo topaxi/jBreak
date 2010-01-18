@@ -14,3 +14,15 @@ function move(x,y){
 
 	return this;
 }
+
+function angle(angle){
+	if(angle === undefined)
+		return this._angle;
+
+	this._angle = angle;
+	var speed = angle / 360 * Math.PI;
+	this._speed.x = Math.cos(speed);
+	this._speed.y = Math.sin(speed);
+
+	return this;
+}

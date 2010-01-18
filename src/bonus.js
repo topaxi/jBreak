@@ -47,15 +47,7 @@ jBreak.bonus.prototype = {
 		this._timer = true;
 		this._animate();
 	},
-	angle:function(angle){
-		if(angle === undefined)
-			return this._angle;
-
-		this._angle = angle;
-		var speed = angle / 360 * Math.PI;
-		this._speed.x = Math.cos(speed);
-		this._speed.y = Math.sin(speed);
-	},
+	angle:angle,
 	_hitCheck:function(x,y){
 		var jB = jBreak;
 		// only run checks if a paddle could be hit

@@ -60,15 +60,7 @@ jBreak.ball.prototype = {
 			clearInterval(this._timersID);
 		}
 	},
-	angle:function(angle){
-		if(angle === undefined)
-			return this._angle;
-
-		this._angle = angle;
-		var speed = angle / 360 * Math.PI;
-		this._speed.x = Math.cos(speed);
-		this._speed.y = Math.sin(speed);
-	},
+	angle:angle,
 	_hitCheck:function(x,y){
 		var jB = jBreak, // store jBreak in this scope to access it faster!
 		    paddle = {
