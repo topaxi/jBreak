@@ -292,7 +292,7 @@ jBreak.ball.prototype = {
 	},
 	move:function(x,y){
 		this.$ball.css({left:x, top:y});
-		this.setPosition(x,y);
+		this._position = {x:x,y:y}
 	},
 	interval:function(i){
 		if(i !== undefined)
@@ -300,14 +300,14 @@ jBreak.ball.prototype = {
 		else
 			return this._interval;
 	},
-	setPosition:function(x,y){
+	position:function(x,y){
+		if(x === undefined && y === undefined)
+			return this._position;
+
 		this._position = {
 			x:x !== null ? x : this._position.x,
 			y:y !== null ? y : this._position.y
 		};
-	},
-	getPosition:function(){
-		return this._position;
 	},
 	remove:function(){
 		clearTimeout(this._timerID);

@@ -198,13 +198,13 @@ jBreak.paddle.prototype = {
 				if($parent.hasClass('ui-effects-wrapper')){
 					$parent.css({
 						left:ballX,
-						top:ball.getPosition().y
+						top:ball.position().y
 					});
-					ball.setPosition(ballX, null);
+					ball.position(ballX, null);
 				} else {
 					ball.move(
 						ballX,
-						ball.getPosition().y);
+						ball.position().y);
 				}
 			}
 
@@ -228,13 +228,13 @@ jBreak.paddle.prototype = {
 				var $parent = ball.$ball.parent();
 				if($parent.hasClass('ui-effects-wrapper')){
 					$parent.css({
-						left:ball.getPosition().x,
+						left:ball.position().x,
 						top:ballY
 					});
-					ball.setPosition(null, ballY);
+					ball.position(null, ballY);
 				} else {
 					ball.move(
-						ball.getPosition().x,
+						ball.position().x,
 						ballY);
 				}
 			}
