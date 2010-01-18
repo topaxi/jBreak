@@ -154,7 +154,7 @@ jBreak.paddle.prototype = {
 			distance:40,
 			times:5
 		}, function(){
-			var position = jBBall.getPosition();
+			var position = jBBall.position();
 
 			jBBall.move(position.x,position.y);
 			jBBall.ready(true);
