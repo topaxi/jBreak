@@ -96,28 +96,28 @@ jBreak.paddle.prototype = {
 		});
 	},
 	connectBall:function(jBBall){
-		var x,y,effectDirection;
+		var x,y,effectDirection,ballSize = jBBall.size();
 
 		switch(this._position.relative){
 			case 'top':
 				x = this._position.x
 				  + this._size.width / 2
-				  - jBBall.$el.width() / 2;
+				  - ballSize.width / 2;
 
 				y = this._position.y
 				  + this._size.height / 2
-				  + jBBall.$el.height() / 2;
+				  + ballSize.height / 2;
 
 				jBBall.angle(90);
 				effectDirection = 'down';
 				break;
 			case 'right':
 				x = this._position.x
-				  - jBBall.$el.width();
+				  - ballSize.width;
 
 				y = this._position.y
 				  + this._size.height / 2
-				  - jBBall.$el.width() / 2;
+				  - ballSize.width / 2;
 
 				jBBall.angle(90);
 				effectDirection = 'left';
@@ -126,22 +126,22 @@ jBreak.paddle.prototype = {
 			case 'bottom':
 				x = this._position.x
 				  + this._size.width / 2
-				  - jBBall.$el.width() / 2;
+				  - ballSize.width / 2;
 
 				y = this._position.y
 				  - this._size.height / 2
-				  - jBBall.$el.height() / 2;
+				  - ballSize.height / 2;
 
 				jBBall.angle(-90);
 				effectDirection = 'up';
 				break;
 			case 'left':
 				x = this._position.x
-				  + jBBall.$el.width();
+				  + ballSize.width;
 
 				y = this._position.y
 				  + this._size.height / 2
-				  - jBBall.$el.width() / 2;
+				  - ballSize.width / 2;
 
 				jBBall.angle(-90);
 				effectDirection = 'right';
@@ -191,7 +191,7 @@ jBreak.paddle.prototype = {
 				var ball = this._balls[i],
 				    ballX = x
 				          + this._size.width / 2
-				          - ball.$el.width() / 2;
+				          - ball.size().width / 2;
 
 				// @todo fix this "workaround" or maybe even kill the "bounce" effect
 				var $parent = ball.$el.parent();
@@ -223,7 +223,7 @@ jBreak.paddle.prototype = {
 				var ball  = this._balls[i],
 				    ballY = y
 				          + this._size.height / 2
-				          - ball.$el.height() / 2;
+				          - ball.size().height / 2;
 
 				var $parent = ball.$el.parent();
 				if($parent.hasClass('ui-effects-wrapper')){

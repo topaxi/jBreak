@@ -340,6 +340,12 @@ jBreak.ball.prototype = {
 	deleteTimer:function(name){
 		delete this._timers[name];
 	},
+	size:function(size){
+		if(size === undefined)
+			return this._size;
+
+		// setting size is not implemented yet!
+	},
 	// private variables
 	_ballID:null,
 	_speed:null,
