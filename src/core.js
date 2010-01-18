@@ -123,11 +123,6 @@ var jBreak = {
 		audio.volume = this._volume/100;
 		audio.play();
 	},
-	addPaddle:function(position){
-		var jBPaddle = new jBreak.paddle(position);
-		this.paddles.push(jBPaddle);
-		return jBPaddle;
-	},
 	_hideCursor:function(hide){
 		if(hide)
 			$('#jBreak').css('cursor',
@@ -135,8 +130,17 @@ var jBreak = {
 		else
 			$('#jBreak').css('cursor', 'default');
 	},
-	_createPaddles:function(){
+	_createPaddles:function(paddles){
 		var self = this;
+
+		for(var i = paddles.length;i--;){
+			var paddle = paddles[i],
+			    jBPaddle = new jBreak.paddle(paddle.position);
+			this.paddles.push(jBPaddle);
+
+			if(paddle.ball)
+				jBPaddle.connectBall(new this.ball());
+		}
 
 		this.$field.unbind('click.jBreakLaunchPaddleBalls');
 		this.$field.bind('click.jBreakCreatePaddles', function(e){
@@ -348,14 +352,7 @@ var jBreak = {
 			self.blocks = level.blocks;
 			self._drawBlocks(level);
 			self._setLevelTitle(level.name);
-			self._createPaddles();
-
-			for(var i = level.paddles.length;i--;){
-				var paddle = level.paddles[i];
-				var jBPaddle = self.addPaddle(paddle.position);
-				if(paddle.ball)
-					jBPaddle.connectBall(new self.ball());
-			}
+			self._createPaddles(level.paddles);
 		}, 250);
 	},
 	_drawBlocks:function(level){
