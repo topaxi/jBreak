@@ -1,4 +1,4 @@
 	$(function(){
-		jBreak.start(true);
+		jBreak.start();
 	});
 })(jQuery);

@@ -1,5 +1,5 @@
 var jBreak = {
-	start:function(initial){
+	start:function(){
 		var $jBreak = $('#jBreak').empty();
 		this.$field = $('<div id="jBreakField"/>');
 		$jBreak.append(this.$field);
@@ -15,23 +15,19 @@ var jBreak = {
 
 		this.lives(this._lives);
 
-		if(initial){
-			this._cacheImages();
-			this._setLevelTitle('jBreak @VERSION');
-			this._trackMouseMovement(true);
-			this.$blocks = $('<div id="jBreakBlocks"/>');
+		this._cacheImages();
+		this._setLevelTitle('jBreak @VERSION');
+		this._trackMouseMovement(true);
+		this.$blocks = $('<div id="jBreakBlocks"/>');
 
-			var cookieSoundVolume = readCookie('soundVolume');
-			if(cookieSoundVolume !== null)
-				this._volume = parseInt(cookieSoundVolume);
+		var cookieSoundVolume = readCookie('soundVolume');
+		if(cookieSoundVolume !== null)
+			this._volume = parseInt(cookieSoundVolume);
 
-			this.options.showOptions();
+		this.options.showOptions();
 
-			if(window.location.hash == '#debug')
-				console.log(window['jBreak'] = this);
-
-		}
-		//console.log('Playing field initialized -> %o', this);
+		if(window.location.hash == '#debug')
+			console.log(window['jBreak'] = this);
 	},
 	_cacheImages:function(){
 		var cache = this._imageCache;
@@ -312,7 +308,7 @@ var jBreak = {
 				$(this).effect('pulsate', {times:2,mode:'hide'}, 2000, function(){
 					self._levelID = 0;
 					self._lives = 3;
-					self.start(true); // restart game
+					self.start(); // restart game
 				});
 			});
 		}, 1000);
