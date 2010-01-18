@@ -4,7 +4,11 @@ jBreak.bonus = function(jBBall,x,y,angle){
 
 jBreak.bonus.prototype = {
 	_init:function(jBBall,x,y,angle){
-		var random, background, powerup, jB = jBreak;
+		var random,
+		    background,
+		    powerup,
+		    jB = jBreak,
+		    $el = $('<div class="jBreakBonus"/>');
 
 		this._animate = $.proxy(animate, this);
 
@@ -21,8 +25,6 @@ jBreak.bonus.prototype = {
 			//console.log('Spawning "bad" %o -> %d', this, random); 
 		}
 		this._action = powerup.action;
-
-		var $el = $('<div class="jBreakBonus"/>');
 
 		jB.$field.append($el);
 

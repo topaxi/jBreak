@@ -70,8 +70,8 @@ jBreak.ball.prototype = {
 		this._speed.y = Math.sin(speed);
 	},
 	_hitCheck:function(x,y){
-		var jB = jBreak; // store jBreak in this scope to access it faster!
-		var paddle = {
+		var jB = jBreak, // store jBreak in this scope to access it faster!
+		    paddle = {
 			top:false,
 			right:false,
 			bottom:false,
@@ -81,16 +81,17 @@ jBreak.ball.prototype = {
 		// only run checks if a block could be hit
 		if(y <= jB.fieldSize.height || y >= 0 || x >= 0 || x <= jB.fieldSize.width){
 			var ballY = (this._speed.y > 0 ? y + this._size.height : y),
-			    ballX = (this._speed.x > 0 ? x + this._size.width  : x);
+			    ballX = (this._speed.x > 0 ? x + this._size.width  : x),
 
-			var blockX = Math.floor(ballX / 40),
-			    blockY = Math.floor(ballY / 16);
+			    blockX = Math.floor(ballX / 40),
+			    blockY = Math.floor(ballY / 16),
 
-			var blockExists = jB.blocks[blockY] !== undefined
+			    blockExists = jB.blocks[blockY] !== undefined
 			               && jB.blocks[blockY][blockX] !== undefined;
 
 			if(blockExists){
 				var block = jB.blocks[blockY][blockX];
+
 				if(block.value > 0){
 					jB.playSound('sound/pling1s.ogg');
 
@@ -99,8 +100,8 @@ jBreak.ball.prototype = {
 						ballY = Math.floor(ballY);
 
 						var hHit = (ballX % 40 <= 39 && ballX % 40 >= 36 && this._speed.x < 0)
-						        || (ballX % 40 <=  4 && this._speed.x > 0);
-						var vHit = (ballY % 16 <= 15 && ballY % 16 >= 12 && this._speed.y < 0)
+						        || (ballX % 40 <=  4 && this._speed.x > 0),
+						    vHit = (ballY % 16 <= 15 && ballY % 16 >= 12 && this._speed.y < 0)
 						        || (ballY % 16 <=  4 && this._speed.y > 0);
 
 						if(vHit && hHit) // don't mirror both speeds, mirror the slower one
@@ -120,12 +121,12 @@ jBreak.ball.prototype = {
 					}
 
 					//console.log('I hit %d,%d', blockX,blockY);
-					var $block = $('.x'+blockX+'.y'+blockY);
-					var direction =
-						(vHit && this._speed.y > 0 ? 'up' :
-							(hHit && this._speed.x > 0 ? 'left' :
-								(hHit && this._speed.x < 0 ? 'right' :
-									/*vHit && this._speed.y < 0*/ 'down')));
+					var $block = $('.x'+blockX+'.y'+blockY),
+					    direction =
+					    	(vHit && this._speed.y > 0 ? 'up' :
+					    		(hHit && this._speed.x > 0 ? 'left' :
+					    			(hHit && this._speed.x < 0 ? 'right' :
+					    				/*vHit && this._speed.y < 0*/ 'down')));
 
 					var rand = Math.random();
 					if(block.value > 1 && !this._pierce){

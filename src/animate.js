@@ -1,6 +1,6 @@
 function animate(){
-	var x = this._position.x + this._speed.x*4;
-	var y = this._position.y + this._speed.y*4;
+	var x = this._position.x + this._speed.x*4,
+	    y = this._position.y + this._speed.y*4;
 
 	this.move(x,y)._hitCheck(x,y);
 
