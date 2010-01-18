@@ -6,6 +6,8 @@ jBreak.bonus.prototype = {
 	_init:function(jBBall,x,y,angle){
 		var random, background, powerup, jB = jBreak;
 
+		this._animate = $.proxy(animate, this);
+
 		jB.bonuses.push(this);
 
 		// 50% chance to get a bad or a good powerup
@@ -135,25 +137,8 @@ jBreak.bonus.prototype = {
 		this._action(jBPaddle);
 		this.remove();
 	},
-	_animate:function(){
-		var x = this._position.x + this._speed.x*4;
-		var y = this._position.y + this._speed.y*4;
-
-		this.move(x,y);
-		this._hitCheck(x,y);
-
-		if(this._timer){
-			// setTimeout(this._animate, 15) kills the "this" reference :(
-			var self = this;
-			setTimeout(function(){
-				self._animate();
-			}, this._interval);
-		}
-	},
-	move:function(x,y){
-		this.$el.css({left:x, top:y});
-		this._position = {x:x,y:y};
-	},
+	_animate:null,
+	move:move,
 	pause:function(){
 		if(this._timer){
 			this._timer = false;

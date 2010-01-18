@@ -21,6 +21,7 @@ jBreak.ball.prototype = {
 		};
 
 		this._timers = {};
+		this._animate = $.proxy(animate, this);
 	},
 	start:function(){
 		if(this._ready){
@@ -275,25 +276,7 @@ jBreak.ball.prototype = {
 			this._interval -= (this._interval > 10 ? .075 : 0);
 		}
 	},
-	_animate:function(){
-		var x = this._position.x + this._speed.x*4;
-		var y = this._position.y + this._speed.y*4;
-
-		this.move(x,y);
-		this._hitCheck(x,y);
-
-		if(this._timer){
-			// setTimeout(this._animate, 15) kills the "this" reference :(
-			var self = this;
-			this._timerID = setTimeout(function(){
-				self._animate();
-			}, this._interval);
-		}
-	},
-	move:function(x,y){
-		this.$el.css({left:x, top:y});
-		this._position = {x:x,y:y}
-	},
+	move:move,
 	interval:function(i){
 		if(i !== undefined)
 			this._interval = (this._interval < 10 ? 10 : i);
@@ -347,7 +330,8 @@ jBreak.ball.prototype = {
 		    ball = $.extend(true, {}, this);
 
 		ball = $.extend(true, ball, {
-			$el:this.$el.clone()
+			$el:this.$el.clone(),
+			_animate:$.proxy(animate, ball)
 		});
 
 		jB.balls.push(ball);

@@ -6,6 +6,7 @@ DIST_DIR = ${PREFIX}/dist
 
 BASE_FILES = ${SRC_DIR}/core.js\
 	${SRC_DIR}/array.js\
+	${SRC_DIR}/animate.js\
 	${SRC_DIR}/ball.js\
 	${SRC_DIR}/bonus.js\
 	${SRC_DIR}/cookie.js\
