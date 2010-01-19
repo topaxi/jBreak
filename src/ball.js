@@ -322,17 +322,15 @@ jBreak.ball.prototype = {
 		));
 	},
 	clone:function(){
-		var jB = jBreak,
-		    ball = $.extend(true, {}, this);
+		var ball = $.extend(true, {}, this);
 
 		ball = $.extend(true, ball, {
 			$el:this.$el.clone(),
 			_animate:$.proxy(animate, ball)
 		});
 
-		jB.balls.push(ball);
-
-		jB.$field.append(ball.$el);
+		jBreak.balls.push(ball);
+		jBreak.$field.append(ball.$el);
 
 		return ball;
 	},
