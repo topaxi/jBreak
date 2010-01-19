@@ -346,15 +346,12 @@ var jBreak = {
 		var self = this;
 		setTimeout(function(){
 			self.blocks = level.blocks;
-			self._drawBlocks(level);
+			self._drawBlocks();
 			self._setLevelTitle(level.name);
 			self._createPaddles(level.paddles);
 		}, 250);
 	},
-	_drawBlocks:function(level){
-		if(this._imageCache.blocks === undefined)
-			this._imageCache.blocks = {};
-
+	_drawBlocks:function(){
 		this.$blocks.hide().empty();
 		for(var y = this.blocks.length;y--;){
 			var horizontalBlocks = this.blocks[y];
