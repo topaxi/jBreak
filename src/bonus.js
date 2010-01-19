@@ -70,11 +70,6 @@ jBreak.bonus.prototype = {
 						         && x <= jBPaddlePosition.x + jBPaddleSize.width;
 
 						paddleMissed = y > jB.fieldSize.height + 2;
-
-						if(paddleHit){
-							this._paddle = jBPaddle;
-							return this._powerUpPaddle();
-						}
 						break;
 					case 'top':
 						paddleHit = this._speed.y < 0
@@ -84,11 +79,6 @@ jBreak.bonus.prototype = {
 						         && x <= jBPaddlePosition.x + jBPaddleSize.width;
 
 						paddleMissed = y < -10;
-
-						if(paddleHit){
-							this._paddle = jBPaddle;
-							return this._powerUpPaddle();
-						}
 						break;
 					case 'left':
 						paddleHit = this._speed.x < 0 
@@ -98,11 +88,6 @@ jBreak.bonus.prototype = {
 						         && y <= jBPaddlePosition.y + jBPaddleSize.height;
 
 						paddleMissed = x < -10;
-
-						if(paddleHit){
-							this._paddle = jBPaddle;
-							return this._powerUpPaddle();
-						}
 						break;
 					case 'right':
 						paddleHit = this._speed.x > 0
@@ -112,12 +97,12 @@ jBreak.bonus.prototype = {
 						         && y <= jBPaddlePosition.y + jBPaddleSize.height;
 
 						paddleMissed = x > jB.fieldSize.width + 2;
-
-						if(paddleHit){
-							this._paddle = jBPaddle;
-							return this._powerUpPaddle();
-						}
 						break;
+				}
+
+				if(paddleHit){
+					this._paddle = jBPaddle;
+					return this._powerUpPaddle();
 				}
 
 				if(paddleMissed)
