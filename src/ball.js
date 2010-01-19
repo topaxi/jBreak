@@ -64,11 +64,11 @@ jBreak.ball.prototype = {
 	_hitCheck:function(x,y){
 		var jB = jBreak, // store jBreak in this scope to access it faster!
 		    paddle = {
-			top:false,
-			right:false,
-			bottom:false,
-			left:false
-		};
+		    	top:false,
+		    	right:false,
+		    	bottom:false,
+		    	left:false
+		    };
 
 		// only run checks if a block could be hit
 		if(y <= jB.fieldSize.height || y >= 0 || x >= 0 || x <= jB.fieldSize.width){
