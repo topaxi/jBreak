@@ -88,6 +88,8 @@ jBreak.ball.prototype = {
 					jB.playSound('sound/pling1s.ogg');
 
 					if(!this._pierce){
+						this._interval -= (this._interval > 12.5 ? .025 : 0);
+
 						ballX = Math.floor(ballX);
 						ballY = Math.floor(ballY);
 
@@ -242,7 +244,7 @@ jBreak.ball.prototype = {
 
 				if(paddleHit){
 					jB.playSound('sound/pling1s.ogg');
-					this._interval -= (this._interval > 12.5 ? .20 : 0);
+					this._interval -= (this._interval > 12.5 ? .2 : 0);
 				} else if(paddleMissed){
 					this.remove();
 					jB.ballChecker(jBPaddle); // any balls left?
