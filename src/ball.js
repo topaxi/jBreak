@@ -300,8 +300,8 @@ jBreak.ball.prototype = {
 
 		//console.log('Ball lost. Removed %o from jBreak field!', this);
 	},
-	pause:function(){
-		if(this._timer){
+	pause:function(pause){
+		if(pause){
 			clearTimeout(this._timerID);
 			this._timer = false;
 			this._toggleTimers(false);

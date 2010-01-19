@@ -133,8 +133,8 @@ jBreak.bonus.prototype = {
 	},
 	_animate:null,
 	move:move,
-	pause:function(){
-		if(this._timer){
+	pause:function(pause){
+		if(pause){
 			this._timer = false;
 		} else {
 			this._timer = true;

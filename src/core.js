@@ -189,10 +189,10 @@ var jBreak = {
 		this._paused = !this._paused;
 
 		for(var i = this.balls.length;i--;)
-			this.balls[i].pause();
+			this.balls[i].pause(this._paused);
 
 		for(var i = this.bonuses.length;i--;)
-			this.bonuses[i].pause();
+			this.bonuses[i].pause(this._paused);
 
 		this._trackMouseMovement(!this._paused);
 
