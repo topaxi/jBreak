@@ -102,7 +102,7 @@ jBreak.editor = {
 			this.$options).css({width:'192px',position:'absolute'});
 
 		var highlightButton = function(){
-			$('.options button')
+			$optionWindow.find('button')
 				.css('border-color', '')
 				.find('div')
 				.css('background-position', '');
