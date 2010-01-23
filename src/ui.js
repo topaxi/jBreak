@@ -23,3 +23,18 @@ function button(label, fn){
 
 	return $button;
 }
+
+function draggableWindow(title, $content){
+	var $win = $('<div class="draggableWindow"/>'),
+	    $draggableHandle = $('<p class="draggableHandle ui-widget-header">'+title+'</p>');
+	$win.prepend($draggableHandle);
+	$win.append($content.addClass('draggableContent ui-widget ui-widget-content ui-corner-all'));
+
+	$win.draggable({
+		containment:'#jBreakField',
+		handle:'.draggableHandle',
+		scroll:false
+	});
+
+	return $win;
+}

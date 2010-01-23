@@ -97,20 +97,11 @@ jBreak.editor = {
 		});
 	},
 	showOptions:function(){
-		var $optionWindow = $('<div class="optionsContainer" style="width:198px"/>');
-		$optionWindow.css('position', 'absolute'); // @todo remove this
+		this.$options = $('<div/>');
+		var $optionWindow = draggableWindow('Toolbox',
+			this.$options).css('width','192px');
 
-		var $draggableHandle = $('<p class="draggableHandle ui-widget-header">Toolbox</p>');
-		$optionWindow.prepend($draggableHandle);
-
-		$optionWindow.draggable({
-			containment:'#jBreakField',
-			handle:'.draggableHandle',
-			scroll:false
-		});
-
-		this.$options = $('<div class="options ui-widget ui-widget-content ui-corner-all"/>');
-		$optionWindow.append(this.$options);
+		$optionWindow.css('position', 'absolute');
 
 		var highlightButton = function(){
 			$('.options button')
@@ -163,6 +154,8 @@ jBreak.editor = {
 					jBreak.$field.unbind('click');
 					jBreak.loadLevel($.extend(true, {}, self._level));
 					jBreak._levelID = -1;
+
+					$(this).unbind('click');
 				})
 			));
 
