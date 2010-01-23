@@ -264,9 +264,12 @@ var jBreak = {
 		}
 
 		if(blockVal === 0){
-			this._levelID += 1;
 			this._destroyField();
-			this.loadLevel(this._levelID);
+
+			if(++this._levelID)
+				this.loadLevel(this._levelID);
+			else
+				this.editor.start();
 		}
 	},
 	ballChecker:function(jBPaddle){
@@ -284,6 +287,9 @@ var jBreak = {
 		}
 	},
 	gameOver:function(){
+		if(this._levelID < 0)
+			return this.editor.start();
+
 		var self = this;
 
 		this._destroyField();
@@ -316,7 +322,7 @@ var jBreak = {
 	loadLevel:function(levelID){
 		levelID = (levelID !== undefined ? levelID : 0);
 
-		// clear previous levle first
+		// clear previous level first
 		for(var i = this.balls.length;i--;)
 			this.balls[i].remove();
 		this.balls = [];
@@ -330,18 +336,21 @@ var jBreak = {
 		this.bonuses = [];
 
 		var level;
-		$.ajax({
-			url:'getLevel.php',
-			method:'get',
-			data:{
-				levelID:levelID
-			},
-			dataType:'json',
-			async:false,
-			success:function(data, textStatus){
-				level = data.message;
-			}
-		});
+		if(typeof levelID === 'object')
+			level = levelID;
+		else
+			$.ajax({
+				url:'getLevel.php',
+				method:'get',
+				data:{
+					levelID:levelID
+				},
+				dataType:'json',
+				async:false,
+				success:function(data, textStatus){
+					level = data.message;
+				}
+			});
 
 		var self = this;
 		setTimeout(function(){
@@ -358,7 +367,7 @@ var jBreak = {
 			for(var x = horizontalBlocks.length;x--;){
 				var block = horizontalBlocks[x];
 
-				if(block !== 0){
+				if(block){
 					var $block = $('<div/>');
 					$block.addClass('jBreakBlock x'+x+' y'+y);
 

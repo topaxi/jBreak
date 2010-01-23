@@ -9,9 +9,11 @@ BASE_FILES = ${SRC_DIR}/core.js\
 	${SRC_DIR}/animate.js\
 	${SRC_DIR}/ball.js\
 	${SRC_DIR}/bonus.js\
+	${SRC_DIR}/paddle.js\
+	${SRC_DIR}/ui.js\
 	${SRC_DIR}/cookie.js\
 	${SRC_DIR}/options.js\
-	${SRC_DIR}/paddle.js
+	${SRC_DIR}/editor.js
 
 MODULES = ${SRC_DIR}/intro.js\
 	${BASE_FILES}\
