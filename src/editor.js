@@ -99,9 +99,7 @@ jBreak.editor = {
 	showOptions:function(){
 		this.$options = $('<div/>');
 		var $optionWindow = draggableWindow('Toolbox',
-			this.$options).css('width','192px');
-
-		$optionWindow.css('position', 'absolute');
+			this.$options).css({width:'192px',position:'absolute'});
 
 		var highlightButton = function(){
 			$('.options button')
