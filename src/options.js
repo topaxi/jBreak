@@ -9,28 +9,21 @@ jBreak.options = {
 		$optionsTabs.append(this.levelOptions());
 		$optionsTabs.append('<div id="tabs-3" style="text-align:center;height:220px"><p>jBreak @VERSION</p><p style="font-size:11px">Written by Damian Senn<br /><br />Graphics and Sounds<br />by <a href="http://www.helleresonnen.com/">Jan Neversil</a><br /><br />Music (coming soon)<br />by <a href="http://www.alphatronic.net/">Dani Whiler</a></p></div>');
 
-		var $startButton = $(
-			'<button class="ui-state-default ui-corner-all" style="cursor:pointer" id="jBreakStart">Start</button>'
-		);
-		$startButton.hover(function(){
-			$startButton.addClass('ui-state-hover');
-		},function(){
-			$startButton.removeClass('ui-state-hover');
+		var $startButton = button('Start', function(e){
+			e.stopPropagation();
+			$options.fadeOut(750);
+			jBreak.loadLevel(jBreak._levelID);
+			$startButton.attr('disabled','disabled');
 		});
 
 		$optionsTabs.append(
-			$('<p class="ui-widget" style="margin-bottom:.5em;text-align:center"/>').append($startButton)
+			$('<p class="ui-widget" style="margin-bottom:.5em;text-align:center"/>')
+				.append($startButton)
 		);
 
 		jBreak.$field.append($options.append($optionsTabs));
 		$optionsTabs.tabs();
 
-		$startButton.bind('click.jBreakCreatePaddles',function(e){
-			e.stopPropagation();
-			$options.fadeOut(750);
-			jBreak.loadLevel(jBreak._levelID);
-			$startButton.unbind('.jBreakCreatePaddles');
-		});
 
 		this.$options = $options.fadeIn(600);
 	},
