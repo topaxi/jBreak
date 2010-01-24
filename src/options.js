@@ -6,7 +6,7 @@ jBreak.options = {
 
 		$optionsTabs.append('<ul style="font-size:12px"><li><a href="#tabs-1">Sound</a></li><li><a href="#tabs-2">Level</a></li><li><a href="#tabs-3">About</a></li></ul>');
 		$optionsTabs.append(this.soundOptions());
-		$optionsTabs.append('<div id="tabs-2" style="text-align:center;height:220px">-under construction-</div>');
+		$optionsTabs.append(this.levelOptions());
 		$optionsTabs.append('<div id="tabs-3" style="text-align:center;height:220px"><p>jBreak @VERSION</p><p style="font-size:11px">Written by Damian Senn<br /><br />Graphics and Sounds<br />by <a href="http://www.helleresonnen.com/">Jan Neversil</a><br /><br />Music (coming soon)<br />by <a href="http://www.alphatronic.net/">Dani Whiler</a></p></div>');
 
 		var $startButton = $(
@@ -80,6 +80,16 @@ jBreak.options = {
 		$soundOptions.append($musicVolumeControl);
 
 		return $soundOptions;
+	},
+	levelOptions:function(){
+		var $levelOptions = $('<div id="tabs-2" style="text-align:center;height:220px"/>');
+		$levelOptions.append(button('Start level editor', function(){
+			jBreak.editor.start();
+		}));
+
+		$levelOptions.append('<p>-under construction-</p>');
+
+		return $levelOptions;
 	},
 	$options:null
 };
