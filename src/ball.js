@@ -141,7 +141,7 @@ jBreak.ball.prototype = {
 							new jB.bonus(this,x,y,180); // spawn bonus
 
 						$block.css('background-position', '0 '+block.sprite+'px');
-						$block.effect('drop', {direction:direction}, 'fast', function(){
+						$block.effect('drop', {direction:direction}, 200, function(){
 							$block.remove();
 						});
 

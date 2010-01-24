@@ -32,7 +32,7 @@ jBreak.options = {
 			$startButton.unbind('.jBreakCreatePaddles');
 		});
 
-		this.$options = $options.fadeIn('slow');
+		this.$options = $options.fadeIn(600);
 	},
 	soundOptions:function(){
 		var $soundOptions = $('<div id="tabs-1" style="height:220px"/>');

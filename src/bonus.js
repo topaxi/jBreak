@@ -128,7 +128,7 @@ jBreak.bonus.prototype = {
 	},
 	remove:function(){
 		this._timer = false;
-		this.$el.fadeOut('slow', function(){
+		this.$el.fadeOut(600, function(){
 			$(this).remove();
 		});
 

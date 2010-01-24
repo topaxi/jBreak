@@ -310,7 +310,7 @@ var jBreak = {
 
 			$fail.css('top',
 				self.$field.height()/2 - $fail.height()/2 + 'px'
-			).fadeIn('slow', function(){
+			).fadeIn(600, function(){
 				$(this).effect('pulsate', {times:2,mode:'hide'}, 2000, function(){
 					self._levelID = 0;
 					self._lives = 3;
@@ -393,7 +393,7 @@ var jBreak = {
 		}
 
 		this.$field.append(this.$blocks);
-		this.$blocks.fadeIn('slow');
+		this.$blocks.fadeIn(600);
 	},
 	// public variables
 	$field:null,

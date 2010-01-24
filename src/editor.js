@@ -146,7 +146,7 @@ jBreak.editor = {
 		this.$options.append(
 			$('<div/>', {css:{textAlign:'center',margin:5}}).append(
 				button('Start', function(){
-					$optionWindow.fadeOut('slow', function(){
+					$optionWindow.fadeOut(600, function(){
 						$optionWindow.remove();
 					});
 					jBreak.$field.unbind('click');
@@ -162,7 +162,7 @@ jBreak.editor = {
 		$optionWindow.click(function(e){
 			e.stopPropagation();
 		});
-		$optionWindow.fadeIn('slow');
+		$optionWindow.fadeIn(600);
 	},
 	_drawBlocks:function(){
 		jBreak.$blocks.hide().empty();
@@ -197,7 +197,7 @@ jBreak.editor = {
 		}
 
 		jBreak.$field.append(jBreak.$blocks);
-		jBreak.$blocks.fadeIn('slow');
+		jBreak.$blocks.fadeIn(600);
 	},
 	_level:null,
 	_selectedTheme:'delete',
