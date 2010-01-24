@@ -11,7 +11,7 @@ jBreak.options = {
 
 		var $startButton = button('Start', function(e){
 			e.stopPropagation();
-			$options.fadeOut(750);
+			$options.fadeOut(600);
 			jBreak.loadLevel(jBreak._levelID);
 			$startButton.attr('disabled','disabled');
 		});

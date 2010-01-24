@@ -293,8 +293,8 @@ var jBreak = {
 		var self = this;
 
 		this._destroyField();
-		this.$field.find('.jBreakPaddle').effect('puff', {}, 750);
-		this.$blocks.find('div').effect('drop', {direction:'down'}, 750);
+		this.$field.find('.jBreakPaddle').effect('puff', {}, 600);
+		this.$blocks.find('div').effect('drop', {direction:'down'}, 600);
 
 		setTimeout(function(){
 			for(var i = self.paddles.length;i--;)
