@@ -70,84 +70,81 @@ jBreak.ball.prototype = {
 		    	left:false
 		    };
 
-		// only run checks if a block could be hit
-		if(y <= jB.fieldSize.height || y >= 0 || x >= 0 || x <= jB.fieldSize.width){
-			var ballY = (this._speed.y > 0 ? y + this._size.height : y),
-			    ballX = (this._speed.x > 0 ? x + this._size.width  : x),
+		var ballY = (this._speed.y > 0 ? y + this._size.height : y),
+				ballX = (this._speed.x > 0 ? x + this._size.width  : x),
 
-			    blockX = Math.floor(ballX / 40),
-			    blockY = Math.floor(ballY / 16),
+				blockX = Math.floor(ballX / 40),
+				blockY = Math.floor(ballY / 16),
 
-			    blockExists = jB.blocks[blockY] !== undefined
-			               && jB.blocks[blockY][blockX] !== undefined;
+				blockExists = jB.blocks[blockY] !== undefined
+									 && jB.blocks[blockY][blockX] !== undefined;
 
-			if(blockExists){
-				var block = jB.blocks[blockY][blockX];
+		if(blockExists){
+			var block = jB.blocks[blockY][blockX];
 
-				if(block.value > 0){
-					jB.playSound('sound/pling1s.ogg');
+			if(block.value > 0){
+				jB.playSound('sound/pling1s.ogg');
 
-					if(!this._pierce){
-						this._interval -= (this._interval > 12.5 ? .025 : 0);
+				if(!this._pierce){
+					this._interval -= (this._interval > 12.5 ? .025 : 0);
 
-						ballX = Math.floor(ballX);
-						ballY = Math.floor(ballY);
+					ballX = Math.floor(ballX);
+					ballY = Math.floor(ballY);
 
-						var hHit = (ballX % 40 <= 39 && ballX % 40 >= 36 && this._speed.x < 0)
-						        || (ballX % 40 <=  4 && this._speed.x > 0),
-						    vHit = (ballY % 16 <= 15 && ballY % 16 >= 12 && this._speed.y < 0)
-						        || (ballY % 16 <=  4 && this._speed.y > 0);
+					var hHit = (ballX % 40 <= 39 && ballX % 40 >= 36 && this._speed.x < 0)
+									|| (ballX % 40 <=  4 && this._speed.x > 0),
+							vHit = (ballY % 16 <= 15 && ballY % 16 >= 12 && this._speed.y < 0)
+									|| (ballY % 16 <=  4 && this._speed.y > 0);
 
-						if(vHit && hHit) // don't mirror both speeds, mirror the slower one
-							(this._speed.y > this._speed.x
-								? hHit = false
-								: vHit = false);
+					if(vHit && hHit) // don't mirror both speeds, mirror the slower one
+						(this._speed.y > this._speed.x
+							? hHit = false
+							: vHit = false);
 
-						if(vHit)
-							this._speed.y *= -1;
+					if(vHit)
+						this._speed.y *= -1;
 
-						if(hHit)
-							this._speed.x *= -1;
+					if(hHit)
+						this._speed.x *= -1;
 
-						/*if(!hHit && !vHit){
-							console.log('ballX: %d speed: %o', ballX, this._speed);
-						}*/
-					}
+					/*if(!hHit && !vHit){
+						console.log('ballX: %d speed: %o', ballX, this._speed);
+					}*/
+				}
 
-					//console.log('I hit %d,%d', blockX,blockY);
-					var $block = $('.x'+blockX+'.y'+blockY),
-					    direction =
-					    	(vHit && this._speed.y > 0 ? 'up' :
-					    		(hHit && this._speed.x > 0 ? 'left' :
-					    			(hHit && this._speed.x < 0 ? 'right' :
-					    				/*vHit && this._speed.y < 0*/ 'down')));
+				//console.log('I hit %d,%d', blockX,blockY);
+				var $block = $('.x'+blockX+'.y'+blockY),
+						direction =
+							(vHit && this._speed.y > 0 ? 'up' :
+								(hHit && this._speed.x > 0 ? 'left' :
+									(hHit && this._speed.x < 0 ? 'right' :
+										/*vHit && this._speed.y < 0*/ 'down')));
 
-					var rand = Math.random();
-					if(block.value > 1 && !this._pierce){
-						if(rand < .04)
-							new jB.bonus(this,x,y,180); // spawn bonus
+				var rand = Math.random();
+				if(block.value > 1 && !this._pierce){
+					if(rand < .04)
+						new jB.bonus(this,x,y,180); // spawn bonus
 
-						$block.css({
-							opacity:1-1/block.value,
-							backgroundPosition:'0 '+block.sprite+'px'
-						});
-						block.value -= 1;
+					$block.css({
+						opacity:1-1/block.value,
+						backgroundPosition:'0 '+block.sprite+'px'
+					});
+					block.value -= 1;
 
-						setTimeout(function(){
-							$block.css('background-position', '-40px '+block.sprite+'px');
-						}, 100);
-					} else {
-						if(rand < .08)
-							new jB.bonus(this,x,y,180); // spawn bonus
+					setTimeout(function(){
+						$block.css('background-position', '-40px '+block.sprite+'px');
+					}, 100);
+				} else {
+					if(rand < .08)
+						new jB.bonus(this,x,y,180); // spawn bonus
 
-						$block.css('background-position', '0 '+block.sprite+'px');
-						$block.effect('drop', {direction:direction}, 200, function(){
-							$block.remove();
-						});
+					$block.css('background-position', '0 '+block.sprite+'px');
+					$block.effect('drop', {direction:direction}, 200, function(){
+						$block.remove();
+					});
 
-						delete jB.blocks[blockY][blockX];
-						jB.blockChecker();
-					}
+					delete jB.blocks[blockY][blockX];
+					jB.blockChecker();
 				}
 			}
 		}
