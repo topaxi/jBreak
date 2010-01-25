@@ -29,6 +29,19 @@ jBreak.options = {
 	},
 	soundOptions:function(){
 		var $soundOptions = $('<div id="tabs-1" style="height:220px"/>');
+		
+		if(typeof Audio === 'undefined')
+			return $soundOptions.append('<p>Your browser does not support audio!</p>');
+
+		if(typeof localStorage !== 'undefined'){
+			if(localStorage['soundVolume'] !== null)
+				jBreak.volume(parseInt(localStorage['soundVolume']));
+		} else {
+			var cookieSoundVolume = readCookie('soundVolume');
+			if(cookieSoundVolume !== null)
+				jBreak.volume(parseInt(cookieSoundVolume));
+		}
+
 
 		var $soundVolumeControl = $('<div/>');
 		var $soundVolumeSlider = $('<div/>');
@@ -41,12 +54,15 @@ jBreak.options = {
 			min:0,
 			max:100,
 			slide:function(e, ui){
-				jBreak._volume = ui.value;
+				jBreak.volume(ui.value);
 				$('#soundVolume').text(ui.value+'%');
 				jBreak.playSound('sound/pling1s.ogg');
 			},
 			stop:function(e, ui){
-				createCookie('soundVolume', ui.value, 7);
+				if(localStorage)
+					localStorage['soundVolume'] = ui.value;
+				else
+					createCookie('soundVolume', ui.value, 7);
 			}
 		});
 		$soundVolumeControl.append($soundVolumeSlider);

@@ -16,7 +16,10 @@ jBreak.editor = {
 		$jBreak.append(jBreak.$field);
 		jBreak._setLevelTitle('jBreak Level Editor');
 
-		if(this._level === null)
+		if(typeof JSON !== 'undefined' && typeof sessionStorage !== 'undefined')
+			this._level = JSON.parse(sessionStorage['editorLevel']);
+
+		if(!this._level)
 			this._level = {
 				blocks:[
 					[],[],[],[],[],
@@ -32,9 +35,47 @@ jBreak.editor = {
 			};
 
 		jBreak.lives(3);
+		this._selectedTheme = 'delete';
 		this._drawBlocks();
+		this._enableGhostBlock(true);
 		this.showOptions();
 		this.bindAddBlock();
+	},
+	_enableGhostBlock:function(enabled){
+		if(!enabled){
+			jBreak.$field.unbind('mousemove');
+			$('#jBreakGhostBlock').remove();
+
+			return;
+		}
+
+		var self = this,
+		    fieldOffset = jBreak.$field.offset(),
+		    $ghostBlock = $('<div/>', {
+		    	id:'jBreakGhostBlock',
+		    	css:{
+		    		width:40,
+		    		height:16,
+		    		opacity:.6,
+		    		backgroundPosition:'0 0',
+		    		position:'absolute'
+		    	}
+		    });
+
+		jBreak.$field
+			.append($ghostBlock)
+			.mousemove(function(e){
+				var x = ~~((e.pageX - fieldOffset.left) / 40),
+				    y = ~~((e.pageY - fieldOffset.top) / 16);
+
+				$ghostBlock.css({
+					left:x*40,
+					top:y*16,
+					backgroundImage:
+						'url(images/blocks/'+self._selectedTheme+'.png)',
+					display:self._selectedTheme !== 'delete' ? 'block' : 'none'
+				});
+			});
 	},
 	bindAddBlock:function(){
 		var fieldOffset = jBreak.$field.offset(),
@@ -45,12 +86,13 @@ jBreak.editor = {
 			    y = ~~((e.pageY - fieldOffset.top) / 16),
 
 			    blocks = self._level.blocks,
-			    blockExists = blocks[y] !== undefined
-			               && blocks[y][x] !== undefined;
+			    blockExists = blocks[y]
+			               && blocks[y][x];
 
 			if(blockExists){
 				var block = blocks[y][x],
 				    $block = $('.jBreakBlock.x'+x+'.y'+y);
+
 				if(block.theme === self._selectedTheme){
 					block.value++;
 					$block.text(block.value > 1 ? block.value : '');
@@ -139,19 +181,25 @@ jBreak.editor = {
 
 		this.$options.append(
 			$('<div/>', {css:{textAlign:'center',margin:5}}).append(
-				button('Remove', buttonBlockCallback('delete')).click(highlightButton)
+				button('Remove', buttonBlockCallback('delete'))
+					.css('border-color','#000')
+					.click(highlightButton)
 			));
 
 		var self = this;
 		this.$options.append(
 			$('<div/>', {css:{textAlign:'center',margin:5}}).append(
 				button('Start', function(){
+					self._enableGhostBlock(false);
 					$optionWindow.fadeOut(600, function(){
 						$optionWindow.remove();
 					});
 					jBreak.$field.unbind('click');
 					jBreak.loadLevel($.extend(true, {}, self._level));
 					jBreak._levelID = -1;
+
+					if(typeof JSON !== 'undefined' && typeof sessionStorage !== 'undefined')
+						sessionStorage['editorLevel'] = JSON.stringify(self._level);
 
 					$(this).unbind('click');
 				})

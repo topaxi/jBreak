@@ -20,10 +20,6 @@ var jBreak = {
 		this._trackMouseMovement(true);
 		this.$blocks = $('<div id="jBreakBlocks"/>');
 
-		var cookieSoundVolume = readCookie('soundVolume');
-		if(cookieSoundVolume !== null)
-			this._volume = parseInt(cookieSoundVolume);
-
 		this.options.showOptions();
 
 		if(window.location.hash == '#debug')
@@ -118,6 +114,12 @@ var jBreak = {
 		var audio = new Audio(soundFile);
 		audio.volume = this._volume/100;
 		audio.play();
+	},
+	volume:function(volume){
+		if(volume === undefined)
+			return this._volume;
+
+		this._volume = volume;
 	},
 	_hideCursor:function(hide){
 		if(hide)

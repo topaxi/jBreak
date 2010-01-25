@@ -71,13 +71,13 @@ jBreak.ball.prototype = {
 		    };
 
 		var ballY = (this._speed.y > 0 ? y + this._size.height : y),
-				ballX = (this._speed.x > 0 ? x + this._size.width  : x),
+		    ballX = (this._speed.x > 0 ? x + this._size.width  : x),
 
-				blockX = Math.floor(ballX / 40),
-				blockY = Math.floor(ballY / 16),
+		    blockX = Math.floor(ballX / 40),
+		    blockY = Math.floor(ballY / 16),
 
-				blockExists = jB.blocks[blockY] !== undefined
-									 && jB.blocks[blockY][blockX] !== undefined;
+		    blockExists = jB.blocks[blockY]
+		               && jB.blocks[blockY][blockX];
 
 		if(blockExists){
 			var block = jB.blocks[blockY][blockX];
@@ -92,9 +92,9 @@ jBreak.ball.prototype = {
 					ballY = Math.floor(ballY);
 
 					var hHit = (ballX % 40 <= 39 && ballX % 40 >= 36 && this._speed.x < 0)
-									|| (ballX % 40 <=  4 && this._speed.x > 0),
-							vHit = (ballY % 16 <= 15 && ballY % 16 >= 12 && this._speed.y < 0)
-									|| (ballY % 16 <=  4 && this._speed.y > 0);
+					        || (ballX % 40 <=  4 && this._speed.x > 0),
+					    vHit = (ballY % 16 <= 15 && ballY % 16 >= 12 && this._speed.y < 0)
+					        || (ballY % 16 <=  4 && this._speed.y > 0);
 
 					if(vHit && hHit) // don't mirror both speeds, mirror the slower one
 						(this._speed.y > this._speed.x
@@ -114,11 +114,11 @@ jBreak.ball.prototype = {
 
 				//console.log('I hit %d,%d', blockX,blockY);
 				var $block = $('.x'+blockX+'.y'+blockY),
-						direction =
-							(vHit && this._speed.y > 0 ? 'up' :
-								(hHit && this._speed.x > 0 ? 'left' :
-									(hHit && this._speed.x < 0 ? 'right' :
-										/*vHit && this._speed.y < 0*/ 'down')));
+				    direction =
+				    	(vHit && this._speed.y > 0 ? 'up' :
+				    		(hHit && this._speed.x > 0 ? 'left' :
+				    			(hHit && this._speed.x < 0 ? 'right' :
+				    				/*vHit && this._speed.y < 0*/ 'down')));
 
 				var rand = Math.random();
 				if(block.value > 1 && !this._pierce){
