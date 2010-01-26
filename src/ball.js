@@ -113,7 +113,7 @@ jBreak.ball.prototype = {
 				}
 
 				//console.log('I hit %d,%d', blockX,blockY);
-				var $block = $('.x'+blockX+'.y'+blockY),
+				var $block = $('.x'+blockX+'.y'+blockY, jB.$field),
 				    direction =
 				    	(vHit && this._speed.y > 0 ? 'up' :
 				    		(hHit && this._speed.x > 0 ? 'left' :
