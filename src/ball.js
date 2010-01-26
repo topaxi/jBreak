@@ -73,8 +73,8 @@ jBreak.ball.prototype = {
 		var ballY = (this._speed.y > 0 ? y + this._size.height : y),
 		    ballX = (this._speed.x > 0 ? x + this._size.width  : x),
 
-		    blockX = Math.floor(ballX / 40),
-		    blockY = Math.floor(ballY / 16),
+		    blockX = ~~(ballX / 40),
+		    blockY = ~~(ballY / 16),
 
 		    blockExists = jB.blocks[blockY]
 		               && jB.blocks[blockY][blockX];
@@ -88,8 +88,8 @@ jBreak.ball.prototype = {
 				if(!this._pierce){
 					this._interval -= (this._interval > 12.5 ? .025 : 0);
 
-					ballX = Math.floor(ballX);
-					ballY = Math.floor(ballY);
+					ballX = ~~ballX;
+					ballY = ~~ballY;
 
 					var hHit = (ballX % 40 <= 39 && ballX % 40 >= 36 && this._speed.x < 0)
 					        || (ballX % 40 <=  4 && this._speed.x > 0),
