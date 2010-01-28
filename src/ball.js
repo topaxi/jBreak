@@ -29,7 +29,6 @@ jBreak.ball.prototype = {
 			this._timer = true;
 			this._toggleTimers(true);
 			this._animate();
-			setTimeout(this._animate, this._interval/2);
 		}
 	},
 	ready:function(ready){
@@ -343,7 +342,6 @@ jBreak.ball.prototype = {
 		// setting size is not implemented yet!
 	},
 	// private variables
-	_ballID:null,
 	_speed:null,
 	_angle:-90,
 	_position:null,
