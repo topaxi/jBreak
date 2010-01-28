@@ -5,7 +5,7 @@ function animate(){
 	this.move(x,y)._hitCheck(x,y);
 
 	if(this._timer)
-		this._timerID = setTimeout(this._animate, this._interval);
+		setTimeout(this._animate, this._interval);
 }
 
 function move(x,y){
