@@ -43,7 +43,7 @@ ${JB}: ${MODULES}
 	@@mkdir -p ${DIST_DIR}
 
 	@@cat ${MODULES} | \
-		sed 's/Date:./&'"${DATE}"'/' | \
+		sed 's/Date:.*/&'"${DATE}"'/' | \
 		${VER} > ${JB};
 
 min: ${JB_MIN}
@@ -51,7 +51,7 @@ min: ${JB_MIN}
 ${JB_MIN}: ${JB}
 	@@echo "Building" ${JB_MIN}
 
-	@@echo "" > ${JB_MIN}
+	@@head -n 19 ${JB} > ${JB_MIN}
 	@@${MINJAR} --js ${JB} --warning_level QUIET >> ${JB_MIN}
 
 clean:
