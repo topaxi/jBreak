@@ -26,20 +26,17 @@ function button(label, fn){
 }
 
 function draggableWindow(title, $content){
-	var $win = $('<div class="draggableWindow"/>'),
-	    $draggableHandle = $('<p/>')
+	var $draggableHandle = $('<p/>')
 	    	.addClass('draggableHandle ui-widget-header')
 	    	.text(title);
 
-	$win.prepend($draggableHandle);
-	$win.append($content.addClass(
-		'draggableContent ui-widget ui-widget-content ui-corner-all'));
-
-	$win.draggable({
-		containment:'#jBreakField',
-		handle:'.draggableHandle',
-		scroll:false
-	});
-
-	return $win;
+	return $('<div class="draggableWindow"/>')
+		.prepend($draggableHandle)
+		.append($content.addClass(
+			'draggableContent ui-widget ui-widget-content ui-corner-all'))
+		.draggable({
+			containment:'#jBreakField',
+			handle:$draggableHandle,
+			scroll:false
+		});
 }
