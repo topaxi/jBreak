@@ -8,6 +8,7 @@ function button(label, fn){
 		fn = $.noop;
 
 	var $button = $('<button/>', {
+		'class':'ui-state-default ui-corner-all',
 		text:label,
 		css:{
 			cursor:'pointer'
@@ -19,7 +20,7 @@ function button(label, fn){
 			$button.removeClass('ui-state-hover');
 		},
 		click:fn
-	}).addClass('ui-state-default ui-corner-all');
+	});
 
 	return $button;
 }
