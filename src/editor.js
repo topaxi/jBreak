@@ -79,7 +79,7 @@ jBreak.editor = {
 	},
 	bindAddBlock:function(){
 		var fieldOffset = jBreak.$field.offset(),
-				self = this;
+		    self = this;
 
 		jBreak.$field.click(function(e){
 			var x = ~~((e.pageX - fieldOffset.left) / 40),
@@ -96,19 +96,23 @@ jBreak.editor = {
 				if(block.theme === self._selectedTheme){
 					block.value++;
 					$block.text(block.value > 1 ? block.value : '');
-				} else if(self._selectedTheme === 'delete'){
+				}
+				else if(self._selectedTheme === 'delete'){
 					if(--block.value){
 						$block.text(block.value > 1 ? block.value : '');
-					} else {
+					}
+					else {
 						delete blocks[y][x];
 						$block.fadeOut();
 					}
-				} else {
+				}
+				else {
 					block.theme = self._selectedTheme;
 					$block.css('background-image', 
 						'url(images/blocks/'+block.theme+'.png)');
 				}
-			} else if(self._selectedTheme !== 'delete') {
+			}
+			else if(self._selectedTheme !== 'delete') {
 				$('.jBreakBlock.x'+x+'.y'+y).remove();
 
 				var $block = $('<div/>', {
@@ -222,8 +226,8 @@ jBreak.editor = {
 				if(block){
 					var $block = $('<div/>', {
 						css:{
-							left:x*40,
-							top:y*16,
+							left: x*40,
+							top:  y*16,
 							background:
 								'transparent url(images/blocks/'
 									+block.theme+'.png) scroll no-repeat',
@@ -247,7 +251,7 @@ jBreak.editor = {
 		jBreak.$field.append(jBreak.$blocks);
 		jBreak.$blocks.fadeIn(600);
 	},
-	_level:null,
-	_selectedTheme:'delete',
-	$options:null
+	_selectedTheme: 'delete',
+	_level:         null,
+	$options:       null
 };

@@ -1,8 +1,8 @@
-jBreak.ball = function(position){
+jBreak.Ball = function(position){
 	this._init(position);
 };
 
-jBreak.ball.prototype = {
+jBreak.Ball.prototype = {
 	_init:function(position){
 		jBreak.balls.push(this);
 		//console.log('Create ball %d -> %o', ballID, this);
@@ -56,7 +56,8 @@ jBreak.ball.prototype = {
 					}
 				}
 			}, 250);
-		} else {
+		}
+		else {
 			clearInterval(this._timersID);
 		}
 	},
@@ -106,10 +107,6 @@ jBreak.ball.prototype = {
 
 					if(hHit)
 						this._speed.x *= -1;
-
-					/*if(!hHit && !vHit){
-						console.log('ballX: %d speed: %o', ballX, this._speed);
-					}*/
 				}
 
 				//console.log('I hit %d,%d', blockX,blockY);
@@ -123,7 +120,7 @@ jBreak.ball.prototype = {
 				var rand = Math.random();
 				if(block.value > 1 && !this._pierce){
 					if(rand < .04)
-						new jB.bonus(this,x,y,180); // spawn bonus
+						new jB.Bonus(this,x,y,180); // spawn bonus
 
 					$block.css({
 						opacity:1-1/block.value,
@@ -134,9 +131,10 @@ jBreak.ball.prototype = {
 					setTimeout(function(){
 						$block.css('background-position', '-40px '+block.sprite+'px');
 					}, 100);
-				} else {
+				}
+				else {
 					if(rand < .08)
-						new jB.bonus(this,x,y,180); // spawn bonus
+						new jB.Bonus(this,x,y,180); // spawn bonus
 
 					$block.css('background-position', '0 '+block.sprite+'px');
 					$block.effect('drop', {direction:direction}, 200, function(){
@@ -242,7 +240,8 @@ jBreak.ball.prototype = {
 				if(paddleHit){
 					jB.playSound('sound/pling1s.ogg');
 					this._interval -= (this._interval > 12.5 ? .2 : 0);
-				} else if(paddleMissed){
+				}
+				else if(paddleMissed){
 					this.remove();
 					jB.ballChecker(jBPaddle); // any balls left?
 					return;
@@ -295,14 +294,13 @@ jBreak.ball.prototype = {
 		for(var i = jBBalls.length;i--;)
 			if(jBBalls[i] === this)
 				return jBBalls.remove(i);
-
-		//console.log('Ball lost. Removed %o from jBreak field!', this);
 	},
 	pause:function(pause){
 		if(pause){
 			this._timer = false;
 			this._toggleTimers(false);
-		} else {
+		}
+		else {
 			this._timer = true;
 			this._toggleTimers(true);
 			this._animate();
@@ -341,17 +339,19 @@ jBreak.ball.prototype = {
 
 		// setting size is not implemented yet!
 	},
+
 	// private variables
-	_speed:null,
-	_angle:-90,
-	_position:null,
-	_timer:null,
-	_interval:30,
-	_size:null,
-	_pierce:false,
-	_ready:false, // ready to start?
-	_timers:null,
-	_timersID:null,
+	_speed:    null,
+	_angle:    -90,
+	_position: null,
+	_timer:    null,
+	_interval: 30,
+	_size:     null,
+	_pierce:   false,
+	_ready:    false, // ready to start?
+	_timers:   null,
+	_timersID: null,
+
 	// public variables
 	$el:null
 };

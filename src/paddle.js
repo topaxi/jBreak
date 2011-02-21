@@ -1,10 +1,9 @@
-jBreak.paddle = function(position){
+jBreak.Paddle = function(position){
 	this._init(position);
 };
 
-jBreak.paddle.prototype = {
+jBreak.Paddle.prototype = {
 	_init:function(position){
-		//console.log('Create %s paddle..', position);
 		this.$el = $('<div class="jBreakPaddle"/>');
 
 		this._position = {
@@ -201,7 +200,8 @@ jBreak.paddle.prototype = {
 						top:ball.position().y
 					});
 					ball.position(ballX, null);
-				} else {
+				}
+				else {
 					ball.move(
 						ballX,
 						ball.position().y);
@@ -210,7 +210,8 @@ jBreak.paddle.prototype = {
 
 			this._position.x = x;
 			this.$el.css('left', x);
-		} else {
+		}
+		else {
 			var y = position;
 			y -= this._size.height / 2;
 
@@ -232,7 +233,8 @@ jBreak.paddle.prototype = {
 						top:ballY
 					});
 					ball.position(null, ballY);
-				} else {
+				}
+				else {
 					ball.move(
 						ball.position().x,
 						ballY);
@@ -266,11 +268,13 @@ jBreak.paddle.prototype = {
 	getPosition:function(){
 		return this._position;
 	},
+
 	// private variables
-	_size:null,
-	_position:null,
-	_balls:null,
-	_paused:false,
+	_size:     null,
+	_position: null,
+	_balls:    null,
+	_paused:   false,
+
 	// public variables
 	$el:null
 };

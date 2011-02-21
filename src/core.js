@@ -20,7 +20,7 @@ var jBreak = {
 		this._trackMouseMovement(true);
 		this.$blocks = $('<div id="jBreakBlocks"/>');
 
-		this.options.showOptions();
+		this.Options.showOptions();
 
 		if(window.location.hash == '#debug')
 			console.log(window['jBreak'] = this);
@@ -133,17 +133,16 @@ var jBreak = {
 
 		for(var i = paddles.length;i--;){
 			var paddle = paddles[i],
-			    jBPaddle = new jBreak.paddle(paddle.position);
+			    jBPaddle = new this.Paddle(paddle.position);
 			this.paddles.push(jBPaddle);
 
 			if(paddle.ball)
-				jBPaddle.connectBall(new this.ball());
+				jBPaddle.connectBall(new this.Ball());
 		}
 
 		this.$field.unbind('click.jBreakLaunchPaddleBalls');
 		this.$field.bind('click.jBreakCreatePaddles', function(e){
 			e.stopPropagation(); // do not bubble
-			//console.log('Creating paddles...');
 			self._hideCursor(true);
 
 			for(var i = self.paddles.length;i--;){
@@ -202,9 +201,9 @@ var jBreak = {
 			this._destroyField();
 
 			var $unpauseButton = $('<button>continue</button>'),
-			    fieldOffset = this.$field.offset(),
-			    buttonLeft = this._mousePosition.pageX - fieldOffset.left - 32,
-			    buttonTop = this._mousePosition.pageY - fieldOffset.top  - 12;
+			    fieldOffset    = this.$field.offset(),
+			    buttonLeft     = this._mousePosition.pageX - fieldOffset.left - 32,
+			    buttonTop      = this._mousePosition.pageY - fieldOffset.top  - 12;
 
 			this.$field.append($unpauseButton);
 			$unpauseButton.css({
@@ -228,7 +227,8 @@ var jBreak = {
 			}).focus(function(){ // prevent button from beeing triggered with <return>
 				$(this).blur();
 			});
-		} else {
+		}
+		else {
 			for(var i = this.paddles.length;i--;)
 				this.paddles[i].start();
 
@@ -275,10 +275,9 @@ var jBreak = {
 		}
 	},
 	ballChecker:function(jBPaddle){
-		//console.log('Checking remaining balls...');
 		if(this.balls.length === 0){
 			if(this._lives > 0){
-				jBPaddle.connectBall(new jBreak.ball());
+				jBPaddle.connectBall(new this.Ball());
 				jBPaddle.size(64); // reset size
 
 				jBPaddle.$el.stop(true, true) // stop any effects on the paddle
@@ -397,18 +396,20 @@ var jBreak = {
 		this.$field.append(this.$blocks);
 		this.$blocks.fadeIn(600);
 	},
+	            
 	// public variables
-	$field:null,
-	$blocks:null,
-	fieldSize:null,
-	paddles:null,
-	balls:null,
-	bonuses:null,
-	blocks:null,
+	$field:    null,
+	$blocks:   null,
+	fieldSize: null,
+	paddles:   null,
+	balls:     null,
+	bonuses:   null,
+	blocks:    null,
+
 	// private variables
-	_imageCache:{},
-	_lives:3,
-	_volume:70,
-	_levelID:0,
-	_mousePosition:null
+	_imageCache:    {},
+	_volume:        70,
+	_lives:          3,
+	_levelID:        0,
+	_mousePosition: null
 };

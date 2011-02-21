@@ -1,4 +1,4 @@
-jBreak.options = {
+jBreak.Options = {
 	showOptions:function(){
 		var $optionsTabs = $('<div/>'),
 		    $options = draggableWindow('Settings',
@@ -36,15 +36,17 @@ jBreak.options = {
 		if(typeof localStorage !== 'undefined'){
 			if(localStorage['soundVolume'] !== null)
 				jBreak.volume(localStorage['soundVolume'] >>> 0);
-		} else {
+		}
+		else {
 			var cookieSoundVolume = readCookie('soundVolume');
 			if(cookieSoundVolume !== null)
 				jBreak.volume(cookieSoundVolume >>> 0);
 		}
 
 
-		var $soundVolumeControl = $('<div/>');
-		var $soundVolumeSlider = $('<div/>');
+		var $soundVolumeControl = $('<div/>'),
+		    $soundVolumeSlider = $('<div/>');
+
 		$soundVolumeControl.css('font-size','11px');
 		$soundVolumeSlider.css({width:'170px',marginBottom:'8px'});
 		$soundVolumeSlider.slider({

@@ -1,8 +1,8 @@
-jBreak.bonus = function(jBBall,x,y,angle){
+jBreak.Bonus = function(jBBall,x,y,angle){
 	this._init(jBBall,x,y,angle);
 };
 
-jBreak.bonus.prototype = {
+jBreak.Bonus.prototype = {
 	_init:function(jBBall,x,y,angle){
 		var random,
 		    background,
@@ -15,11 +15,12 @@ jBreak.bonus.prototype = {
 		jB.bonuses.push(this);
 
 		// 50% chance to get a bad or a good powerup
-		if(Math.floor(Math.random()+.5)){
+		if(Math.floor(Math.random() + .5)){
 			random = Math.floor(Math.random() * this._good.length);
 			powerup = this._good[random];
 			//console.log('Spawning "good" %o -> %d', this, random); 
-		} else {
+		}
+		else {
 			random = Math.floor(Math.random() * this._bad.length);
 			powerup = this._bad[random];
 			//console.log('Spawning "bad" %o -> %d', this, random); 
@@ -121,7 +122,8 @@ jBreak.bonus.prototype = {
 	pause:function(pause){
 		if(pause){
 			this._timer = false;
-		} else {
+		}
+		else {
 			this._timer = true;
 			this._animate();
 		}
@@ -137,16 +139,16 @@ jBreak.bonus.prototype = {
 			if(jBBonuses[i] === this)
 				return jBBonuses.remove(i);
 	},
-	$el:null,
-	_direction:null,
-	_position:null,
-	_speed:null,
-	_timer:false,
-	_interval:30,
-	_angle:180,
-	_ball:null, // the ball who triggered this bonus
-	_paddle:null, // the paddle which caught this bonus
-	_action:null, // will hold the function to be executed
+	$el:        null,
+	_direction: null,
+	_position:  null,
+	_speed:     null,
+	_timer:     false,
+	_interval:  30,
+	_angle:     180,
+	_ball:      null, // the ball who triggered this bonus
+	_paddle:    null, // the paddle which caught this bonus
+	_action:    null, // will hold the function to be executed
 	_bad:[
 		{ // shrink paddle
 			background:'url(images/bonuses/shrink.png)',
