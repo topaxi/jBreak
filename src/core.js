@@ -1,6 +1,9 @@
-var jBreak = {
+var $document = $(document)
+  , $jBreak
+  , jBreak    = {
 	start:function(){
-		var $jBreak = $('#jBreak').empty();
+		$jBreak = $('#jBreak').empty();
+
 		this.$field = $('<div id="jBreakField"/>');
 		$jBreak.append(this.$field);
 
@@ -9,8 +12,8 @@ var jBreak = {
 		this.balls   = [];
 
 		this.fieldSize = {
-			width:this.$field.width(),
-			height:this.$field.height()
+			width:  this.$field.width(),
+			height: this.$field.height()
 		};
 
 		this.lives(this._lives);
@@ -86,10 +89,10 @@ var jBreak = {
 			cache.block[i] = $('<img src="images/blocks/'+blockImages[i]+'.png"/>');
 	},
 	_setLevelTitle:function(title){
-		$('#jBreakLevelTitle').remove();
+		$('#jBreakLevelTitle', $jBreak).remove();
 		var $title = $('<div id="jBreakLevelTitle"/>').text(title);
 
-		$('#jBreak').append($title);
+		$jBreak.append($title);
 	},
 	lives:function(lives){
 		if(lives === undefined)
@@ -99,13 +102,13 @@ var jBreak = {
 
 		this._lives = lives;
 
-		$('#jBreakLives').remove();
+		$('#jBreakLives', $jBreak).remove();
 		var $lives = $('<div id="jBreakLives"/>');
 
 		for(var i = this._lives;i--;)
 			$lives.append('<div class="jBreakLive"/>');
 
-		$('#jBreak').append($lives);
+		$jBreak.append($lives);
 	},
 	playSound:function(soundFile){ // I'M LEAKING LOTS OF MEMORY!!
 		if(this._volume === 0 || typeof Audio === 'undefined')
@@ -123,10 +126,10 @@ var jBreak = {
 	},
 	_hideCursor:function(hide){
 		if(hide)
-			$('#jBreak').css('cursor',
+			$jBreak.css('cursor',
 				'url(images/cursor/cursor.gif), url(images/cursor/cursor.ico), none');
 		else
-			$('#jBreak').css('cursor', 'default');
+			$jBreak.css('cursor', 'default');
 	},
 	_createPaddles:function(paddles){
 		var self = this;
@@ -174,17 +177,14 @@ var jBreak = {
 	},
 	_bindPause:function(){
 		var self = this;
-		$(document).bind('keydown.jBreakPause', function(e){
+		$document.bind('keydown.jBreakPause', function(e){
 			if(e.keyCode === 32 || e.keyCode === 80){
 				self.togglePause();
-
-				if(self._paused)
-					self._unbindPause();
 			}
 		});
 	},
 	_unbindPause:function(){
-		$(document).unbind('.jBreakPause');
+		$document.unbind('.jBreakPause');
 	},
 	togglePause:function(){
 		this._paused = !this._paused;
@@ -199,6 +199,7 @@ var jBreak = {
 
 		if(this._paused){
 			this._destroyField();
+			this._unbindPause();
 
 			var $unpauseButton = $('<button>continue</button>'),
 			    fieldOffset    = this.$field.offset(),
@@ -220,12 +221,11 @@ var jBreak = {
 
 			var self = this;
 			$unpauseButton.click(function(){
-				self.togglePause();
-				self._bindPause();
+				$unpauseButton.remove();
 
-				$(this).remove();
+				self.togglePause();
 			}).focus(function(){ // prevent button from beeing triggered with <return>
-				$(this).blur();
+				$unpauseButton.blur();
 			});
 		}
 		else {
@@ -233,6 +233,7 @@ var jBreak = {
 				this.paddles[i].start();
 
 			this._hideCursor(true);
+			this._bindPause();
 		}
 	},
 	_trackMouseMovement:function(track){
@@ -240,7 +241,7 @@ var jBreak = {
 
 		if(track){
 			var self = this;
-			$(document).mousemove(function(e){
+			$document.mousemove(function(e){
 				self._mousePosition = {
 					pageX:e.pageX,
 					pageY:e.pageY
@@ -251,7 +252,7 @@ var jBreak = {
 	_destroyField:function(){
 		this._trackMouseMovement(false);
 		this._unbindPause();
-		$(document).unbind('mousemove');
+		$document.unbind('mousemove');
 		this._hideCursor(false);
 	},
 	blockChecker:function(){
@@ -312,7 +313,7 @@ var jBreak = {
 			$fail.css('top',
 				self.$field.height()/2 - $fail.height()/2 + 'px'
 			).fadeIn(600, function(){
-				$(this).effect('pulsate', {times:2,mode:'hide'}, 2000, function(){
+				$fail.effect('pulsate', {times:2,mode:'hide'}, 2000, function(){
 					self._levelID = 0;
 					self._lives = 3;
 					self.start(); // restart game
@@ -396,7 +397,7 @@ var jBreak = {
 		this.$field.append(this.$blocks);
 		this.$blocks.fadeIn(600);
 	},
-	            
+
 	// public variables
 	$field:    null,
 	$blocks:   null,

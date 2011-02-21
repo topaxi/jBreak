@@ -1,7 +1,7 @@
 function buttonBlockCallback(color){
 	return function(){
 		jBreak.editor._selectedTheme = color;
-	}
+	};
 }
 
 jBreak.editor = {
@@ -10,14 +10,14 @@ jBreak.editor = {
 			jBreak.balls[i].remove();
 		jBreak.balls = [];
 
-		var $jBreak = $('#jBreak').empty().unbind().css('cursor', 'default');
+		$jBreak.empty().unbind().css('cursor', 'default');
 
 		jBreak.$field = $('<div id="jBreakField"/>');
 		$jBreak.append(jBreak.$field);
 		jBreak._setLevelTitle('jBreak Level Editor');
 
-		if(typeof JSON !== 'undefined' && typeof sessionStorage !== 'undefined')
-			this._level = JSON.parse(sessionStorage['editorLevel']);
+		//if(typeof JSON !== 'undefined' && typeof sessionStorage !== 'undefined')
+		//	this._level = JSON.parse(sessionStorage['editorLevel']);
 
 		if(!this._level)
 			this._level = {
@@ -44,7 +44,7 @@ jBreak.editor = {
 	_enableGhostBlock:function(enabled){
 		if(!enabled){
 			jBreak.$field.unbind('mousemove');
-			$('#jBreakGhostBlock').remove();
+			$('#jBreakGhostBlock', $jBreak).remove();
 
 			return;
 		}
@@ -91,7 +91,7 @@ jBreak.editor = {
 
 			if(blockExists){
 				var block = blocks[y][x],
-				    $block = $('.jBreakBlock.x'+x+'.y'+y);
+				    $block = $('.jBreakBlock.x'+x+'.y'+y, $jBreak);
 
 				if(block.theme === self._selectedTheme){
 					block.value++;
@@ -113,7 +113,7 @@ jBreak.editor = {
 				}
 			}
 			else if(self._selectedTheme !== 'delete') {
-				$('.jBreakBlock.x'+x+'.y'+y).remove();
+				$('.jBreakBlock.x'+x+'.y'+y, $jBreak).remove();
 
 				var $block = $('<div/>', {
 					css:{
@@ -127,10 +127,10 @@ jBreak.editor = {
 						display:'none'
 					},
 					mouseenter:function(){
-						$(this).css('background-position','0 0');
+						$block.css('background-position','0 0');
 					},
 					mouseleave:function(){
-						$(this).css('background-position','-40px 0');
+						$block.css('background-position','-40px 0');
 					}
 				}).addClass('jBreakBlock x'+x+' y'+y);
 
@@ -235,10 +235,10 @@ jBreak.editor = {
 							textAlign:'center'
 						},
 						mouseenter:function(){
-							$(this).css('background-position','0 0');
+							$block.css('background-position','0 0');
 						},
 						mouseleave:function(){
-							$(this).css('background-position','-40px 0');
+							$block.css('background-position','-40px 0');
 						},
 						text:block.value > 1 ? block.value : ''
 					}).addClass('jBreakBlock x'+x+' y'+y);
