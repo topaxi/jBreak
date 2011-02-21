@@ -35,11 +35,11 @@ jBreak.options = {
 
 		if(typeof localStorage !== 'undefined'){
 			if(localStorage['soundVolume'] !== null)
-				jBreak.volume(parseInt(localStorage['soundVolume']));
+				jBreak.volume(localStorage['soundVolume'] >>> 0);
 		} else {
 			var cookieSoundVolume = readCookie('soundVolume');
 			if(cookieSoundVolume !== null)
-				jBreak.volume(parseInt(cookieSoundVolume));
+				jBreak.volume(cookieSoundVolume >>> 0);
 		}
 
 
