@@ -9,6 +9,7 @@ BASE_FILES = ${SRC_DIR}/core.js\
 	${SRC_DIR}/animate.js\
 	${SRC_DIR}/ball.js\
 	${SRC_DIR}/bonus.js\
+	${SRC_DIR}/bullet.js\
 	${SRC_DIR}/paddle.js\
 	${SRC_DIR}/ui.js\
 	${SRC_DIR}/cookie.js\
@@ -25,7 +26,7 @@ JB_MIN = ${DIST_DIR}/jBreak.min.js
 JB_VER = `cat version.txt`
 VER = sed s/@VERSION/${JB_VER}/
 
-MINJAR = java -jar ${BUILD_DIR}/google-compiler-20091218.jar
+MINJAR = java -jar ${BUILD_DIR}/google-compiler-20110225.jar
 
 DATE=`git log -1 | grep Date: | sed 's/[^:]*: *//'`
 
