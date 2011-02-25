@@ -22,7 +22,7 @@ var Cookie = (function(document, undefined){
 				if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
 			}
 		},
-		'delete':function(name){
+		remove:function(name){
 			this.create(name,"",-1);
 		}
 	};
