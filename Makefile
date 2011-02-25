@@ -9,7 +9,6 @@ BASE_FILES = ${SRC_DIR}/core.js\
 	${SRC_DIR}/animate.js\
 	${SRC_DIR}/ball.js\
 	${SRC_DIR}/bonus.js\
-	${SRC_DIR}/bullet.js\
 	${SRC_DIR}/paddle.js\
 	${SRC_DIR}/ui.js\
 	${SRC_DIR}/cookie.js\
