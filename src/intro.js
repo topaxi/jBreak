@@ -17,4 +17,4 @@
  * Author: Damian Senn <damian.senn@gmail.com>
  * Date:   
  */
-(function($, setTimeout){
+(function($, setTimeout, undefined){

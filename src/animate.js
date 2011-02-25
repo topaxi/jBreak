@@ -1,6 +1,9 @@
 function animate(){
-	var x = this._position.x + this._speed.x*4,
-	    y = this._position.y + this._speed.y*4;
+	var pos   = this._position
+	  , speed = this._speed
+	  , x     = pos.x + speed.x*4
+	  , y     = pos.y + speed.y*4
+	;
 
 	this.move(x,y)._hitCheck(~~x, ~~y);
 
@@ -21,8 +24,7 @@ function angle(angle){
 
 	this._angle = angle;
 	var speed = angle / 360 * Math.PI;
-	this._speed.x = Math.cos(speed);
-	this._speed.y = Math.sin(speed);
+	this._speed = {x: Math.cos(speed), y: Math.sin(speed)};
 
 	return this;
 }

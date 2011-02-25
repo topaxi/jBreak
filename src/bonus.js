@@ -160,14 +160,12 @@ jBreak.Bonus.prototype = {
 			action:function(){
 				var ball = this._ball;
 
-				ball.oldInterval = (ball.oldInterval
-					? ball.oldInterval
-					: ball.interval());
+				ball.oldInterval = ball.oldInterval || ball.interval();
 
 				ball.addTimer('speedUp15', {
 					action:function(){
 						this.interval(ball.oldInterval);
-						this.oldInterval = false;
+						delete this.oldInterval;
 					},
 					timeout:15
 				});

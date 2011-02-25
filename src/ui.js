@@ -1,11 +1,8 @@
 function button(label, fn){
 	if(arguments.length === 1 && typeof label === 'function'){
-		fn = label;
+		fn    = label;
 		label = null;
 	}
-
-	if(typeof fn !== 'function')
-		fn = $.noop;
 
 	var $button = $('<button/>', {
 		'class':'ui-state-default ui-corner-all',
@@ -19,7 +16,7 @@ function button(label, fn){
 		mouseleave:function(){
 			$button.removeClass('ui-state-hover');
 		},
-		click:fn
+		click: typeof fn === 'function' ? fn : $.noop
 	});
 
 	return $button;

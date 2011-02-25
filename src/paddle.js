@@ -85,7 +85,7 @@ jBreak.Paddle.prototype = {
 		    relativePosition = this._position.relative,
 		    fieldOffset = jBreak.$field.offset();
 
-		$(document)./*jBreak.$field.*/mousemove(function(e){
+		$document./*jBreak.$field.*/mousemove(function(e){
 			var newPosition = (relativePosition === 'top'
 			               ||  relativePosition === 'bottom'
 			                   ? e.pageX - fieldOffset.left
