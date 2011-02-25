@@ -71,18 +71,19 @@ jBreak.Ball.prototype = {
 		    	left:false
 		    };
 
-		var ballY = (this._speed.y > 0 ? y + this._size.height : y),
-		    ballX = (this._speed.x > 0 ? x + this._size.width  : x),
+		var speed  = this._speed
+		  , size   = this._size
+		  , ballY  = speed.y > 0 ? y + size.height : y
+		  , ballX  = speed.x > 0 ? x + size.width  : x
 
-		    blockX = ~~(ballX / 40),
-		    blockY = ~~(ballY / 16),
+		  , blockX = ~~(ballX / 40)
+		  , blockY = ~~(ballY / 16)
 
-		    blockExists = jB.blocks[blockY]
-		               && jB.blocks[blockY][blockX];
+		  , block  = jB.blocks[blockY]
+		          && jB.blocks[blockY][blockX]
+		;
 
-		if(blockExists){
-			var block = jB.blocks[blockY][blockX];
-
+		if(block){
 			if(block.value > 0){
 				jB.playSound('sound/pling1s.ogg');
 
@@ -92,30 +93,30 @@ jBreak.Ball.prototype = {
 					ballX = ~~ballX;
 					ballY = ~~ballY;
 
-					var hHit = (ballX % 40 <= 39 && ballX % 40 >= 36 && this._speed.x < 0)
-					        || (ballX % 40 <=  4 && this._speed.x > 0),
-					    vHit = (ballY % 16 <= 15 && ballY % 16 >= 12 && this._speed.y < 0)
-					        || (ballY % 16 <=  4 && this._speed.y > 0);
+					var hHit = (ballX % 40 <= 39 && ballX % 40 >= 36 && speed.x < 0)
+					        || (ballX % 40 <=  4 && speed.x > 0),
+					    vHit = (ballY % 16 <= 15 && ballY % 16 >= 12 && speed.y < 0)
+					        || (ballY % 16 <=  4 && speed.y > 0);
 
 					if(vHit && hHit) // don't mirror both speeds, mirror the slower one
-						(this._speed.y > this._speed.x
+						(speed.y > speed.x
 							? hHit = false
 							: vHit = false);
 
 					if(vHit)
-						this._speed.y *= -1;
+						speed.y *= -1;
 
 					if(hHit)
-						this._speed.x *= -1;
+						speed.x *= -1;
 				}
 
 				//console.log('I hit %d,%d', blockX,blockY);
-				var $block = $('.x'+blockX+'.y'+blockY, jB.$field),
+				var $block = $('.x'+ blockX +'.y'+ blockY, jB.$field),
 				    direction =
-				    	(vHit && this._speed.y > 0 ? 'up' :
-				    		(hHit && this._speed.x > 0 ? 'left' :
-				    			(hHit && this._speed.x < 0 ? 'right' :
-				    				/*vHit && this._speed.y < 0*/ 'down')));
+				    	(vHit && speed.y > 0 ? 'up' :
+				    		(hHit && speed.x > 0 ? 'left' :
+				    			(hHit && speed.x < 0 ? 'right' :
+				    				/*vHit && speed.y < 0*/ 'down')));
 
 				var rand = Math.random();
 				if(block.value > 1 && !this._pierce){
@@ -150,29 +151,30 @@ jBreak.Ball.prototype = {
 		// only run checks if a paddle could be hit
 		if(y >= jB.fieldSize.height - 16 || y <=  8 || x <=  8 || x >= jB.fieldSize.width - 16){
 			for(var i = jB.paddles.length;i--;){
-				var jBPaddle = jB.paddles[i],
-				    paddleMissed,
-				    paddleHit,
-				    angle,
-				    jBPaddlePosition = jBPaddle.getPosition(),
-				    jBPaddleSize = jBPaddle.size();
+				var jBPaddle         = jB.paddles[i]
+				  , jBPaddlePosition = jBPaddle.getPosition()
+				  , jBPaddleSize     = jBPaddle.size()
+				  , paddleMissed
+				  , paddleHit
+				  , angle
+				;
 
 				switch(jBPaddlePosition.relative){
 					default:
 					case 'bottom':
 						paddle.bottom = true;
 
-						paddleHit = this._speed.y > 0
+						paddleHit = speed.y > 0
 						         && y <= jB.fieldSize.height - 8
-						         && x >= jBPaddlePosition.x - this._size.width
-						         && Math.ceil(y) >= jBPaddlePosition.y - this._size.height
+						         && x >= jBPaddlePosition.x - size.width
+						         && Math.ceil(y) >= jBPaddlePosition.y - size.height
 						         && x <= jBPaddlePosition.x + jBPaddleSize.width;
 
 						paddleMissed = y > jB.fieldSize.height + 2;
 
 						if(paddleHit){
 							angle =
-								(this._position.x - jBPaddlePosition.x + this._size.width/2)
+								(x - jBPaddlePosition.x + size.width/2)
 								 * 180 / (jBPaddle._size.width / 2)
 								 - 360;
 
@@ -186,17 +188,17 @@ jBreak.Ball.prototype = {
 					case 'top':
 						paddle.top = true;
 
-						paddleHit = this._speed.y < 0
+						paddleHit = speed.y < 0
 						         && y >= 4
-						         && x >= jBPaddlePosition.x - this._size.width
-						         && Math.ceil(y) <= jBPaddlePosition.y + this._size.height
+						         && x >= jBPaddlePosition.x - size.width
+						         && Math.ceil(y) <= jBPaddlePosition.y + size.height
 						         && x <= jBPaddlePosition.x + jBPaddleSize.width;
 
 						paddleMissed = y < -10;
 
 						if(paddleHit){
 							angle =
-								(this._position.x - jBPaddlePosition.x + this._size.width/2)
+								(x - jBPaddlePosition.x + size.width/2)
 								 * 180 / (jBPaddle._size.width / 2)
 								 - 360;
 
@@ -210,30 +212,30 @@ jBreak.Ball.prototype = {
 					case 'left':
 						paddle.left = true;
 
-						paddleHit = this._speed.x < 0 
+						paddleHit = speed.x < 0 
 						         && x >= 4
-						         && y >= jBPaddlePosition.y - this._size.height
-						         && Math.ceil(x) <= jBPaddlePosition.x + this._size.width
+						         && y >= jBPaddlePosition.y - size.height
+						         && Math.ceil(x) <= jBPaddlePosition.x + size.width
 						         && y <= jBPaddlePosition.y + jBPaddleSize.height;
 
 						paddleMissed = x < -10;
 
 						if(paddleHit)
-							this._speed.x *= -1;
+							speed.x *= -1;
 						break;
 					case 'right':
 						paddle.right = true;
 
-						paddleHit = this._speed.x > 0
-						         && y >= jBPaddlePosition.y - this._size.height
+						paddleHit = speed.x > 0
+						         && y >= jBPaddlePosition.y - size.height
 						         && x <= jB.fieldSize.width - 8
-						         && Math.ceil(x) >= jBPaddlePosition.x - this._size.width
+						         && Math.ceil(x) >= jBPaddlePosition.x - size.width
 						         && y <= jBPaddlePosition.y + jBPaddleSize.height;
 
 						paddleMissed = x > jB.fieldSize.width + 2;
 
 						if(paddleHit)
-							this._speed.x *= -1;
+							speed.x *= -1;
 						break;
 				}
 
@@ -252,18 +254,18 @@ jBreak.Ball.prototype = {
 		var check;
 
 		check = x < 0 && !paddle.left
-		     || x > jB.fieldSize.width - this._size.width && !paddle.right;
+		     || x > jB.fieldSize.width - size.width && !paddle.right;
 		if(check){
 			jB.playSound('sound/pling1s.ogg');
-			this._speed.x *= -1;
+			speed.x *= -1;
 			this._interval -= (this._interval > 10 ? .075 : 0);
 		}
 
 		check = y < 0 && !paddle.top
-		     || y > jB.fieldSize.height - this._size.height && !paddle.bottom;
+		     || y > jB.fieldSize.height - size.height && !paddle.bottom;
 		if(check){
 			jB.playSound('sound/pling1s.ogg');
-			this._speed.y *= -1;
+			speed.y *= -1;
 			this._interval -= (this._interval > 10 ? .075 : 0);
 		}
 	},
