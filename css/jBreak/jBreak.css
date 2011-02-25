@@ -2,8 +2,8 @@ body {
 	background-color:#ccc;
 }
 
-div#jBreak {
-	background:white url(../../images/BG2-b.png) scroll no-repeat;
+#jBreak {
+	background:#fff url(../../images/BG2-b.png) scroll no-repeat;
 	width:678px;
 	height:434px;
 	position:relative;
@@ -13,7 +13,7 @@ div#jBreak {
 	-webkit-box-shadow: 5px 5px 10px #888;
 }
 
-div#jBreakField {
+#jBreakField {
 	background:transparent url(../../images/backgrounds/icecaveBG01.png) scroll no-repeat;
 	top:17px;
 	left:17px;
@@ -24,18 +24,18 @@ div#jBreakField {
 	overflow:hidden
 }
 
-div#jBreakField div.jBreakPaddle {
+.jBreakPaddle {
 	position:absolute;
 	background-color:black
 }
 
-	div#jBreakField div.jBreakPaddle.top {
+	.jBreakPaddle.top {
 		width:64px;
 		height:8px;
 		background:transparent url(../../images/paddles/pad64x8.png) scroll repeat;
 	}
 
-	div#jBreakField div.jBreakPaddle.right {
+	.jBreakPaddle.right {
 		width:8px;
 		height:64px;
 		background:transparent url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAABACAYAAAAnBDaKAAAABHNCSVQICAgIfAhkiAAAAjFJREFUSIltVUtuG1EMI4U62bSp240P6SsYaG6Q3jA5QAHXM0DtTYZd6PP0nBjwZzQaiaT4ZALA8Xh8vN1uf17f3r4ulwvWdcWyLFiWBV8AYNu26/l8ppEwEiD8JcCen38t1+s/D0lQ3QVEwc5/L9/GI/RfYl3Z9v6OTBD9KUBVxcxYAQKgGgYA1pJRWQMFbIoKkAYGr8DRAhQIf7cWamX9lhgpAkxk16V+EQDIGWQGe8z8aoCiSq4EiYDupVWf/j21EAByBKiokCGCXoyVDStgySJBBgzTuBWTRJUQBKPu5J9IM6TWmEUr40pOUiflwESG1Gpc3ROBTIBRcpP0ymxKil25pDxYWbcYM7kPywOjRacsAEbSRUfkld0825qGIBS29ysCado+QdYDRXOUZZVWCjW5WkFY44S65Th4drspD04/BwNy6iBAGoZR6hq+sFnaVMrVpbPAx1c/3aKmnlQHWUJlJLwhFTljG54IMJfYcHUbN+73g2DEjGF0d/rWrj/4gVRYjq1HqyhUhXlJKBOFOJu9d4EklI5q6yMaDOmNbZb6hJGprRw2TQokWQP+BK9gPte7Rdj/L9QfU5ggDcSg2X3o404WtUh743ntGai7YxGzDoEMImbbqbwphOX6UVNI3Gi2RZorr1nMmP6O4lkw1+W0QJgslMTlIAtlCakqYQ+PuwEyaGZ5AbD99/2Kre+ZYUwKsNPp9LT/+SP0bDMpDAB+v7zY4XBYd7uHaU8CxH96riiGsz4FrAAAAABJRU5ErkJggg%3D%3D) scroll repeat;
@@ -45,13 +45,13 @@ div#jBreakField div.jBreakPaddle {
 		-webkit-border-top-left-radius:3px
 	}
 
-	div#jBreakField div.jBreakPaddle.bottom {
+	.jBreakPaddle.bottom {
 		width:64px;
 		height:8px;
 		background:transparent url(../../images/paddles/pad64x8.png) scroll repeat;
 	}
 
-	div#jBreakField div.jBreakPaddle.left {
+	.jBreakPaddle.left {
 		width:8px;
 		height:64px;
 		background:transparent url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAABACAYAAAAnBDaKAAAABHNCSVQICAgIfAhkiAAAAjZJREFUSIltlU1OXEEMhL9qVoCmXyZcIJHI/cINyCk4IzsisglIU1m02+0e5W1Gb/xXLpf9dH937350eu8cx8HXhwe+f/v2/vLy0gEamPEIbD4/P3h9fT39fHq6ACgzHJ3j1OnHQe+dfuo8/nh8b1Yk8Mgy89HE2++3U1MYBSCj9DAffz8Dg8AooQy7QKZlWhlcSsgI0TK9I2i6WBjTsqjCKVDPSm3Wlke0pgUji+xiOKYViwBpFgg5iZWHVytBEZZtgKC5zMKLJcywtPxPTnLGuxCUEouheDfg1WYEFQTCo81Vd7TrxCBBK7Cj48Wk9xKKObg4ZxeeXLOxCYSiFMxVnoZjgvSsnFQPdTV7T1kgRYZFZW0o4GpILnIiFRihj1bcsb0LTNA8G5YGSaqtEIqaWbdxMyS3t7A/o4Sm0UWbkxOvzRqS1TLraprXFWampm04DiURvwFyUByuusLgspu5fwAylmh11byRFBi2YVulTYfs64zrhbGwfUV18V0HpJQcu7C8LU8Mq62qcbkwKRchMKK3Nq1txyJDEDU8zKY5A9oOiNY6RRdr3P9RS1ygOc2YQVU184BkPbY2cZwg5jgTYy4hOJd3BlX5DK+2DkY9HWTLRZPezyRFchlo7w0rQBZY21WUPZhUvChNFKozIuSWQHKz5nt8K4qIgXJASvYdZDFa3mZxudQSCFnbd7Pd3JTvhdaVng7nL8d7U6FPc2LA7e2dn59/9e17cbG52JzP5z+ttVuAf3foHt2L9pFUAAAAAElFTkSuQmCC) scroll repeat;
@@ -61,20 +61,20 @@ div#jBreakField div.jBreakPaddle {
 		-webkit-border-top-right-radius:3px
 	}
 
-div#jBreakField div.jBreakBall {
+.jBreakBall {
 	position:absolute;
 	background:transparent url(../../images/ball4-88.png) scroll no-repeat;
 	width:8px;
 	height:8px
 }
 
-div#jBreakField div.jBreakBonus {
+.jBreakBonus {
 	position:absolute;
 	width:24px;
 	height:24px
 }
 
-div#jBreakField div.draggableWindow {
+#jBreakField .draggableWindow {
 	border:1px solid black;
 	right:16px;
 	top:16px;
@@ -87,7 +87,7 @@ div#jBreakField div.draggableWindow {
 	-webkit-border-radius:8px
 }
 
-	div#jBreakField div.draggableWindow p.draggableHandle {
+	#jBreakField .draggableWindow .draggableHandle {
 		cursor:move;
 		margin:0;
 		text-align:center;
@@ -96,7 +96,7 @@ div#jBreakField div.draggableWindow {
 		-webkit-border-radius:4px
 	}
 
-	div#jBreakField div.draggableWindow .draggableContent {
+	#jBreakField .draggableWindow .draggableContent {
 		margin:4px 0 0 0;
 		padding:2px;
 		color:black;
@@ -104,33 +104,33 @@ div#jBreakField div.draggableWindow {
 		-webkit-border-radius:4px
 	}
 
-div#jBreakBlocks {
+#jBreakBlocks {
 	position:absolute;
 	display:none
 }
 
-	div#jBreakBlocks .jBreakBlock {
-		width:40px;
-		height:16px;
-		position:absolute
-	}
+.jBreakBlock {
+	width:40px;
+	height:16px;
+	position:absolute
+}
 
-div#jBreakField div.fail {
+#jBreakField .fail {
 	position:absolute;
 	width:100%;
 	text-align:center;
-	color:#cc0000;
+	color:#c00;
 	font-size:32pt;
 	font-weight:bold
 }
 
-div#jBreakLives {
+#jBreakLives {
 	position:absolute;
 	bottom:0;
 	left:20px
 }
 
-div#jBreakLives div.jBreakLive {
+.jBreakLive {
 	width:32px;
 	height:8px;
 	background-image:url(../../images/paddles/pad32x8.png);
@@ -138,7 +138,7 @@ div#jBreakLives div.jBreakLive {
 	margin:4px 1px
 }
 
-div#jBreakLevelTitle {
+#jBreakLevelTitle {
 	position:absolute;
 	top:1px;
 	width:100%;
@@ -148,12 +148,12 @@ div#jBreakLevelTitle {
 	text-align:center
 }
 
-button.jBreakEditorBlockButton div {
+.jBreakEditorBlockButton div {
 	width:38px;
 	height:16px;
 	background-position:-40px 0
 }
 
-button.jBreakEditorBlockButton:hover div {
+.jBreakEditorBlockButton:hover div {
 	background-position:0 0
 }
