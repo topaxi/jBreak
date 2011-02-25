@@ -38,8 +38,8 @@ jBreak.Options = {
 				jBreak.volume(localStorage['soundVolume'] >>> 0);
 		}
 		else {
-			var cookieSoundVolume = readCookie('soundVolume');
-			if(cookieSoundVolume !== null)
+			var cookieSoundVolume = Cookie.get('soundVolume');
+			if(cookieSoundVolume !== undefined)
 				jBreak.volume(cookieSoundVolume >>> 0);
 		}
 
@@ -64,7 +64,7 @@ jBreak.Options = {
 				if(localStorage)
 					localStorage['soundVolume'] = ui.value;
 				else
-					createCookie('soundVolume', ui.value, 7);
+					Cookie.set('soundVolume', ui.value, 7);
 			}
 		});
 		$soundVolumeControl.append($soundVolumeSlider);
