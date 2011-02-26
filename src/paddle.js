@@ -252,6 +252,8 @@ jBreak.Paddle.prototype = {
 	remove:function(){
 		var jB = jBreak;
 
+		this.triggerTimer();
+
 		for(var i = jB.paddles.length;i--;)
 			if(jB.paddles[i]._position.relative === this._position.relative)
 				jB.paddles.remove(i);

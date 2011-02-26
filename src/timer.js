@@ -5,6 +5,7 @@ function addTimers(obj) {
 	obj.toggleTimers = toggleTimers;
 	obj.addTimer     = addTimer;
 	obj.deleteTimer  = deleteTimer;
+	obj.triggerTimer = triggerTimer;
 
 	function toggleTimers(on){
 		clearInterval(obj._timerIntervalID);
@@ -33,7 +34,15 @@ function addTimers(obj) {
 	}
 	
 	function triggerTimer(name){
-		timers[name].action.call(obj);
-		deleteTimer(name);
+		if(name){
+			timers[name].action.call(obj);
+			deleteTimer(name);
+		}
+		else {
+			for(var i in timers){
+				timers[i].action.call(obj);
+				deleteTimer(i);
+			}
+		}
 	}
 }
