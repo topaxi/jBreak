@@ -1,10 +1,10 @@
 function buttonBlockCallback(color){
 	return function(){
-		jBreak.editor._selectedTheme = color;
+		jBreak.Editor._selectedTheme = color;
 	};
 }
 
-jBreak.editor = {
+jBreak.Editor = {
 	start:function(){
 		for(var i = jBreak.balls.length;i--;)
 			jBreak.balls[i].remove();

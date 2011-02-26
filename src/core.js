@@ -272,7 +272,7 @@ var $document = $(document)
 			if(++this._levelID)
 				this.loadLevel(this._levelID);
 			else
-				this.editor.start();
+				this.Editor.start();
 		}
 	},
 	ballChecker:function(jBPaddle){
@@ -290,7 +290,7 @@ var $document = $(document)
 	},
 	gameOver:function(){
 		if(this._levelID < 0)
-			return this.editor.start();
+			return this.Editor.start();
 
 		var self = this;
 
