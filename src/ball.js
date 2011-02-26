@@ -303,6 +303,9 @@ jBreak.Ball.prototype = {
 			_animate:$.proxy(animate, ball)
 		});
 
+		addTimers(ball);
+		ball.addTimer($.extend(true, {}, this.getTimer()));
+
 		jBreak.balls.push(ball);
 		jBreak.$field.append(ball.$el);
 
