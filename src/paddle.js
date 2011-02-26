@@ -177,23 +177,25 @@ jBreak.Paddle.prototype = {
 		}
 	},
 	move:function(position){
-		var jB = jBreak,
-		    jBFieldSize = jB.fieldSize,
-		    relativePosition = this._position.relative;
+		var jB               = jBreak
+		  , size             = this._size;
+		  , jBFieldSize      = jB.fieldSize
+		  , relativePosition = this._position.relative
+		;
 
 		if(relativePosition === 'top' || relativePosition === 'bottom'){
 			var x = position;
-			x -= this._size.width / 2;
+			x -= size.width / 2;
 
 			if(x < 0)
 				x = 0;
-			else if(x > jBFieldSize.width - this._size.width)
-				x = jBFieldSize.width - this._size.width;
+			else if(x > jBFieldSize.width - size.width)
+				x = jBFieldSize.width - size.width;
 
 			for(var i = this._balls.length;i--;){
 				var ball = this._balls[i],
 				    ballX = x
-				          + this._size.width / 2
+				          + size.width / 2
 				          - ball.size().width / 2;
 
 				// @todo fix this "workaround" or maybe even kill the "bounce" effect
@@ -217,17 +219,17 @@ jBreak.Paddle.prototype = {
 		}
 		else {
 			var y = position;
-			y -= this._size.height / 2;
+			y -= size.height / 2;
 
 			if(y < 0)
 				y = 0;
-			else if(y > jBFieldSize.height - this._size.height)
-				y = jBFieldSize.height - this._size.height;
+			else if(y > jBFieldSize.height - size.height)
+				y = jBFieldSize.height - size.height;
 
 			for(var i = this._balls.length;i--;){
 				var ball  = this._balls[i],
 				    ballY = y
-				          + this._size.height / 2
+				          + size.height / 2
 				          - ball.size().height / 2;
 
 				var $parent = ball.$el.parent();
