@@ -178,7 +178,7 @@ jBreak.Paddle.prototype = {
 	},
 	move:function(position){
 		var jB               = jBreak
-		  , size             = this._size;
+		  , size             = this._size
 		  , jBFieldSize      = jB.fieldSize
 		  , relativePosition = this._position.relative
 		;
