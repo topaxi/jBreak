@@ -10,6 +10,7 @@ var $document = $(document)
 		this.paddles = [];
 		this.bonuses = [];
 		this.balls   = [];
+		this.bullets = [];
 
 		this.fieldSize = {
 			width:  this.$field.width(),
@@ -187,26 +188,31 @@ var $document = $(document)
 		$document.unbind('.jBreakPause');
 	},
 	togglePause:function(){
-		this._paused = !this._paused;
+		var paused = this._paused = !this._paused;
 
 		for(var i = this.balls.length;i--;)
-			this.balls[i].pause(this._paused);
+			this.balls[i].pause(paused);
+
+		for(var i = this.bullets.length;i--;)
+			this.bullets[i].pause(paused);
 
 		for(var i = this.bonuses.length;i--;)
-			this.bonuses[i].pause(this._paused);
+			this.bonuses[i].pause(paused);
 
-		this._trackMouseMovement(!this._paused);
+		for(var i = this.paddles.length;i--;)
+			this.paddles[i].toggleTimers(!paused);
 
-		if(this._paused){
+		this._trackMouseMovement(!paused);
+
+		if(paused){
 			this._destroyField();
 			this._unbindPause();
 
-			var $unpauseButton = $('<button>continue</button>'),
+			var $unpauseButton = $('<button>continue</button>').appendTo(this.$field),
 			    fieldOffset    = this.$field.offset(),
 			    buttonLeft     = this._mousePosition.pageX - fieldOffset.left - 32,
 			    buttonTop      = this._mousePosition.pageY - fieldOffset.top  - 12;
 
-			this.$field.append($unpauseButton);
 			$unpauseButton.css({
 				position:'absolute',
 				width:'64px',
@@ -337,6 +343,10 @@ var $document = $(document)
 			this.bonuses[i].remove();
 		this.bonuses = [];
 
+		for(var i = this.bullets.length;i--;)
+			this.bullets[i].remove();
+		this.bullets = [];
+
 		var level;
 		if(typeof levelID === 'object')
 			level = levelID;
@@ -406,6 +416,7 @@ var $document = $(document)
 	balls:     null,
 	bonuses:   null,
 	blocks:    null,
+	bullets:   null,
 
 	// private variables
 	_imageCache:    {},

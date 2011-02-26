@@ -231,6 +231,30 @@ jBreak.Bonus.prototype = {
 			action:function(){
 				this._ball.clone().start();
 			}
+		},{ // equip paddle with a gun
+			background:'yellow',
+			action:function(){
+				var paddle = this._paddle;
+
+				jBreak.$field.bind('click.jBreakBullet', function(){
+					var position = paddle.getPosition()
+					  , size     = paddle.size()
+					;
+
+					if(jBreak.bullets.length < 2)
+						new jBreak.Bullet(
+							position.x + size.width  / 2,
+							position.y + size.height / 2,
+							-180);
+				});
+
+				paddle.addTimer('bullet', {
+					action:function(){
+						jBreak.$field.unbind('.jBreakBullet');
+					},
+					timeout: 5
+				});
+			}
 		}
 	]
 };

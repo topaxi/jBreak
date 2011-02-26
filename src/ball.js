@@ -20,14 +20,14 @@ jBreak.Ball.prototype = {
 			y:null
 		};
 
-		this._timers = {};
 		this._animate = $.proxy(animate, this);
+		addTimers(this);
 	},
 	start:function(){
 		if(this._ready){
 			this.angle(this._angle);
 			this._timer = true;
-			this._toggleTimers(true);
+			this.toggleTimers(true);
 			this._animate();
 		}
 	},
@@ -39,27 +39,6 @@ jBreak.Ball.prototype = {
 		}
 
 		return this._ready;
-	},
-	_toggleTimers:function(on){
-		if(on){
-			var self = this;
-			this._timersID = setInterval(function(){
-				var timers = self._timers;
-
-				for(var i in timers){
-					var timer = timers[i];
-					timer.timeout -= .25;
-
-					if(timer.timeout <= 0){
-						timer.action.call(self);
-						self.deleteTimer(i);
-					}
-				}
-			}, 250);
-		}
-		else {
-			clearInterval(this._timersID);
-		}
 	},
 	angle:angle,
 	_hitCheck:function(x,y){
@@ -288,7 +267,7 @@ jBreak.Ball.prototype = {
 	},
 	remove:function(){
 		this._timer = false;
-		this._toggleTimers(false);
+		this.toggleTimers(false);
 		this.$el.remove();
 
 		// delete me!
@@ -300,11 +279,11 @@ jBreak.Ball.prototype = {
 	pause:function(pause){
 		if(pause){
 			this._timer = false;
-			this._toggleTimers(false);
+			this.toggleTimers(false);
 		}
 		else {
 			this._timer = true;
-			this._toggleTimers(true);
+			this.toggleTimers(true);
 			this._animate();
 		}
 	},
@@ -329,12 +308,6 @@ jBreak.Ball.prototype = {
 
 		return ball;
 	},
-	addTimer:function(name, timer){
-		this._timers[name] = timer;
-	},
-	deleteTimer:function(name){
-		delete this._timers[name];
-	},
 	size:function(size){
 		if(size === undefined)
 			return this._size;
@@ -351,8 +324,6 @@ jBreak.Ball.prototype = {
 	_size:     null,
 	_pierce:   false,
 	_ready:    false, // ready to start?
-	_timers:   null,
-	_timersID: null,
 
 	// public variables
 	$el:null

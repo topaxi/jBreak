@@ -47,6 +47,8 @@ jBreak.Paddle.prototype = {
 			top:this._position.y
 		});
 		//console.log('%s paddle created and moved to initial position -> %o', position, this);
+
+		addTimers(this);
 	},
 	grow:function(){
 		var size = this._size;
@@ -84,6 +86,8 @@ jBreak.Paddle.prototype = {
 		var self = this,
 		    relativePosition = this._position.relative,
 		    fieldOffset = jBreak.$field.offset();
+
+		this.toggleTimers(true);
 
 		$document./*jBreak.$field.*/mousemove(function(e){
 			var newPosition = (relativePosition === 'top'
