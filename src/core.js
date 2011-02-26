@@ -239,7 +239,7 @@ var $document = $(document)
 				this.paddles[i].start();
 
 			this._hideCursor(true);
-			this._bindPause();
+			this._unbindPause();
 		}
 	},
 	_trackMouseMovement:function(track){
