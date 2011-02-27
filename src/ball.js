@@ -232,16 +232,16 @@ jBreak.Ball.prototype = {
 
 		var check;
 
-		check = x < 0 && !paddle.left
-		     || x > jB.fieldSize.width - size.width && !paddle.right;
+		check = x <= 0 && !paddle.left
+		     || x >= jB.fieldSize.width - size.width - 1 && !paddle.right;
 		if(check){
 			jB.playSound('sound/pling1s.ogg');
 			speed.x *= -1;
 			this._interval -= (this._interval > 10 ? .075 : 0);
 		}
 
-		check = y < 0 && !paddle.top
-		     || y > jB.fieldSize.height - size.height && !paddle.bottom;
+		check = y <= 0 && !paddle.top
+		     || y >= jB.fieldSize.height - size.height - 1 && !paddle.bottom;
 		if(check){
 			jB.playSound('sound/pling1s.ogg');
 			speed.y *= -1;
@@ -251,10 +251,10 @@ jBreak.Ball.prototype = {
 	_animate:null,
 	move:move,
 	interval:function(i){
-		if(i !== undefined)
-			this._interval = (this._interval < 10 ? 10 : i);
-		else
+		if(i === undefined)
 			return this._interval;
+
+		this._interval = (this._interval < 10 ? 10 : i);
 	},
 	position:function(x,y){
 		if(x === undefined && y === undefined)
