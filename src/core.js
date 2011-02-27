@@ -171,6 +171,8 @@ var $document = $(document)
 
 				for(var i = self.paddles.length;i--;)
 					self.paddles[i].startBalls();
+
+				self.$field.unbind('.jBreakLaunchPaddleBalls');
 			});
 			self.$field.unbind('click.jBreakCreatePaddles');
 			//console.log('Paddles created');
@@ -180,15 +182,17 @@ var $document = $(document)
 		var self = this;
 		$document.bind('keydown.jBreakPause', function(e){
 			if(e.keyCode === 32 || e.keyCode === 80){
-				self.togglePause();
+				self.togglePause(true);
 			}
 		});
 	},
 	_unbindPause:function(){
 		$document.unbind('.jBreakPause');
 	},
-	togglePause:function(){
-		var paused = this._paused = !this._paused;
+	togglePause:function(paused){
+		this._destroyField();
+
+		paused = this._paused = paused || !this._paused;
 
 		for(var i = this.balls.length;i--;)
 			this.balls[i].pause(paused);
@@ -205,9 +209,6 @@ var $document = $(document)
 		this._trackMouseMovement(!paused);
 
 		if(paused){
-			this._destroyField();
-			this._unbindPause();
-
 			var $unpauseButton = $('<button>continue</button>').appendTo(this.$field),
 			    fieldOffset    = this.$field.offset(),
 			    buttonLeft     = this._mousePosition.pageX - fieldOffset.left - 32,
@@ -229,7 +230,7 @@ var $document = $(document)
 			$unpauseButton.click(function(){
 				$unpauseButton.remove();
 
-				self.togglePause();
+				self.togglePause(false);
 			}).focus(function(){ // prevent button from beeing triggered with <return>
 				$unpauseButton.blur();
 			});
@@ -239,7 +240,7 @@ var $document = $(document)
 				this.paddles[i].start();
 
 			this._hideCursor(true);
-			this._unbindPause();
+			this._bindPause();
 		}
 	},
 	_trackMouseMovement:function(track){
