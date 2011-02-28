@@ -8,6 +8,9 @@ body {
 	height:434px;
 	position:relative;
 	margin:auto;
+	user-select: none;
+	-moz-user-select: none;
+	-webkit-user-select: none;
 	box-shadow: 5px 5px 10px #888;
 	-moz-box-shadow: 5px 5px 10px #888;
 	-webkit-box-shadow: 5px 5px 10px #888;
