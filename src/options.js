@@ -96,7 +96,7 @@ var Options = jBreak.Options = {
 	levelOptions:function(){
 		var $levelOptions = $('<div id="tabs-2" style="text-align:center;height:220px"/>');
 		$levelOptions.append(button('Start level editor', function(){
-			jBreak.editor.start();
+			Editor.start();
 		}));
 
 		$levelOptions.append('<p>-under construction-</p>');
