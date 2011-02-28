@@ -67,15 +67,21 @@ var Editor = jBreak.Editor = {
 			.mousemove(function(e){
 				var x = ~~((e.pageX - fieldOffset.left) / 40)
 				  , y = ~~((e.pageY - fieldOffset.top)  / 16)
+
+				  , theme = self._selectedTheme
 				;
 
-				$ghostBlock.css({
-					left: x*40,
-					top:  y*16,
-					backgroundImage:
-						'url(images/blocks/'+self._selectedTheme+'.png)',
-					display: self._selectedTheme !== 'delete' ? 'block' : 'none'
-				});
+				if(theme === 'delete'){
+					$ghostBlock.css('display', 'none');
+				}
+				else {
+					$ghostBlock.css({
+						left: x*40,
+						top:  y*16,
+						backgroundImage: 'url(images/blocks/'+ theme +'.png)',
+						display: 'block'
+					});
+				}
 			});
 	},
 	bindAddBlock:function(){
