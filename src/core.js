@@ -1,5 +1,6 @@
 var $jBreak
   , $jBreakField
+  , document   = window.document
   , $document  = $(document)
   , setTimeout = window.setTimeout
   , jBreak     = {
