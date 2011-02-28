@@ -1,6 +1,6 @@
 function buttonBlockCallback(color){
 	return function(){
-		jBreak.Editor._selectedTheme = color;
+		Editor._selectedTheme = color;
 	};
 }
 
@@ -12,7 +12,7 @@ var Editor = jBreak.Editor = {
 
 		$jBreak.empty().unbind().css('cursor', 'default');
 
-		$jBreakFfield = $('<div id="jBreakField"/>');
+		$jBreakField = $('<div id="jBreakField"/>');
 		$jBreak.append($jBreakField);
 		jBreak._setLevelTitle('jBreak Level Editor');
 
