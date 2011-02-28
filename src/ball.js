@@ -15,10 +15,6 @@ Ball.prototype = {
 		};
 
 		this._position = position;
-		this._speed = {
-			x:null,
-			y:null
-		};
 
 		this._animate = $.proxy(animate, this);
 		addTimers(this);
@@ -321,15 +317,9 @@ Ball.prototype = {
 	},
 
 	// private variables
-	_speed:    null,
 	_angle:    -90,
-	_position: null,
 	_timer:    null,
 	_interval: 30,
-	_size:     null,
 	_pierce:   false,
-	_ready:    false, // ready to start?
-
-	// public variables
-	$el:null
+	_ready:    false  // ready to start?
 };

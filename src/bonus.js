@@ -8,7 +8,7 @@ Bonus.prototype = {
 		  , background
 		  , powerup
 		  , jB  = jBreak
-		  , $el = $('<div class="jBreakBonus"/>')
+		  , $el = this.$el = $('<div class="jBreakBonus"/>')
 		;
 
 		this._animate = $.proxy(animate, this);
@@ -33,10 +33,6 @@ Bonus.prototype = {
 		this._ball = jBBall;
 		
 		this._position = {x:x,y:y};
-		this._speed = {
-			x:null,
-			y:null
-		};
 
 		$el.css({
 			left: x,
@@ -44,7 +40,6 @@ Bonus.prototype = {
 			background: powerup.background
 		});
 
-		this.$el = $el;
 		this.angle(angle);
 		this._timer = true;
 		this._animate();
@@ -142,16 +137,10 @@ Bonus.prototype = {
 			if(jBBonuses[i] === this)
 				return jBBonuses.remove(i);
 	},
-	$el:        null,
-	_direction: null,
-	_position:  null,
-	_speed:     null,
 	_timer:     false,
 	_interval:  30,
 	_angle:     180,
-	_ball:      null, // the ball who triggered this bonus
 	_paddle:    null, // the paddle which caught this bonus
-	_action:    null, // will hold the function to be executed
 	_bad:[
 		{ // shrink paddle
 			background:'url(images/bonuses/shrink.png)',

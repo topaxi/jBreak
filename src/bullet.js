@@ -76,7 +76,6 @@ Bullet.prototype = {
 	},
 	angle:     angle,
 	move:      move,
-	pause:     jBreak.Bonus.prototype.pause,
-	_animate:  null, // bound on runtime
+	pause:     Bonus.prototype.pause,
 	_interval: 15
 };

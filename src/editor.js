@@ -263,6 +263,5 @@ var Editor = jBreak.Editor = {
 		jBreak.$blocks.fadeIn(600);
 	},
 	_selectedTheme: 'delete',
-	_level:         null,
-	$options:       null
+	_level:         null
 };

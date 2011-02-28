@@ -102,6 +102,5 @@ var Options = jBreak.Options = {
 		$levelOptions.append('<p>-under construction-</p>');
 
 		return $levelOptions;
-	},
-	$options:null
+	}
 };

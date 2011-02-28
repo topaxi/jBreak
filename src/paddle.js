@@ -284,11 +284,5 @@ Paddle.prototype = {
 	},
 
 	// private variables
-	_size:     null,
-	_position: null,
-	_balls:    null,
-	_paused:   false,
-
-	// public variables
-	$el:null
+	_paused:   false
 };
