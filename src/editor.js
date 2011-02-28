@@ -4,7 +4,7 @@ function buttonBlockCallback(color){
 	};
 }
 
-jBreak.Editor = {
+var Editor = jBreak.Editor = {
 	start:function(){
 		for(var i = jBreak.balls.length;i--;)
 			jBreak.balls[i].remove();
@@ -12,8 +12,8 @@ jBreak.Editor = {
 
 		$jBreak.empty().unbind().css('cursor', 'default');
 
-		jBreak.$field = $('<div id="jBreakField"/>');
-		$jBreak.append(jBreak.$field);
+		$jBreakFfield = $('<div id="jBreakField"/>');
+		$jBreak.append($jBreakField);
 		jBreak._setLevelTitle('jBreak Level Editor');
 
 		//if(typeof JSON !== 'undefined' && typeof sessionStorage !== 'undefined')
@@ -43,15 +43,15 @@ jBreak.Editor = {
 	},
 	_enableGhostBlock:function(enabled){
 		if(!enabled){
-			jBreak.$field.unbind('mousemove');
+			$jBreakField.unbind('mousemove');
 			$('#jBreakGhostBlock', $jBreak).remove();
 
 			return;
 		}
 
-		var self = this,
-		    fieldOffset = jBreak.$field.offset(),
-		    $ghostBlock = $('<div/>', {
+		var self        = this
+		  , fieldOffset = $jBreakField.offset()
+		  , $ghostBlock = $('<div/>', {
 		    	id:'jBreakGhostBlock',
 		    	css:{
 		    		width:40,
@@ -62,36 +62,38 @@ jBreak.Editor = {
 		    	}
 		    });
 
-		jBreak.$field
+		$jBreakField
 			.append($ghostBlock)
 			.mousemove(function(e){
-				var x = ~~((e.pageX - fieldOffset.left) / 40),
-				    y = ~~((e.pageY - fieldOffset.top) / 16);
+				var x = ~~((e.pageX - fieldOffset.left) / 40)
+				  , y = ~~((e.pageY - fieldOffset.top)  / 16)
+				;
 
 				$ghostBlock.css({
-					left:x*40,
-					top:y*16,
+					left: x*40,
+					top:  y*16,
 					backgroundImage:
 						'url(images/blocks/'+self._selectedTheme+'.png)',
-					display:self._selectedTheme !== 'delete' ? 'block' : 'none'
+					display: self._selectedTheme !== 'delete' ? 'block' : 'none'
 				});
 			});
 	},
 	bindAddBlock:function(){
-		var fieldOffset = jBreak.$field.offset(),
-		    self = this;
+		var fieldOffset = $jBreakField.offset()
+		  , self        = this
+		;
 
-		jBreak.$field.click(function(e){
-			var x = ~~((e.pageX - fieldOffset.left) / 40),
-			    y = ~~((e.pageY - fieldOffset.top) / 16),
+		$jBreakField.click(function(e){
+			var x = ~~((e.pageX - fieldOffset.left) / 40)
+			  , y = ~~((e.pageY - fieldOffset.top)  / 16)
 
-			    blocks = self._level.blocks,
-			    blockExists = blocks[y]
-			               && blocks[y][x];
+			  , blocks = self._level.blocks
+			  , block  = blocks[y]
+			          && blocks[y][x]
+			;
 
-			if(blockExists){
-				var block = blocks[y][x],
-				    $block = $('.jBreakBlock.x'+x+'.y'+y, $jBreak);
+			if(block){
+				var $block = $('.jBreakBlock.x'+x+'.y'+y, $jBreakField);
 
 				if(block.theme === self._selectedTheme){
 					block.value++;
@@ -112,8 +114,8 @@ jBreak.Editor = {
 						'url(images/blocks/'+block.theme+'.png)');
 				}
 			}
-			else if(self._selectedTheme !== 'delete') {
-				$('.jBreakBlock.x'+x+'.y'+y, $jBreak).remove();
+			else if(self._selectedTheme !== 'delete'){
+				$('.jBreakBlock.x'+x+'.y'+y, $jBreakField).remove();
 
 				var $block = $('<div/>', {
 					css:{
@@ -198,7 +200,7 @@ jBreak.Editor = {
 					$optionWindow.fadeOut(600, function(){
 						$optionWindow.remove();
 					});
-					jBreak.$field.unbind('click');
+					$jBreakField.unbind('click');
 					jBreak.loadLevel($.extend(true, {}, self._level));
 					jBreak._levelID = -1;
 
@@ -209,7 +211,7 @@ jBreak.Editor = {
 				})
 			));
 
-		jBreak.$field.append($optionWindow);
+		$jBreakField.append($optionWindow);
 
 		$optionWindow.click(function(e){
 			e.stopPropagation();
@@ -217,9 +219,12 @@ jBreak.Editor = {
 		$optionWindow.fadeIn(600);
 	},
 	_drawBlocks:function(){
+		var blocks = this._level.blocks;
+
 		jBreak.$blocks.hide().empty();
-		for(var y = this._level.blocks.length;y--;){
-			var horizontalBlocks = this._level.blocks[y];
+
+		for(var y = blocks.length;y--;){
+			var horizontalBlocks = blocks[y];
 			for(var x = horizontalBlocks.length;x--;){
 				var block = horizontalBlocks[x];
 
@@ -248,7 +253,7 @@ jBreak.Editor = {
 			}
 		}
 
-		jBreak.$field.append(jBreak.$blocks);
+		$jBreakField.append(jBreak.$blocks);
 		jBreak.$blocks.fadeIn(600);
 	},
 	_selectedTheme: 'delete',

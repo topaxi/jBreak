@@ -1,7 +1,7 @@
-jBreak.Options = {
+var Options = jBreak.Options = {
 	showOptions:function(){
-		var $optionsTabs = $('<div/>'),
-		    $options = draggableWindow('Settings',
+		var $optionsTabs = $('<div/>')
+		  , $options     = draggableWindow('Settings',
 		    	$optionsTabs).css({width:'216px', position:'absolute'});
 
 		$optionsTabs.append('<ul style="font-size:12px"><li><a href="#tabs-1">Sound</a></li><li><a href="#tabs-2">Level</a></li><li><a href="#tabs-3">About</a></li></ul>');
@@ -21,7 +21,7 @@ jBreak.Options = {
 				.append($startButton)
 		);
 
-		jBreak.$field.append($options.append($optionsTabs));
+		$jBreakField.append($options.append($optionsTabs));
 		$optionsTabs.tabs();
 
 
@@ -44,8 +44,9 @@ jBreak.Options = {
 		}
 
 
-		var $soundVolumeControl = $('<div/>'),
-		    $soundVolumeSlider = $('<div/>');
+		var $soundVolumeControl = $('<div/>')
+		  , $soundVolumeSlider  = $('<div/>')
+		;
 
 		$soundVolumeControl.css('font-size','11px');
 		$soundVolumeSlider.css({width:'170px',marginBottom:'8px'});

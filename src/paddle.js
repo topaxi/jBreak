@@ -1,52 +1,50 @@
-jBreak.Paddle = function(position){
+var Paddle = jBreak.Paddle = function(position){
 	this._init(position);
 };
 
-jBreak.Paddle.prototype = {
-	_init:function(position){
-		this.$el = $('<div class="jBreakPaddle"/>');
-
-		this._position = {
-			x:null,
-			y:null,
-			relative:position
-		};
+Paddle.prototype = {
+	_init:function(relativePosition){
+		var $el      = this.$el = $('<div class="jBreakPaddle"/>')
+		  , position = this._position = {
+		    	relative: relativePosition
+		    }
+		  , width
+		  , height
+		;
 
 		this._balls = [];
 
-		this.$el.addClass(position);
-		jBreak.$field.append(this.$el);
+		$jBreakField.append($el.addClass(relativePosition));
 
 		this._size = {
-			width:this.$el.width(),
-			height:this.$el.height()
+			width:  width  = $el.width(),
+			height: height = $el.height()
 		};
 
-		switch(position){
+		switch(relativePosition){
 			default:
 			case 'bottom':
-				this._position.y = jBreak.fieldSize.height - this._size.height;
-				this._position.x = jBreak.fieldSize.width / 2 - this._size.width / 2;
+				position.y = jBreak.fieldSize.height - height;
+				position.x = jBreak.fieldSize.width / 2 - width / 2;
 				break;
 			case 'top':
-				this._position.y = 0;
-				this._position.x = jBreak.fieldSize.width / 2 - this._size.width / 2;
+				position.y = 0;
+				position.x = jBreak.fieldSize.width / 2 - width / 2;
 				break;
 			case 'left':
-				this._position.y = jBreak.fieldSize.height / 2 - this._size.width / 2;
-				this._position.x = 0;
+				position.y = jBreak.fieldSize.height / 2 - width / 2;
+				position.x = 0;
 				break;
 			case 'right':
-				this._position.y = jBreak.fieldSize.height / 2 - this._size.height / 2;
-				this._position.x = jBreak.fieldSize.width - this._size.width;
+				position.y = jBreak.fieldSize.height / 2 - height / 2;
+				position.x = jBreak.fieldSize.width - width;
 				break;
 		}
 
-		this.$el.css({
-			left:this._position.x,
-			top:this._position.y
+		$el.css({
+			left: position.x,
+			top:  position.y
 		});
-		//console.log('%s paddle created and moved to initial position -> %o', position, this);
 
 		addTimers(this);
 	},
@@ -76,30 +74,35 @@ jBreak.Paddle.prototype = {
 			: height = size);
 
 		this.$el.css({
-			width:width+'px',
-			height:height+'px',
-			backgroundImage:'url(images/paddles/pad'+width+'x'+height+'.png)'
+			width:  width,
+			height: height,
+			backgroundImage: 'url(images/paddles/pad'+ width +'x'+ height +'.png)'
 		});
+
 		this._size = {width:width, height:height};
 	},
 	start:function(){
-		var self = this,
-		    relativePosition = this._position.relative,
-		    fieldOffset = jBreak.$field.offset();
+		var self             = this
+		  , fieldOffset      = $jBreakField.offset()
+		  , topOffset        = fieldOffset.top
+		  , leftOffset       = fieldOffset.left
+		  , relativePosition = this._position.relative
+		;
 
 		this.toggleTimers(true);
 
-		$document./*jBreak.$field.*/mousemove(function(e){
-			var newPosition = (relativePosition === 'top'
+		$document.mousemove(function(e){
+			var newPosition = relativePosition === 'top'
 			               ||  relativePosition === 'bottom'
-			                   ? e.pageX - fieldOffset.left
-			                   : e.pageY - fieldOffset.top);
+			                   ? e.pageX - leftOffset
+			                   : e.pageY - topOffset
+			;
 
 			self.move(newPosition);
 		});
 	},
 	connectBall:function(jBBall){
-		var x,y,effectDirection,ballSize = jBBall.size();
+		var x, y, effectDirection, ballSize = jBBall.size();
 
 		switch(this._position.relative){
 			case 'top':
@@ -193,13 +196,14 @@ jBreak.Paddle.prototype = {
 				x = jBFieldSize.width - size.width;
 
 			for(var i = this._balls.length;i--;){
-				var ball = this._balls[i],
-				    ballX = x
+				var ball  = this._balls[i]
+				  , ballX = x
 				          + size.width / 2
-				          - ball.size().width / 2;
+				          - ball.size().width / 2
 
-				// @todo fix this "workaround" or maybe even kill the "bounce" effect
-				var $parent = ball.$el.parent();
+				  , $parent = ball.$el.parent();
+				;
+
 				if($parent.hasClass('ui-effects-wrapper')){
 					$parent.css({
 						left:ballX,
@@ -227,12 +231,14 @@ jBreak.Paddle.prototype = {
 				y = jBFieldSize.height - size.height;
 
 			for(var i = this._balls.length;i--;){
-				var ball  = this._balls[i],
-				    ballY = y
+				var ball  = this._balls[i]
+				  , ballY = y
 				          + size.height / 2
-				          - ball.size().height / 2;
+				          - ball.size().height / 2
 
-				var $parent = ball.$el.parent();
+				  , $parent = ball.$el.parent();
+				;
+
 				if($parent.hasClass('ui-effects-wrapper')){
 					$parent.css({
 						left:ball.position().x,

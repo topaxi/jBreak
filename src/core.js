@@ -1,11 +1,13 @@
-var $document = $(document)
-  , $jBreak
-  , jBreak    = {
+var $jBreak
+  , $jBreakField
+  , $document  = $(document)
+  , setTimeout = window.setTimeout
+  , jBreak     = {
 	start:function(){
 		$jBreak = $('#jBreak').empty();
 
-		this.$field = $('<div id="jBreakField"/>');
-		$jBreak.append(this.$field);
+		$jBreakField = $('<div id="jBreakField"/>');
+		$jBreak.append($jBreakField);
 
 		this.paddles = [];
 		this.bonuses = [];
@@ -13,8 +15,8 @@ var $document = $(document)
 		this.bullets = [];
 
 		this.fieldSize = {
-			width:  this.$field.width(),
-			height: this.$field.height()
+			width:  $jBreakField.width(),
+			height: $jBreakField.height()
 		};
 
 		this.lives(this._lives);
@@ -24,69 +26,71 @@ var $document = $(document)
 		this._trackMouseMovement(true);
 		this.$blocks = $('<div id="jBreakBlocks"/>');
 
-		this.Options.showOptions();
+		Options.showOptions();
 
 		if(window.location.hash == '#debug')
 			console.log(window['jBreak'] = this);
 	},
 	_cacheImages:function(){
-		var cache = this._imageCache;
+		var cache        = this._imageCache
+		  , paddleImages = [
+		    	'pad16x8',
+		    	'pad32x8',
+		    	'pad48x8',
+		    	'pad64x8',
+		    	'pad80x8',
+		    	'pad96x8',
+		    	'pad112x8',
+		    	'pad128x8'
+		    ]
+		  , ballImages = [
+		    	'ball1-88',
+		    	'ball4-88'
+		    ]
+		  , bonusImages = [
+		    	'shrink',
+		    	'15+speed',
+		    	'faster',
+		    	'grow',
+		    	'slower',
+		    	'life',
+		    	'powerball',
+		    	'multiball'
+		    ]
+		  , blockImages = [
+		    	'Blue',
+		    	'Blue_purpled',
+		    	'Gray',
+		    	'Green_greener',
+		    	'Green_Yellowish_Light',
+		    	'Orange',
+		    	'Purple_bluish',
+		    	'Purple_gay',
+		    	'Purple_haze',
+		    	'Red_fire',
+		    	'Red_Pink',
+		    	'Turkoise_2',
+		    	'Turkoise_3',
+		    	'Turkoise_greenisch',
+		    	'Yellow'
+		    ]
+		  , i
+		 ;
 
 		cache.paddle = [];
-		var paddleImages = [
-			'pad16x8',
-			'pad32x8',
-			'pad48x8',
-			'pad64x8',
-			'pad80x8',
-			'pad96x8',
-			'pad112x8',
-			'pad128x8'
-		];
-		for(var i = paddleImages.length;i--;)
+		for(i = paddleImages.length;i--;)
 			cache.paddle[i] = $('<img src="images/paddles/'+paddleImages[i]+'.png"/>');
 
 		cache.ball = [];
-		var ballImages = [
-			'ball1-88',
-			'ball4-88'
-		];
-		for(var i = ballImages.length;i--;)
+		for(i = ballImages.length;i--;)
 			cache.ball[i] = $('<img src="images/'+ballImages[i]+'.png"/>');
 
 		cache.bonus = [];
-		var bonusImages = [
-			'shrink',
-			'15+speed',
-			'faster',
-			'grow',
-			'slower',
-			'life',
-			'powerball',
-			'multiball'
-		];
-		for(var i = bonusImages.length;i--;)
+		for(i = bonusImages.length;i--;)
 			cache.bonus[i] = $('<img src="images/bonuses/'+bonusImages[i]+'.png"/>');
 
 		cache.block = [];
-		var blockImages = [
-			'Blue',
-			'Blue_purpled',
-			'Gray',
-			'Green_greener',
-			'Green_Yellowish_Light',
-			'Orange',
-			'Purple_bluish',
-			'Purple_gay',
-			'Purple_haze',
-			'Red_fire',
-			'Red_Pink',
-			'Turkoise_2',
-			'Turkoise_3',
-			'Turkoise_greenisch',
-			'Yellow'
-		];
-		for(var i = blockImages.length;i--;)
+		for(i = blockImages.length;i--;)
 			cache.block[i] = $('<img src="images/blocks/'+blockImages[i]+'.png"/>');
 	},
 	_setLevelTitle:function(title){
@@ -136,16 +140,18 @@ var $document = $(document)
 		var self = this;
 
 		for(var i = paddles.length;i--;){
-			var paddle = paddles[i],
-			    jBPaddle = new this.Paddle(paddle.position);
+			var paddle   = paddles[i]
+			  , jBPaddle = new Paddle(paddle.position)
+			;
+
 			this.paddles.push(jBPaddle);
 
 			if(paddle.ball)
-				jBPaddle.connectBall(new this.Ball());
+				jBPaddle.connectBall(new Ball());
 		}
 
-		this.$field.unbind('click.jBreakLaunchPaddleBalls');
-		this.$field.bind('click.jBreakCreatePaddles', function(e){
+		$jBreakField.unbind('click.jBreakLaunchPaddleBalls');
+		$jBreakField.bind('click.jBreakCreatePaddles', function(e){
 			e.stopPropagation(); // do not bubble
 			self._hideCursor(true);
 
@@ -153,8 +159,9 @@ var $document = $(document)
 				var jBPaddle = self.paddles[i];
 				jBPaddle.start();
 
-				var jBPaddlePosition = jBPaddle.getPosition(),
-				    fieldOffset = self.$field.offset();
+				var jBPaddlePosition = jBPaddle.getPosition()
+				  , fieldOffset      = $jBreakField.offset()
+				;
 
 				var position = (
 					jBPaddlePosition.relative === 'top' ||
@@ -165,16 +172,16 @@ var $document = $(document)
 				jBPaddle.move(position);
 			}
 
-			self.$field.bind('click.jBreakLaunchPaddleBalls', function(){
+			$jBreakField.bind('click.jBreakLaunchPaddleBalls', function(){
 				self._trackMouseMovement(true);
 				self._bindPause();
 
 				for(var i = self.paddles.length;i--;)
 					self.paddles[i].startBalls();
 
-				self.$field.unbind('.jBreakLaunchPaddleBalls');
+				$jBreakField.unbind('.jBreakLaunchPaddleBalls');
 			});
-			self.$field.unbind('click.jBreakCreatePaddles');
+			$jBreakField.unbind('click.jBreakCreatePaddles');
 			//console.log('Paddles created');
 		});
 	},
@@ -209,8 +216,8 @@ var $document = $(document)
 		this._trackMouseMovement(!paused);
 
 		if(paused){
-			var $unpauseButton = $('<button>continue</button>').appendTo(this.$field),
-			    fieldOffset    = this.$field.offset(),
+			var $unpauseButton = $('<button>continue</button>').appendTo($jBreakField),
+			    fieldOffset    = $jBreakField.offset(),
 			    buttonLeft     = this._mousePosition.pageX - fieldOffset.left - 32,
 			    buttonTop      = this._mousePosition.pageY - fieldOffset.top  - 12;
 
@@ -244,7 +251,7 @@ var $document = $(document)
 		}
 	},
 	_trackMouseMovement:function(track){
-		this.$field.unbind('mousemove');
+		$jBreakField.unbind('mousemove');
 
 		if(track){
 			var self = this;
@@ -263,8 +270,9 @@ var $document = $(document)
 		this._hideCursor(false);
 	},
 	blockChecker:function(){
-		var blockVal = 0,
-		    blocks   = this.blocks;
+		var blockVal = 0
+		  , blocks   = this.blocks
+		;
 
 		for(var y = blocks.length;y--;){
 			var blocksY = blocks[y]; 
@@ -279,13 +287,13 @@ var $document = $(document)
 			if(++this._levelID)
 				this.loadLevel(this._levelID);
 			else
-				this.Editor.start();
+				Editor.start();
 		}
 	},
 	ballChecker:function(jBPaddle){
 		if(this.balls.length === 0){
 			if(this._lives > 0){
-				jBPaddle.connectBall(new this.Ball());
+				jBPaddle.connectBall(new Ball());
 				jBPaddle.size(64); // reset size
 
 				jBPaddle.$el.stop(true, true) // stop any effects on the paddle
@@ -297,12 +305,12 @@ var $document = $(document)
 	},
 	gameOver:function(){
 		if(this._levelID < 0)
-			return this.Editor.start();
+			return Editor.start();
 
 		var self = this;
 
 		this._destroyField();
-		this.$field.find('.jBreakPaddle').effect('puff', {}, 600);
+		$jBreakField.find('.jBreakPaddle').effect('puff', {}, 600);
 		this.$blocks.find('div').effect('drop', {direction:'down'}, 600);
 
 		setTimeout(function(){
@@ -314,11 +322,11 @@ var $document = $(document)
 
 			var $fail = $('<div class="fail" style="display:none">FAIL!</div>');
 			self._hideCursor(false);
-			self.$field.append($fail);
+			$jBreakField.append($fail);
 			var failOffset = $fail.offset();
 
 			$fail.css('top',
-				self.$field.height()/2 - $fail.height()/2 + 'px'
+				$jBreakField.height()/2 - $fail.height()/2 + 'px'
 			).fadeIn(600, function(){
 				$fail.effect('pulsate', {times:2,mode:'hide'}, 2000, function(){
 					self._levelID = 0;
@@ -348,7 +356,7 @@ var $document = $(document)
 			this.bullets[i].remove();
 		this.bullets = [];
 
-		var level;
+		var level, self = this;
 		if(typeof levelID === 'object')
 			level = levelID;
 		else
@@ -365,7 +373,6 @@ var $document = $(document)
 				}
 			});
 
-		var self = this;
 		setTimeout(function(){
 			self.blocks = level.blocks;
 			self._drawBlocks();
@@ -374,9 +381,11 @@ var $document = $(document)
 		}, 250);
 	},
 	_drawBlocks:function(){
+		var blocks = this.blocks;
+
 		this.$blocks.hide().empty();
-		for(var y = this.blocks.length;y--;){
-			var horizontalBlocks = this.blocks[y];
+		for(var y = blocks.length;y--;){
+			var horizontalBlocks = blocks[y];
 			for(var x = horizontalBlocks.length;x--;){
 				var block = horizontalBlocks[x];
 
@@ -405,12 +414,11 @@ var $document = $(document)
 			}
 		}
 
-		this.$field.append(this.$blocks);
+		$jBreakField.append(this.$blocks);
 		this.$blocks.fadeIn(600);
 	},
 
 	// public variables
-	$field:    null,
 	$blocks:   null,
 	fieldSize: null,
 	paddles:   null,

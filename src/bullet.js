@@ -1,22 +1,19 @@
-jBreak.Bullet = function(x,y,angle){
+var Bullet = jBreak.Bullet = function(x,y,angle){
 	this._init(x,y,angle);
 }
 
-jBreak.Bullet.prototype = {
+Bullet.prototype = {
 	_init:function(x,y,angle){
-		var jB  = jBreak,
-		    $el = $('<div class="jBreakBullet"/>');
+		var jB  = jBreak
+		  , $el = $('<div class="jBreakBullet"/>')
+		;
 
 		this._animate = $.proxy(animate, this);
 
-		jB.$field.append($el);
+		$jBreakField.append($el);
 		jB.bullets.push(this);
 
 		this._position = {x:x,y:y};
-		this._speed = {
-			x:null,
-			y:null
-		};
 		this._size = {width: 3, height: 5};
 
 		$el.css({
@@ -44,12 +41,13 @@ jBreak.Bullet.prototype = {
 		  , blockX  = ~~(bulletX / 40)
 		  , blockY  = ~~(bulletY / 16)
 
-		  , block   = jB.blocks[blockY]
-		           && jB.blocks[blockY][blockX]
+		  , blocks  = jB.blocks
+		  , block   = blocks[blockY]
+		           && blocks[blockY][blockX]
 		;
 
 		if(block){
-			var $block = $('.x'+ blockX +'.y'+ blockY, jB.$field)
+			var $block    = $('.x'+ blockX +'.y'+ blockY, $jBreakField)
 			  , direction =  speed.y === -1 ? 'up'
 			              :  speed.x === -1 ? 'left'
 			              :  speed.x ===  1 ? 'right'
@@ -61,7 +59,7 @@ jBreak.Bullet.prototype = {
 				$block.remove();
 			});
 
-			delete jB.blocks[blockY][blockX];
+			delete blocks[blockY][blockX];
 			jB.blockChecker();
 
 			this.remove();

@@ -1,17 +1,17 @@
-jBreak.Ball = function(position){
+var Ball = jBreak.Ball = function(position){
 	this._init(position);
 };
 
-jBreak.Ball.prototype = {
+Ball.prototype = {
 	_init:function(position){
 		jBreak.balls.push(this);
 		//console.log('Create ball %d -> %o', ballID, this);
-		this.$el = $('<div class="jBreakBall"/>');
-		jBreak.$field.append(this.$el);
+		var $el = this.$el = $('<div class="jBreakBall"/>');
+		$jBreakField.append($el);
 
 		this._size = {
-			width: this.$el.width(),
-			height:this.$el.height()
+			width:  $el.width(),
+			height: $el.height()
 		};
 
 		this._position = position;
@@ -42,15 +42,15 @@ jBreak.Ball.prototype = {
 	},
 	angle:angle,
 	_hitCheck:function(x,y){
-		var jB = jBreak, // store jBreak in this scope to access it faster!
-		    paddle = {
-		    	top:false,
-		    	right:false,
-		    	bottom:false,
-		    	left:false
-		    };
+		var jB = jBreak
+		  , paddle = {
+		    	top:    false,
+		    	right:  false,
+		    	bottom: false,
+		    	left:   false
+		    }
 
-		var speed  = this._speed
+		  , speed  = this._speed
 		  , size   = this._size
 		  , ballY  = speed.y > 0 ? y + size.height : y
 		  , ballX  = speed.x > 0 ? x + size.width  : x
@@ -58,8 +58,9 @@ jBreak.Ball.prototype = {
 		  , blockX = ~~(ballX / 40)
 		  , blockY = ~~(ballY / 16)
 
-		  , block  = jB.blocks[blockY]
-		          && jB.blocks[blockY][blockX]
+		  , blocks = jB.blocks
+		  , block  = blocks[blockY]
+		          && blocks[blockY][blockX]
 		;
 
 		if(block){
@@ -73,9 +74,10 @@ jBreak.Ball.prototype = {
 					ballY = ~~ballY;
 
 					var hHit = (ballX % 40 <= 39 && ballX % 40 >= 36 && speed.x < 0)
-					        || (ballX % 40 <=  4 && speed.x > 0),
-					    vHit = (ballY % 16 <= 15 && ballY % 16 >= 12 && speed.y < 0)
-					        || (ballY % 16 <=  4 && speed.y > 0);
+					        || (ballX % 40 <=  4 && speed.x > 0)
+					  , vHit = (ballY % 16 <= 15 && ballY % 16 >= 12 && speed.y < 0)
+					        || (ballY % 16 <=  4 && speed.y > 0)
+					;
 
 					if(vHit && hHit) // don't mirror both speeds, mirror the slower one
 						(speed.y > speed.x
@@ -90,17 +92,17 @@ jBreak.Ball.prototype = {
 				}
 
 				//console.log('I hit %d,%d', blockX,blockY);
-				var $block = $('.x'+ blockX +'.y'+ blockY, jB.$field),
-				    direction =
-				    	(vHit && speed.y > 0 ? 'up' :
-				    		(hHit && speed.x > 0 ? 'left' :
-				    			(hHit && speed.x < 0 ? 'right' :
-				    				/*vHit && speed.y < 0*/ 'down')));
+				var $block    = $('.x'+ blockX +'.y'+ blockY, $jBreakField)
+				  , direction =  vHit && speed.y > 0 ? 'up'
+				              :  hHit && speed.x > 0 ? 'left'
+				              :  hHit && speed.x < 0 ? 'right'
+				              :/*vHit && speed.y < 0*/ 'down'
+				  , rand = Math.random();
+				;
 
-				var rand = Math.random();
 				if(block.value > 1 && !this._pierce){
 					if(rand < .04)
-						new jB.Bonus(this,x,y,180); // spawn bonus
+						new Bonus(this,x,y,180); // spawn bonus
 
 					$block.css({
 						opacity:1-1/block.value,
@@ -114,14 +116,14 @@ jBreak.Ball.prototype = {
 				}
 				else {
 					if(rand < .08)
-						new jB.Bonus(this,x,y,180); // spawn bonus
+						new Bonus(this,x,y,180); // spawn bonus
 
 					$block.css('background-position', '0 '+block.sprite+'px');
 					$block.effect('drop', {direction:direction}, 200, function(){
 						$block.remove();
 					});
 
-					delete jB.blocks[blockY][blockX];
+					delete blocks[blockY][blockX];
 					jB.blockChecker();
 				}
 			}
@@ -261,8 +263,8 @@ jBreak.Ball.prototype = {
 			return this._position;
 
 		this._position = {
-			x:x !== null ? x : this._position.x,
-			y:y !== null ? y : this._position.y
+			x: x !== null ? x : this._position.x,
+			y: y !== null ? y : this._position.y
 		};
 	},
 	remove:function(){
@@ -307,7 +309,7 @@ jBreak.Ball.prototype = {
 		ball.addTimer($.extend(true, {}, this.getTimer()));
 
 		jBreak.balls.push(ball);
-		jBreak.$field.append(ball.$el);
+		$jBreakField.append(ball.$el);
 
 		return ball;
 	},

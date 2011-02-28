@@ -1,14 +1,15 @@
-jBreak.Bonus = function(jBBall,x,y,angle){
+var Bonus = jBreak.Bonus = function(jBBall,x,y,angle){
 	this._init(jBBall,x,y,angle);
 };
 
-jBreak.Bonus.prototype = {
+Bonus.prototype = {
 	_init:function(jBBall,x,y,angle){
-		var random,
-		    background,
-		    powerup,
-		    jB = jBreak,
-		    $el = $('<div class="jBreakBonus"/>');
+		var random
+		  , background
+		  , powerup
+		  , jB  = jBreak
+		  , $el = $('<div class="jBreakBonus"/>')
+		;
 
 		this._animate = $.proxy(animate, this);
 
@@ -27,7 +28,7 @@ jBreak.Bonus.prototype = {
 		}
 		this._action = powerup.action;
 
-		jB.$field.append($el);
+		$jBreakField.append($el);
 
 		this._ball = jBBall;
 		
@@ -38,9 +39,9 @@ jBreak.Bonus.prototype = {
 		};
 
 		$el.css({
-			left:x,
-			top:y,
-			background:powerup.background
+			left: x,
+			top:  y,
+			background: powerup.background
 		});
 
 		this.$el = $el;
@@ -54,17 +55,19 @@ jBreak.Bonus.prototype = {
 		// only run checks if a paddle could be hit
 		if(y >= jB.fieldSize.height - 32 || y <=  24 || x <=  24 || x >= jB.fieldSize.width - 32){
 			for(var i = jB.paddles.length;i--;){
-				var jBPaddle = jB.paddles[i],
-				    paddleMissed,
-				    paddleHit,
-				    angle,
-				    jBPaddlePosition = jBPaddle.getPosition(),
-				    jBPaddleSize = jBPaddle.size();
+				var jBPaddle = jB.paddles[i]
+				  , paddleMissed
+				  , paddleHit
+				  , angle
+				  , jBPaddlePosition = jBPaddle.getPosition()
+				  , jBPaddleSize     = jBPaddle.size()
+				  , speed            = this._speed
+				;
 
 				switch(jBPaddlePosition.relative){
 					default:
 					case 'bottom':
-						paddleHit = this._speed.y > 0
+						paddleHit = speed.y > 0
 						         && y <= jB.fieldSize.height - 8
 						         && x >= jBPaddlePosition.x - 24
 						         && Math.ceil(y) >= jBPaddlePosition.y - 24
@@ -73,7 +76,7 @@ jBreak.Bonus.prototype = {
 						paddleMissed = y > jB.fieldSize.height + 2;
 						break;
 					case 'top':
-						paddleHit = this._speed.y < 0
+						paddleHit = speed.y < 0
 						         && y >= 4
 						         && x >= jBPaddlePosition.x + 24
 						         && Math.ceil(y) <= jBPaddlePosition.y + 24
@@ -82,7 +85,7 @@ jBreak.Bonus.prototype = {
 						paddleMissed = y < -10;
 						break;
 					case 'left':
-						paddleHit = this._speed.x < 0 
+						paddleHit = speed.x < 0 
 						         && x >= 4
 						         && y >= jBPaddlePosition.y + 24
 						         && Math.ceil(x) <= jBPaddlePosition.x + 24
@@ -91,7 +94,7 @@ jBreak.Bonus.prototype = {
 						paddleMissed = x < -10;
 						break;
 					case 'right':
-						paddleHit = this._speed.x > 0
+						paddleHit = speed.x > 0
 						         && y >= jBPaddlePosition.y - 24
 						         && x <= jB.fieldSize.width - 8
 						         && Math.ceil(x) >= jBPaddlePosition.x - 24
@@ -236,13 +239,13 @@ jBreak.Bonus.prototype = {
 			action:function(){
 				var paddle = this._paddle;
 
-				jBreak.$field.bind('click.jBreakBullet', function(){
+				$jBreakField.bind('click.jBreakBullet', function(){
 					var position = paddle.getPosition()
 					  , size     = paddle.size()
 					;
 
 					if(jBreak.bullets.length < 2)
-						new jBreak.Bullet(
+						new Bullet(
 							position.x + size.width  / 2,
 							position.y + size.height / 2,
 							-180);
@@ -250,7 +253,7 @@ jBreak.Bonus.prototype = {
 
 				paddle.addTimer('bullet', {
 					action:function(){
-						jBreak.$field.unbind('.jBreakBullet');
+						$jBreakField.unbind('.jBreakBullet');
 					},
 					timeout: 5
 				});
