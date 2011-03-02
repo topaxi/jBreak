@@ -122,7 +122,7 @@ Bonus.prototype = {
 		if(!pause) this._animate();
 	},
 	remove:function(){
-		this._timer = false;
+		this.toggleAnimate(false);
 		this.$el.fadeOut(600, function(){
 			$(this).remove();
 		});
