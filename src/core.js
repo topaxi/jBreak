@@ -253,7 +253,7 @@ var $jBreak
 		}
 	},
 	_trackMouseMovement:function(track){
-		$jBreakField.unbind('mousemove');
+		$document.unbind('mousemove');
 
 		if(track){
 			var mousePosition = this._mousePosition;
@@ -266,7 +266,6 @@ var $jBreak
 	_destroyField:function(){
 		this._trackMouseMovement(false);
 		this._unbindPause();
-		$document.unbind('mousemove');
 		this._hideCursor(false);
 	},
 	blockChecker:function(){
