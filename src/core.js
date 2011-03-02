@@ -253,11 +253,11 @@ var $jBreak
 		}
 	},
 	_trackMouseMovement:function(track){
-		$document.unbind('mousemove');
+		$document.unbind('.jBreakMouseTrack');
 
 		if(track){
 			var mousePosition = this._mousePosition;
-			$document.mousemove(function(e){
+			$document.bind('mousemove.jBreakMouseTrack', function(e){
 				mousePosition.pageX = e.pageX;
 				mousePosition.pageY = e.pageY;
 			});
