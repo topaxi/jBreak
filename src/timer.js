@@ -1,16 +1,16 @@
-function addTimers(obj) {
+function addTimers(self) {
 	var timers = {}
 	  , interval
 	;
 
-	obj.toggleTimers = toggleTimers;
-	obj.addTimer     = addTimer;
-	obj.deleteTimer  = deleteTimer;
-	obj.triggerTimer = triggerTimer;
-	obj.getTimer     = getTimer;
+	self.toggleTimers = toggleTimers;
+	self.addTimer     = addTimer;
+	self.deleteTimer  = deleteTimer;
+	self.triggerTimer = triggerTimer;
+	self.getTimer     = getTimer;
 
 	function toggleTimers(on){
-		clearInterval(obj._timerIntervalID);
+		clearInterval(interval);
 
 		if(on){
 			interval = setInterval(function(){
@@ -19,7 +19,7 @@ function addTimers(obj) {
 					timer.timeout -= .25;
 
 					if(timer.timeout <= 0){
-						timer.action.call(obj);
+						timer.action.call(self);
 						deleteTimer(i);
 					}
 				}
@@ -38,12 +38,12 @@ function addTimers(obj) {
 	
 	function triggerTimer(name){
 		if(name){
-			timers[name].action.call(obj);
+			timers[name].action.call(self);
 			deleteTimer(name);
 		}
 		else {
 			for(var i in timers){
-				timers[i].action.call(obj);
+				timers[i].action.call(self);
 				deleteTimer(i);
 			}
 		}
