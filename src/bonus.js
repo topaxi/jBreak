@@ -10,9 +10,7 @@ Bonus.prototype = {
 		  , jB  = jBreak
 		  , $el = this.$el = $('<div class="jBreakBonus"/>')
 		;
-
-		this._animate = $.proxy(animate, this);
-
+		
 		jB.bonuses.push(this);
 
 		// 50% chance to get a bad or a good powerup
@@ -33,6 +31,7 @@ Bonus.prototype = {
 		this._ball = jBBall;
 		
 		this._position = {x:x,y:y};
+		this._speed    = {};
 
 		$el.css({
 			left: x,
@@ -40,11 +39,8 @@ Bonus.prototype = {
 			background: powerup.background
 		});
 
-		this.angle(angle);
-		this._timer = true;
-		this._animate();
+		animate(this).angle(angle).toggleAnimate(true);
 	},
-	angle:angle,
 	_hitCheck:function(x,y){
 		var jB          = jBreak
 		  , fieldSize   = jB.fieldSize
@@ -120,8 +116,6 @@ Bonus.prototype = {
 		this._action(jBPaddle);
 		this.remove();
 	},
-	_animate:null,
-	move:move,
 	pause:function(pause){
 		this._timer = !pause;
 		
@@ -138,9 +132,7 @@ Bonus.prototype = {
 			if(jBBonuses[i] === this)
 				return jBBonuses.remove(i);
 	},
-	_timer:     false,
 	_interval:  30,
-	_angle:     180,
 	_paddle:    null, // the paddle which caught this bonus
 	_bad:[
 		{ // shrink paddle

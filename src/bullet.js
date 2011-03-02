@@ -5,30 +5,18 @@ var Bullet = jBreak.Bullet = function(x,y,angle){
 Bullet.prototype = {
 	_init:function(x,y,angle){
 		var jB  = jBreak
-		  , $el = $('<div class="jBreakBullet"/>')
+		  , $el = this.$el = $('<div class="jBreakBullet"/>')
 		;
-
-		this._animate = $.proxy(animate, this);
 
 		$jBreakField.append($el);
 		jB.bullets.push(this);
 
 		this._position = {x:x,y:y};
-		this._size = {width: 3, height: 5};
+		this._size = {width: $el.width(), height: $el.height()};
 
-		$el.css({
-			left:x,
-			top:y,
-			background:'#000',
-			width:'3px',
-			height:'5px',
-			position:'absolute'
-		});
+		$el.css({left: x, top:y});
 
-		this.$el = $el;
-		this.angle(angle);
-		this._timer = true;
-		this._animate();
+		animate(this).angle(angle).toggleAnimate(true);
 	},
 	_hitCheck:function(x,y){
 		if(y < -10) this.remove();
@@ -67,7 +55,7 @@ Bullet.prototype = {
 		}
 	},
 	remove:function(){
-		this._timer = false;
+		this.toggleAnimate(false);
 		this.$el.remove();
 
 		var jBBullets = jBreak.bullets;
@@ -75,8 +63,6 @@ Bullet.prototype = {
 			if(jBBullets[i] === this)
 				return jBBullets.remove(i);
 	},
-	angle:     angle,
-	move:      move,
 	pause:     Bonus.prototype.pause,
 	_interval: 15
 };

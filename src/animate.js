@@ -1,30 +1,61 @@
-function animate(){
-	var pos   = this._position
-	  , speed = this._speed
-	  , x     = pos.x + speed.x*4
-	  , y     = pos.y + speed.y*4
+function animate(self){
+	var selfAngle
+	  , animated
+	  , $el   = self.$el
+	  , pos   = self._position
+	  , speed = self._speed
 	;
 
-	this.move(x,y)._hitCheck(~~x, ~~y);
+	self.toggleAnimate = toggleAnimate;
+	self.move          = move;
+	self.angle         = angle;
+	self.interval      = interval;
 
-	if(this._timer)
-		setTimeout(this._animate, this._interval);
-}
+	function interval(i){
+		if(i === undefined)
+			return self._interval;
 
-function move(x,y){
-	this.$el.css({left: ~~x, top: ~~y});
-	this._position = {x:x,y:y};
+		self._interval = self._interval < 10 ? 10 : i;
+	}
 
-	return this;
-}
+	function animate(){
+		var x = pos.x + speed.x*4
+		  , y = pos.y + speed.y*4
+		;
+	
+		move(x,y)._hitCheck(~~x, ~~y);
+	
+		if(animated)
+			setTimeout(animate, self._interval);
+	}
 
-function angle(angle){
-	if(angle === undefined)
-		return this._angle;
+	function toggleAnimate(a){
+		animated = a;
 
-	this._angle = angle;
-	var speed = angle / 360 * Math.PI;
-	this._speed = {x: Math.cos(speed), y: Math.sin(speed)};
+		if(a) animate();
+	}
 
-	return this;
+	function move(x,y){
+		$el.css({left: ~~x, top: ~~y});
+
+		pos.x = x;
+		pos.y = y;
+	
+		return self;
+	}
+	
+	function angle(angle){
+		if(angle === undefined)
+			return selfAngle;
+	
+		selfAngle = angle;
+		var s = angle / 360 * Math.PI;
+
+		speed.x = Math.cos(s);
+		speed.y = Math.sin(s);
+	
+		return self;
+	}
+
+	return self;
 }

@@ -14,29 +14,26 @@ Ball.prototype = {
 			height: $el.height()
 		};
 
-		this._position = position;
+		this._position = position || {};
+		this._speed    = {};
 
-		this._animate = $.proxy(animate, this);
 		addTimers(this);
+		animate(this).angle(-90);
 	},
 	start:function(){
 		if(this._ready){
-			this.angle(this._angle);
-			this._timer = true;
 			this.toggleTimers(true);
-			this._animate();
+			this.toggleAnimate(true);
 		}
 	},
 	ready:function(ready){
-		if(ready !== undefined){
-			this._ready = ready;
+		if(ready === undefined)
+			return this._ready;
 
-			return this;
-		}
+		this._ready = ready;
 
-		return this._ready;
+		return this;
 	},
-	angle:angle,
 	_hitCheck:function(x,y){
 		var jB = jBreak
 		  , paddle = {
@@ -250,14 +247,6 @@ Ball.prototype = {
 			this._interval -= (this._interval > 10 ? .075 : 0);
 		}
 	},
-	_animate:null,
-	move:move,
-	interval:function(i){
-		if(i === undefined)
-			return this._interval;
-
-		this._interval = (this._interval < 10 ? 10 : i);
-	},
 	position:function(x,y){
 		if(x === undefined && y === undefined)
 			return this._position;
@@ -268,8 +257,8 @@ Ball.prototype = {
 		if(y !== null) position.y = y;
 	},
 	remove:function(){
-		this._timer = false;
 		this.toggleTimers(false);
+		this.toggleAnimate(false);
 		this.$el.remove();
 
 		// delete me!
@@ -283,9 +272,7 @@ Ball.prototype = {
 
 		this._timer = start;
 		this.toggleTimers(start);
-
-		if(start)
-			this._animate();
+		this.toggleAnimate(start);
 	},
 	pierce:function(pierce){
 		this._pierce = pierce;
@@ -303,6 +290,7 @@ Ball.prototype = {
 			_animate: $.proxy(animate, ball)
 		});
 
+		animate(ball);
 		addTimers(ball);
 		ball.addTimer($.extend(true, {}, this.getTimer()));
 
@@ -319,8 +307,6 @@ Ball.prototype = {
 	},
 
 	// private variables
-	_angle:    -90,
-	_timer:    null,
 	_interval: 30,
 	_pierce:   false,
 	_ready:    false  // ready to start?

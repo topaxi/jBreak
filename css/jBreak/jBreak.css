@@ -77,6 +77,13 @@ body {
 	height:24px
 }
 
+.jBreakBullet {
+	position:absolute;
+	background:#000
+	width:3px;
+	height:5px
+}
+
 #jBreakField .draggableWindow {
 	border:1px solid black;
 	right:16px;
