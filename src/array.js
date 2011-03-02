@@ -4,3 +4,9 @@ Array.prototype.remove = function(from, to){
 	this.length = from < 0 ? this.length + from : from;
 	return this.push.apply(this, rest);
 };
+
+function Array2D(b){
+	for(var a = [];b--;) a.push([]);
+
+	return a;
+}

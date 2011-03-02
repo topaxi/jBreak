@@ -96,9 +96,8 @@ var $jBreak
 	},
 	_setLevelTitle:function(title){
 		$('#jBreakLevelTitle', $jBreak).remove();
-		var $title = $('<div id="jBreakLevelTitle"/>').text(title);
 
-		$jBreak.append($title);
+		$jBreak.append($('<div id="jBreakLevelTitle"/>').text(title));
 	},
 	lives:function(lives){
 		if(lives === undefined)
@@ -111,7 +110,7 @@ var $jBreak
 		$('#jBreakLives', $jBreak).remove();
 		var $lives = $('<div id="jBreakLives"/>');
 
-		for(var i = this._lives;i--;)
+		for(;lives--;)
 			$lives.append('<div class="jBreakLive"/>');
 
 		$jBreak.append($lives);
@@ -145,19 +144,21 @@ var $jBreak
 			  , jBPaddle = new Paddle(paddle.position)
 			;
 
-			this.paddles.push(jBPaddle);
+			self.paddles.push(jBPaddle);
 
 			if(paddle.ball)
 				jBPaddle.connectBall(new Ball());
 		}
-
+		
 		$jBreakField.unbind('click.jBreakLaunchPaddleBalls');
 		$jBreakField.bind('click.jBreakCreatePaddles', function(e){
 			e.stopPropagation(); // do not bubble
 			self._hideCursor(true);
 
-			for(var i = self.paddles.length;i--;){
-				var jBPaddle = self.paddles[i];
+			var paddles = self.paddles;
+
+			for(var i = paddles.length;i--;){
+				var jBPaddle = paddles[i];
 				jBPaddle.start();
 
 				var jBPaddlePosition = jBPaddle.getPosition()
@@ -173,17 +174,17 @@ var $jBreak
 				jBPaddle.move(position);
 			}
 
-			$jBreakField.bind('click.jBreakLaunchPaddleBalls', function(){
+			$jBreakField.one('click', function(){
 				self._trackMouseMovement(true);
 				self._bindPause();
-
-				for(var i = self.paddles.length;i--;)
-					self.paddles[i].startBalls();
-
-				$jBreakField.unbind('.jBreakLaunchPaddleBalls');
 			});
+
+			$jBreakField.bind('click.jBreakLaunchPaddleBalls', function(){
+				for(var i = paddles.length;i--;)
+					paddles[i].startBalls();
+			});
+
 			$jBreakField.unbind('click.jBreakCreatePaddles');
-			//console.log('Paddles created');
 		});
 	},
 	_bindPause:function(){
@@ -255,12 +256,10 @@ var $jBreak
 		$jBreakField.unbind('mousemove');
 
 		if(track){
-			var self = this;
+			var mousePosition = this._mousePosition;
 			$document.mousemove(function(e){
-				self._mousePosition = {
-					pageX:e.pageX,
-					pageY:e.pageY
-				};
+				mousePosition.pageX = e.pageX;
+				mousePosition.pageY = e.pageY;
 			});
 		}
 	},
@@ -305,14 +304,14 @@ var $jBreak
 		}
 	},
 	gameOver:function(){
-		if(this._levelID < 0)
-			return Editor.start();
-
 		var self = this;
 
-		this._destroyField();
+		if(self._levelID < 0)
+			return Editor.start();
+
+		self._destroyField();
 		$jBreakField.find('.jBreakPaddle').effect('puff', {}, 600);
-		this.$blocks.find('div').effect('drop', {direction:'down'}, 600);
+		self.$blocks.find('div').effect('drop', {direction:'down'}, 600);
 
 		setTimeout(function(){
 			for(var i = self.paddles.length;i--;)
@@ -338,26 +337,27 @@ var $jBreak
 		}, 1000);
 	},
 	loadLevel:function(levelID){
+		var level, self = this;
+
 		levelID = (levelID !== undefined ? levelID : 0);
 
 		// clear previous level first
-		for(var i = this.balls.length;i--;)
-			this.balls[i].remove();
-		this.balls = [];
+		for(var i = self.balls.length;i--;)
+			self.balls[i].remove();
+		self.balls = [];
 
-		for(var i = this.paddles.length;i--;)
-			this.paddles[i].remove();
-		this.paddles = [];
+		for(var i = self.paddles.length;i--;)
+			self.paddles[i].remove();
+		self.paddles = [];
 
-		for(var i = this.bonuses.length;i--;)
-			this.bonuses[i].remove();
-		this.bonuses = [];
+		for(var i = self.bonuses.length;i--;)
+			self.bonuses[i].remove();
+		self.bonuses = [];
 
-		for(var i = this.bullets.length;i--;)
-			this.bullets[i].remove();
-		this.bullets = [];
+		for(var i = self.bullets.length;i--;)
+			self.bullets[i].remove();
+		self.bullets = [];
 
-		var level, self = this;
 		if(typeof levelID === 'object')
 			level = levelID;
 		else
@@ -402,12 +402,12 @@ var $jBreak
 					}
 
 					$block.css({
-						left:x*40,
-						top:y*16,
+						left: x*40,
+						top:  y*16,
 						background:
 							'transparent url(images/blocks/'
 								+block.theme+'.png) scroll no-repeat',
-						backgroundPosition:'-40px '+block.sprite+'px'
+						backgroundPosition: '-40px '+block.sprite+'px'
 					});
 
 					this.$blocks.append($block);
@@ -433,5 +433,5 @@ var $jBreak
 	_volume:        70,
 	_lives:          3,
 	_levelID:        0,
-	_mousePosition: null
+	_mousePosition: {}
 };

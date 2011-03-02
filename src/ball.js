@@ -51,6 +51,10 @@ Ball.prototype = {
 		  , ballY  = speed.y > 0 ? y + size.height : y
 		  , ballX  = speed.x > 0 ? x + size.width  : x
 
+		  , fieldSize        = jB.fieldSize
+		  , fieldHeight      = fieldSize.height
+		  , fieldWidth       = fieldSize.width
+
 		  , blockX = ~~(ballX / 40)
 		  , blockY = ~~(ballY / 16)
 
@@ -126,7 +130,7 @@ Ball.prototype = {
 		}
 
 		// only run checks if a paddle could be hit
-		if(y >= jB.fieldSize.height - 16 || y <=  8 || x <=  8 || x >= jB.fieldSize.width - 16){
+		if(y >= fieldHeight - 16 || y <=  8 || x <=  8 || x >= fieldWidth - 16){
 			for(var i = jB.paddles.length;i--;){
 				var jBPaddle         = jB.paddles[i]
 				  , jBPaddlePosition = jBPaddle.getPosition()
@@ -142,17 +146,17 @@ Ball.prototype = {
 						paddle.bottom = true;
 
 						paddleHit = speed.y > 0
-						         && y <= jB.fieldSize.height - 8
+						         && y <= fieldHeight - 8
 						         && x >= jBPaddlePosition.x - size.width
 						         && Math.ceil(y) >= jBPaddlePosition.y - size.height
 						         && x <= jBPaddlePosition.x + jBPaddleSize.width;
 
-						paddleMissed = y > jB.fieldSize.height + 2;
+						paddleMissed = y > fieldHeight + 2;
 
 						if(paddleHit){
 							angle =
 								(x - jBPaddlePosition.x + size.width/2)
-								 * 180 / (jBPaddle._size.width / 2)
+								 * 180 / (jBPaddleSize.width / 2)
 								 - 360;
 
 							angle = Math.floor(
@@ -176,7 +180,7 @@ Ball.prototype = {
 						if(paddleHit){
 							angle =
 								(x - jBPaddlePosition.x + size.width/2)
-								 * 180 / (jBPaddle._size.width / 2)
+								 * 180 / (jBPaddleSize.width / 2)
 								 - 360;
 
 							angle = Math.floor(
@@ -205,11 +209,11 @@ Ball.prototype = {
 
 						paddleHit = speed.x > 0
 						         && y >= jBPaddlePosition.y - size.height
-						         && x <= jB.fieldSize.width - 8
+						         && x <= fieldWidth - 8
 						         && Math.ceil(x) >= jBPaddlePosition.x - size.width
 						         && y <= jBPaddlePosition.y + jBPaddleSize.height;
 
-						paddleMissed = x > jB.fieldSize.width + 2;
+						paddleMissed = x > fieldWidth + 2;
 
 						if(paddleHit)
 							speed.x *= -1;
@@ -231,7 +235,7 @@ Ball.prototype = {
 		var check;
 
 		check = x <= 0 && !paddle.left
-		     || x >= jB.fieldSize.width - size.width - 1 && !paddle.right;
+		     || x >= fieldWidth - size.width - 1 && !paddle.right;
 		if(check){
 			jB.playSound('sound/pling1s.ogg');
 			speed.x *= -1;
@@ -239,7 +243,7 @@ Ball.prototype = {
 		}
 
 		check = y <= 0 && !paddle.top
-		     || y >= jB.fieldSize.height - size.height - 1 && !paddle.bottom;
+		     || y >= fieldHeight - size.height - 1 && !paddle.bottom;
 		if(check){
 			jB.playSound('sound/pling1s.ogg');
 			speed.y *= -1;
@@ -258,10 +262,10 @@ Ball.prototype = {
 		if(x === undefined && y === undefined)
 			return this._position;
 
-		this._position = {
-			x: x !== null ? x : this._position.x,
-			y: y !== null ? y : this._position.y
-		};
+		var position = this._position;
+
+		if(x !== null) position.x = x;
+		if(y !== null) position.y = y;
 	},
 	remove:function(){
 		this._timer = false;
@@ -274,16 +278,14 @@ Ball.prototype = {
 			if(jBBalls[i] === this)
 				return jBBalls.remove(i);
 	},
-	pause:function(pause){
-		if(pause){
-			this._timer = false;
-			this.toggleTimers(false);
-		}
-		else {
-			this._timer = true;
-			this.toggleTimers(true);
+	pause:function(start){
+		start = !start;
+
+		this._timer = start;
+		this.toggleTimers(start);
+
+		if(start)
 			this._animate();
-		}
 	},
 	pierce:function(pierce){
 		this._pierce = pierce;
@@ -297,8 +299,8 @@ Ball.prototype = {
 		var ball = $.extend(true, {}, this);
 
 		ball = $.extend(true, ball, {
-			$el:this.$el.clone(),
-			_animate:$.proxy(animate, ball)
+			$el:      this.$el.clone(),
+			_animate: $.proxy(animate, ball)
 		});
 
 		addTimers(ball);

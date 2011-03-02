@@ -46,9 +46,14 @@ Bonus.prototype = {
 	},
 	angle:angle,
 	_hitCheck:function(x,y){
-		var jB = jBreak;
+		var jB          = jBreak
+		  , fieldSize   = jB.fieldSize
+		  , fieldHeight = fieldSize.height
+		  , fieldWidth  = fieldSize.width
+		;
+
 		// only run checks if a paddle could be hit
-		if(y >= jB.fieldSize.height - 32 || y <=  24 || x <=  24 || x >= jB.fieldSize.width - 32){
+		if(y >= fieldHeight - 32 || y <=  24 || x <=  24 || x >= fieldWidth - 32){
 			for(var i = jB.paddles.length;i--;){
 				var jBPaddle = jB.paddles[i]
 				  , paddleMissed
@@ -68,7 +73,7 @@ Bonus.prototype = {
 						         && Math.ceil(y) >= jBPaddlePosition.y - 24
 						         && x <= jBPaddlePosition.x + jBPaddleSize.width;
 
-						paddleMissed = y > jB.fieldSize.height + 2;
+						paddleMissed = y > fieldHeight + 2;
 						break;
 					case 'top':
 						paddleHit = speed.y < 0
@@ -95,14 +100,12 @@ Bonus.prototype = {
 						         && Math.ceil(x) >= jBPaddlePosition.x - 24
 						         && y <= jBPaddlePosition.y + jBPaddleSize.height;
 
-						paddleMissed = x > jB.fieldSize.width + 2;
+						paddleMissed = x > fieldWidth + 2;
 						break;
 				}
 
-				if(paddleHit){
-					this._paddle = jBPaddle;
-					return this._powerUpPaddle();
-				}
+				if(paddleHit)
+					return this._powerUpPaddle(jBPaddle);
 
 				if(paddleMissed)
 					this.remove();
@@ -112,19 +115,17 @@ Bonus.prototype = {
 	_powerUpPaddle:function(jBPaddle){
 		jBreak.playSound('sound/pling1s.ogg');
 
+		this._paddle = jBPaddle;
+
 		this._action(jBPaddle);
 		this.remove();
 	},
 	_animate:null,
 	move:move,
 	pause:function(pause){
-		if(pause){
-			this._timer = false;
-		}
-		else {
-			this._timer = true;
-			this._animate();
-		}
+		this._timer = !pause;
+		
+		if(!pause) this._animate();
 	},
 	remove:function(){
 		this._timer = false;
@@ -144,8 +145,8 @@ Bonus.prototype = {
 	_bad:[
 		{ // shrink paddle
 			background:'url(images/bonuses/shrink.png)',
-			action:function(){
-				this._paddle.shrink();
+			action:function(paddle){
+				paddle.shrink();
 			}
 		},{ // ball speedup for 15 seconds
 			background:'url(images/bonuses/15+speed.png)',
@@ -174,8 +175,8 @@ Bonus.prototype = {
 			}
 		},{ // pulsate paddle
 			background:'blue',
-			action:function(){
-				this._paddle.$el.effect('pulsate', {times:10}, 3000);
+			action:function(paddle){
+				paddle.$el.effect('pulsate', {times:10}, 3000);
 			}
 		},{ // kill a life
 			background:'red',
@@ -187,8 +188,8 @@ Bonus.prototype = {
 	_good:[
 		{ // grow paddle
 			background:'url(images/bonuses/grow.png)',
-			action:function(){
-				this._paddle.grow();
+			action:function(paddle){
+				paddle.grow();
 			}
 		},{ // slow down ball
 			background:'url(images/bonuses/slower.png)',
@@ -225,9 +226,7 @@ Bonus.prototype = {
 			}
 		},{ // equip paddle with a gun
 			background:'yellow',
-			action:function(){
-				var paddle = this._paddle;
-
+			action:function(paddle){
 				$jBreakField.bind('click.jBreakBullet', function(){
 					var position = paddle.getPosition()
 					  , size     = paddle.size()

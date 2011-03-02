@@ -21,17 +21,11 @@ var Editor = jBreak.Editor = {
 
 		if(!this._level)
 			this._level = {
-				blocks:[
-					[],[],[],[],[],
-					[],[],[],[],[],
-					[],[],[],[],[],
-					[],[],[],[],[],
-					[],[],[],[],[]
-				],
-				paddles:[
+				blocks: Array2D(25),
+				paddles: [
 					{position:'bottom','ball':true}
 				],
-				name:'Custom'
+				name: 'Custom'
 			};
 
 		jBreak.lives(3);

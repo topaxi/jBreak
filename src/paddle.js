@@ -10,6 +10,10 @@ Paddle.prototype = {
 		    }
 		  , width
 		  , height
+
+		  , fieldSize        = jBreak.fieldSize
+		  , fieldHeight      = fieldSize.height
+		  , fieldWidth       = fieldSize.width
 		;
 
 		this._balls = [];
@@ -24,20 +28,20 @@ Paddle.prototype = {
 		switch(relativePosition){
 			default:
 			case 'bottom':
-				position.y = jBreak.fieldSize.height - height;
-				position.x = jBreak.fieldSize.width / 2 - width / 2;
+				position.y = fieldHeight - height;
+				position.x = fieldWidth / 2 - width / 2;
 				break;
 			case 'top':
 				position.y = 0;
-				position.x = jBreak.fieldSize.width / 2 - width / 2;
+				position.x = fieldWidth / 2 - width / 2;
 				break;
 			case 'left':
-				position.y = jBreak.fieldSize.height / 2 - width / 2;
+				position.y = fieldHeight / 2 - width / 2;
 				position.x = 0;
 				break;
 			case 'right':
-				position.y = jBreak.fieldSize.height / 2 - height / 2;
-				position.x = jBreak.fieldSize.width - width;
+				position.y = fieldHeight / 2 - height / 2;
+				position.x = fieldWidth - width;
 				break;
 		}
 
@@ -49,29 +53,40 @@ Paddle.prototype = {
 		addTimers(this);
 	},
 	grow:function(){
-		var size = this._size;
-		this.size(size.width > size.height
-			? size.width  + 16
-			: size.height + 16);
+		var size   = this._size
+		  , width  = size.width
+		  , height = size.height
+		;
+
+		this.size(width > height
+			? width  + 16
+			: height + 16);
 	},
 	shrink:function(){
-		var size = this._size;
-		this.size(size.width > size.height
-			? size.width  - 16
-			: size.height - 16);
+		var size   = this._size
+		  , width  = size.width
+		  , height = size.height
+		;
+
+		this.size(width > height
+			? width  - 16
+			: height - 16);
 	},
-	size:function(size){
-		if(size === undefined)
+	size:function(newSize){
+		if(newSize === undefined)
 			return this._size;
 
-		if(size > 128 || size < 16 || size % 16 !== 0)
+		if(newSize > 128 || newSize < 16 || newSize % 16 !== 0)
 			return;
 
-		var width = this._size.width,
-		    height = this._size.height;
+		var size   = this._size
+		  , width  = size.width
+		  , height = size.height
+		;
+
 		(width > height
-			? width = size
-			: height = size);
+			? width  = newSize
+			: height = newSize);
 
 		this.$el.css({
 			width:  width,
@@ -79,7 +94,8 @@ Paddle.prototype = {
 			backgroundImage: 'url(images/paddles/pad'+ width +'x'+ height +'.png)'
 		});
 
-		this._size = {width:width, height:height};
+		size.width  = width;
+		size.height = height;
 	},
 	start:function(){
 		var self             = this
@@ -102,27 +118,33 @@ Paddle.prototype = {
 		});
 	},
 	connectBall:function(jBBall){
-		var x, y, effectDirection, ballSize = jBBall.size();
+		var x
+		  , y
+		  , effectDirection
+		  , ballSize = jBBall.size()
+		  , position = this._position
+		  , size     = this._size
+		;
 
-		switch(this._position.relative){
+		switch(position.relative){
 			case 'top':
-				x = this._position.x
-				  + this._size.width / 2
+				x = position.x
+				  + size.width / 2
 				  - ballSize.width / 2;
 
-				y = this._position.y
-				  + this._size.height / 2
+				y = position.y
+				  + size.height / 2
 				  + ballSize.height / 2;
 
 				jBBall.angle(90);
 				effectDirection = 'down';
 				break;
 			case 'right':
-				x = this._position.x
+				x = position.x
 				  - ballSize.width;
 
-				y = this._position.y
-				  + this._size.height / 2
+				y = position.y
+				  + size.height / 2
 				  - ballSize.width / 2;
 
 				jBBall.angle(90);
@@ -130,23 +152,23 @@ Paddle.prototype = {
 				break;
 			default:
 			case 'bottom':
-				x = this._position.x
-				  + this._size.width / 2
+				x = position.x
+				  + size.width / 2
 				  - ballSize.width / 2;
 
-				y = this._position.y
-				  - this._size.height / 2
+				y = position.y
+				  - size.height / 2
 				  - ballSize.height / 2;
 
 				jBBall.angle(-90);
 				effectDirection = 'up';
 				break;
 			case 'left':
-				x = this._position.x
+				x = position.x
 				  + ballSize.width;
 
-				y = this._position.y
-				  + this._size.height / 2
+				y = position.y
+				  + size.height / 2
 				  - ballSize.width / 2;
 
 				jBBall.angle(-90);
@@ -162,7 +184,7 @@ Paddle.prototype = {
 		}, function(){
 			var position = jBBall.position();
 
-			jBBall.move(position.x,position.y);
+			jBBall.move(position.x, position.y);
 			jBBall.ready(true);
 		});
 		this._balls.push(jBBall);
@@ -182,7 +204,12 @@ Paddle.prototype = {
 	move:function(position){
 		var jB               = jBreak
 		  , size             = this._size
-		  , jBFieldSize      = jB.fieldSize
+		  , balls            = this._balls
+
+		  , fieldSize        = jB.fieldSize
+		  , fieldHeight      = fieldSize.height
+		  , fieldWidth       = fieldSize.width
+
 		  , relativePosition = this._position.relative
 		;
 
@@ -192,11 +219,11 @@ Paddle.prototype = {
 
 			if(x < 0)
 				x = 0;
-			else if(x > jBFieldSize.width - size.width)
-				x = jBFieldSize.width - size.width;
+			else if(x > fieldWidth - size.width)
+				x = fieldWidth - size.width;
 
-			for(var i = this._balls.length;i--;){
-				var ball  = this._balls[i]
+			for(var i = balls.length;i--;){
+				var ball  = balls[i]
 				  , ballX = x
 				          + size.width / 2
 				          - ball.size().width / 2
@@ -206,8 +233,8 @@ Paddle.prototype = {
 
 				if($parent.hasClass('ui-effects-wrapper')){
 					$parent.css({
-						left:ballX,
-						top:ball.position().y
+						left: ballX,
+						top:  ball.position().y
 					});
 					ball.position(ballX, null);
 				}
@@ -227,11 +254,11 @@ Paddle.prototype = {
 
 			if(y < 0)
 				y = 0;
-			else if(y > jBFieldSize.height - size.height)
-				y = jBFieldSize.height - size.height;
+			else if(y > fieldHeight - size.height)
+				y = fieldHeight - size.height;
 
-			for(var i = this._balls.length;i--;){
-				var ball  = this._balls[i]
+			for(var i = balls.length;i--;){
+				var ball  = balls[i]
 				  , ballY = y
 				          + size.height / 2
 				          - ball.size().height / 2

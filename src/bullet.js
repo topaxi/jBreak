@@ -36,6 +36,7 @@ Bullet.prototype = {
 		var jB      = jBreak
 		  , speed   = this._speed
 		  , size    = this._size
+
 		  , bulletY = speed.y > 0 ? y + size.height : y
 		  , bulletX = speed.x > 0 ? x + size.width  : x
 		  , blockX  = ~~(bulletX / 40)
