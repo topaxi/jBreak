@@ -214,17 +214,16 @@ Paddle.prototype = {
 		;
 
 		if(relativePosition === 'top' || relativePosition === 'bottom'){
-			var x = position;
-			x -= size.width / 2;
+			position -= size.width / 2;
 
-			if(x < 0)
-				x = 0;
-			else if(x > fieldWidth - size.width)
-				x = fieldWidth - size.width;
+			if(position < 0)
+				position = 0;
+			else if(position > fieldWidth - size.width)
+				position = fieldWidth - size.width;
 
 			for(var i = balls.length;i--;){
 				var ball  = balls[i]
-				  , ballX = x
+				  , ballX = position
 				          + size.width / 2
 				          - ball.size().width / 2
 
@@ -245,21 +244,20 @@ Paddle.prototype = {
 				}
 			}
 
-			this._position.x = x;
-			this.$el.css('left', x);
+			this._position.x = position;
+			this.$el.css('left', position);
 		}
 		else {
-			var y = position;
-			y -= size.height / 2;
+			position -= size.height / 2;
 
-			if(y < 0)
-				y = 0;
-			else if(y > fieldHeight - size.height)
-				y = fieldHeight - size.height;
+			if(position < 0)
+				position = 0;
+			else if(position > fieldHeight - size.height)
+				position = fieldHeight - size.height;
 
 			for(var i = balls.length;i--;){
 				var ball  = balls[i]
-				  , ballY = y
+				  , ballY = position
 				          + size.height / 2
 				          - ball.size().height / 2
 
@@ -268,8 +266,8 @@ Paddle.prototype = {
 
 				if($parent.hasClass('ui-effects-wrapper')){
 					$parent.css({
-						left:ball.position().x,
-						top:ballY
+						left: ball.position().x,
+						top:  ballY
 					});
 					ball.position(null, ballY);
 				}
@@ -280,8 +278,8 @@ Paddle.prototype = {
 				}
 			}
 
-			this._position.y = y;
-			this.$el.css('top', y);
+			this._position.y = position;
+			this.$el.css('top', position);
 		}
 	},
 	remove:function(){
