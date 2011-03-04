@@ -137,7 +137,7 @@ Bonus.prototype = {
 		{ // shrink paddle
 			background:'url(images/bonuses/shrink.png)',
 			action:function(paddle){
-				paddle.shrink();
+				paddle.grow(-16);
 			}
 		},{ // ball speedup for 15 seconds
 			background:'url(images/bonuses/15+speed.png)',
@@ -180,7 +180,7 @@ Bonus.prototype = {
 		{ // grow paddle
 			background:'url(images/bonuses/grow.png)',
 			action:function(paddle){
-				paddle.grow();
+				paddle.grow(16);
 			}
 		},{ // slow down ball
 			background:'url(images/bonuses/slower.png)',

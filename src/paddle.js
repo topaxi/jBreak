@@ -52,25 +52,15 @@ Paddle.prototype = {
 
 		addTimers(this);
 	},
-	grow:function(){
+	grow:function(s){
 		var size   = this._size
 		  , width  = size.width
 		  , height = size.height
 		;
 
 		this.size(width > height
-			? width  + 16
-			: height + 16);
-	},
-	shrink:function(){
-		var size   = this._size
-		  , width  = size.width
-		  , height = size.height
-		;
-
-		this.size(width > height
-			? width  - 16
-			: height - 16);
+			? width  + s
+			: height + s);
 	},
 	size:function(newSize){
 		if(newSize === undefined)
