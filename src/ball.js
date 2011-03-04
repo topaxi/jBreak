@@ -285,8 +285,7 @@ Ball.prototype = {
 		var ball = $.extend(true, {}, this);
 
 		ball = $.extend(true, ball, {
-			$el:      this.$el.clone(),
-			_animate: $.proxy(animate, ball)
+			$el: this.$el.clone()
 		});
 
 		animate(ball);
