@@ -79,7 +79,7 @@ body {
 
 .jBreakBullet {
 	position:absolute;
-	background:#000
+	background:#000;
 	width:3px;
 	height:5px
 }
