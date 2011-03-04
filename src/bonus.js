@@ -117,9 +117,8 @@ Bonus.prototype = {
 		this.remove();
 	},
 	pause:function(pause){
-		this._timer = !pause;
-		
-		if(!pause) this._animate();
+		this.toggleTimers(!pause);
+		this.toggleAnimate(!pause);
 	},
 	remove:function(){
 		this.toggleAnimate(false);

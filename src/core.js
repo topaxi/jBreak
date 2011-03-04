@@ -20,7 +20,7 @@ var $jBreak
 			height: $jBreakField.height()
 		};
 
-		this.lives(this._lives);
+		this.lives(3);
 
 		this._cacheImages();
 		this._setLevelTitle('jBreak @VERSION');
@@ -188,10 +188,9 @@ var $jBreak
 		});
 	},
 	_bindPause:function(){
-		var self = this;
 		$document.bind('keydown.jBreakPause', function(e){
 			if(e.keyCode === 32 || e.keyCode === 80){
-				self.togglePause(true);
+				jBreak.togglePause(true);
 			}
 		});
 	},
@@ -199,43 +198,43 @@ var $jBreak
 		$document.unbind('.jBreakPause');
 	},
 	togglePause:function(paused){
-		this._destroyField();
+		var self = this;
+		self._destroyField();
 
-		paused = this._paused = paused || !this._paused;
+		paused = self._paused = paused || !self._paused;
 
-		for(var i = this.balls.length;i--;)
-			this.balls[i].pause(paused);
+		for(var i = self.balls.length;i--;)
+			self.balls[i].pause(paused);
 
-		for(var i = this.bullets.length;i--;)
-			this.bullets[i].pause(paused);
+		for(var i = self.bullets.length;i--;)
+			self.bullets[i].pause(paused);
 
-		for(var i = this.bonuses.length;i--;)
-			this.bonuses[i].pause(paused);
+		for(var i = self.bonuses.length;i--;)
+			self.bonuses[i].pause(paused);
 
-		for(var i = this.paddles.length;i--;)
-			this.paddles[i].toggleTimers(!paused);
+		for(var i = self.paddles.length;i--;)
+			self.paddles[i].pause(paused);
 
-		this._trackMouseMovement(!paused);
+		self._trackMouseMovement(!paused);
 
 		if(paused){
 			var $unpauseButton = $('<button>continue</button>').appendTo($jBreakField),
 			    fieldOffset    = $jBreakField.offset(),
-			    buttonLeft     = this._mousePosition.pageX - fieldOffset.left - 32,
-			    buttonTop      = this._mousePosition.pageY - fieldOffset.top  - 12;
+			    buttonLeft     = self._mousePosition.pageX - fieldOffset.left - 32,
+			    buttonTop      = self._mousePosition.pageY - fieldOffset.top  - 12;
 
 			$unpauseButton.css({
 				position:'absolute',
 				width:'64px',
 				height:'24px',
-				left:(buttonLeft > this.fieldSize.width ? this.fieldSize.width-64 :
+				left:(buttonLeft > self.fieldSize.width ? self.fieldSize.width-64 :
 					(buttonLeft < 0 ? 0 :
 						buttonLeft)),
-				top: (buttonTop > this.fieldSize.height ? this.fieldSize.height-24 :
+				top: (buttonTop > self.fieldSize.height ? self.fieldSize.height-24 :
 					(buttonTop < 0 ? 0 :
 						buttonTop))
 			});
 
-			var self = this;
 			$unpauseButton.click(function(){
 				$unpauseButton.remove();
 
@@ -245,11 +244,11 @@ var $jBreak
 			});
 		}
 		else {
-			for(var i = this.paddles.length;i--;)
-				this.paddles[i].start();
+			for(var i = self.paddles.length;i--;)
+				self.paddles[i].start();
 
-			this._hideCursor(true);
-			this._bindPause();
+			self._hideCursor(true);
+			self._bindPause();
 		}
 	},
 	_trackMouseMovement:function(track){
@@ -418,19 +417,9 @@ var $jBreak
 		this.$blocks.fadeIn(600);
 	},
 
-	// public variables
-	$blocks:   null,
-	fieldSize: null,
-	paddles:   null,
-	balls:     null,
-	bonuses:   null,
-	blocks:    null,
-	bullets:   null,
-
 	// private variables
 	_imageCache:    {},
 	_volume:        70,
-	_lives:          3,
 	_levelID:        0,
 	_mousePosition: {}
 };

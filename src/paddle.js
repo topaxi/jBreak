@@ -11,9 +11,9 @@ Paddle.prototype = {
 		  , width
 		  , height
 
-		  , fieldSize        = jBreak.fieldSize
-		  , fieldHeight      = fieldSize.height
-		  , fieldWidth       = fieldSize.width
+		  , fieldSize   = jBreak.fieldSize
+		  , fieldHeight = fieldSize.height
+		  , fieldWidth  = fieldSize.width
 		;
 
 		this._balls = [];
@@ -107,7 +107,7 @@ Paddle.prototype = {
 
 		this.toggleTimers(true);
 
-		$document.mousemove(function(e){
+		$document.bind('mousemove.jBreakPaddle-'+ relativePosition, function(e){
 			var newPosition = relativePosition === 'top'
 			               ||  relativePosition === 'bottom'
 			                   ? e.pageX - leftOffset
@@ -116,6 +116,13 @@ Paddle.prototype = {
 
 			self.move(newPosition);
 		});
+	},
+	pause:function(pause){
+		if(pause) {
+			this.toggleTimers(!pause);
+			$document.unbind('.jBreakPaddle-'+ this._position.relative);
+		}
+		else this.start();
 	},
 	connectBall:function(jBBall){
 		var x

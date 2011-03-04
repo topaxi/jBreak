@@ -270,7 +270,6 @@ Ball.prototype = {
 	pause:function(start){
 		start = !start;
 
-		this._timer = start;
 		this.toggleTimers(start);
 		this.toggleAnimate(start);
 	},
