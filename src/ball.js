@@ -283,12 +283,10 @@ Ball.prototype = {
 	},
 	clone:function(){
 		var ball = $.extend(true, {}, this);
-
-		ball = $.extend(true, ball, {
-			$el: this.$el.clone()
-		});
+		ball.$el = this.$el.clone();
 
 		animate(ball);
+
 		addTimers(ball);
 		ball.addTimer($.extend(true, {}, this.getTimer()));
 
