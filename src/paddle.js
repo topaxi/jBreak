@@ -53,23 +53,36 @@ Paddle.prototype = {
 		addTimers(this);
 	},
 	grow:function(){
-		this.size(this.size() + 16);
-	},
-	shrink:function(){
-		this.size(this.size() - 16);
-	},
-	size:function(newSize){
-		var size = this._size
+		var size   = this._size
 		  , width  = size.width
 		  , height = size.height
 		;
 
-		if(newSize === undefined){
-			return width > height ? width : height;
-		}
+		this.size(width > height
+			? width  + 16
+			: height + 16);
+	},
+	shrink:function(){
+		var size   = this._size
+		  , width  = size.width
+		  , height = size.height
+		;
+
+		this.size(width > height
+			? width  - 16
+			: height - 16);
+	},
+	size:function(newSize){
+		if(newSize === undefined)
+			return this._size;
 
 		if(newSize > 128 || newSize < 16 || newSize % 16 !== 0)
 			return;
+
+		var size   = this._size
+		  , width  = size.width
+		  , height = size.height
+		;
 
 		(width > height
 			? width  = newSize
