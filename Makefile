@@ -2,7 +2,7 @@ SRC_DIR = src
 BUILD_DIR = build
 
 PREFIX = .
-DIST_DIR = ${PREFIX}/dist
+DIST_DIR = ${PREFIX}/public/js
 
 BASE_FILES = ${SRC_DIR}/core.js\
 	${SRC_DIR}/array.js\

@@ -18,3 +18,6 @@
  * Date:   
  */
 (function($, window, Math, undefined){ "use strict";
+	var document   = window.document
+	  , setTimeout = window.setTimeout
+	;

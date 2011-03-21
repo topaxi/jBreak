@@ -1,0 +1,34 @@
+!!! 5
+head
+  title= "jBreak "+ version
+
+  meta(http-equiv:"X-UA-Compatible", content:"IE=EmulateIE7")
+  
+  link(rel:"stylesheet", href:"css/smoothness/jquery-ui-1.8.10.custom.css")
+  link(rel:"stylesheet", href:"css/jBreak/jBreak.css")
+
+  script(src:"//ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js")
+  script(src:"//ajax.googleapis.com/ajax/libs/jqueryui/1.8.10/jquery-ui.min.js")
+
+  - if(production)
+    script(src:"js/jBreak.js")
+  - else
+    script(src:"js/src/core.js")
+    script(src:"js/src/array.js")
+    script(src:"js/src/animate.js")
+    script(src:"js/src/ball.js")
+    script(src:"js/src/bonus.js")
+    script(src:"js/src/bullet.js")
+    script(src:"js/src/paddle.js")
+    script(src:"js/src/timer.js")
+    script(src:"js/src/ui.js")
+    script(src:"js/src/cookie.js")
+    script(src:"js/src/options.js")
+    script(src:"js/src/editor.js")
+    script
+      $(function($){
+        jBreak.start();
+      });
+
+body
+  #jBreak

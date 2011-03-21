@@ -1,8 +1,6 @@
 var $jBreak
   , $jBreakField
-  , document   = window.document
   , $document  = $(document)
-  , setTimeout = window.setTimeout
   , jBreak     = {
 	start:function(){
 		$jBreak = $('#jBreak').empty();
@@ -360,11 +358,8 @@ var $jBreak
 			level = levelID;
 		else
 			$.ajax({
-				url:'getLevel.php',
+				url:'level/'+ levelID,
 				method:'get',
-				data:{
-					levelID:levelID
-				},
 				dataType:'json',
 				async:false,
 				success:function(data, textStatus){
