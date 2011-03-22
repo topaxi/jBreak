@@ -3,16 +3,19 @@ head
   title= "jBreak "+ version
 
   meta(http-equiv:"X-UA-Compatible", content:"IE=EmulateIE7")
-  
+
   link(rel:"stylesheet", href:"css/smoothness/jquery-ui-1.8.10.custom.css")
   link(rel:"stylesheet", href:"css/jBreak/jBreak.css")
 
-  script(src:"//ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js")
-  script(src:"//ajax.googleapis.com/ajax/libs/jqueryui/1.8.10/jquery-ui.min.js")
-
   - if(production)
-    script(src:"js/jBreak.js")
+    script(src:"//ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js")
+    script(src:"//ajax.googleapis.com/ajax/libs/jqueryui/1.8.10/jquery-ui.min.js")
+
+    script(src:"js/jBreak.min.js")
   - else
+    script(src:"//ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.js")
+    script(src:"//ajax.googleapis.com/ajax/libs/jqueryui/1.8.10/jquery-ui.js")
+
     script(src:"js/src/core.js")
     script(src:"js/src/array.js")
     script(src:"js/src/animate.js")
