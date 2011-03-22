@@ -1,5 +1,5 @@
 function button(label, fn){
-	if(arguments.length === 1 && typeof label === 'function'){
+	if(fn === undefined && typeof label === 'function'){
 		fn    = label;
 		label = null;
 	}
