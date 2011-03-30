@@ -31,7 +31,6 @@ Bonus.prototype = {
 		this._ball = jBBall;
 		
 		this._position = {x:x,y:y};
-		this._speed    = {};
 
 		$el.css({
 			left: x,

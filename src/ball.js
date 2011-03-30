@@ -15,7 +15,6 @@ Ball.prototype = {
 		};
 
 		this._position = position || {};
-		this._speed    = {};
 
 		addTimers(this);
 		animate(this).angle(-90);

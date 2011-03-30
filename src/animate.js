@@ -3,7 +3,7 @@ function animate(self){
 	  , animated
 	  , $el   = self.$el
 	  , pos   = self._position
-	  , speed = self._speed
+	  , speed = self._speed = self._speed || {}
 	;
 
 	self.toggleAnimate = toggleAnimate;

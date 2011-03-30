@@ -12,10 +12,12 @@ Bullet.prototype = {
 		jB.bullets.push(this);
 
 		this._position = {x:x,y:y};
-		this._speed    = {};
-		this._size = {width: $el.width(), height: $el.height()};
+		this._size     = {
+			width:  $el.width(),
+			height: $el.height()
+		};
 
-		$el.css({left: x, top:y});
+		$el.css({left: x, top: y});
 
 		animate(this).angle(angle).toggleAnimate(true);
 	},
