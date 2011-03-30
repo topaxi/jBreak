@@ -403,6 +403,8 @@ var $jBreak
 						backgroundPosition: '-40px '+block.sprite+'px'
 					});
 
+					block.$el = $block;
+
 					this.$blocks.append($block);
 				}
 			}

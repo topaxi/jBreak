@@ -88,7 +88,7 @@ Ball.prototype = {
 				}
 
 				//console.log('I hit %d,%d', blockX,blockY);
-				var $block    = $('.x'+ blockX +'.y'+ blockY, $jBreakField)
+				var $block    = block.$el
 				  , direction =  vHit && speed.y > 0 ? 'up'
 				              :  hHit && speed.x > 0 ? 'left'
 				              :  hHit && speed.x < 0 ? 'right'
