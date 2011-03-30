@@ -17,7 +17,4 @@
  * Author: Damian Senn <damian.senn@gmail.com>
  * Date:   
  */
-(function($, window, Math, undefined){ "use strict";
-	var document   = window.document
-	  , setTimeout = window.setTimeout
-	;
+(function($, window, document, Math, JSON, localStorage, sessionStorage, setTimeout, undefined){ "use strict";

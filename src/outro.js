@@ -1,4 +1,4 @@
 	$(function(){
 		jBreak.start();
 	});
-})(jQuery, window, Math);
+})(jQuery, window, document, Math, JSON, localStorage, sessionStorage, setTimeout);
